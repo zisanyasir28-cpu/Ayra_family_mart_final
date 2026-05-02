@@ -1,8 +1,6 @@
 # 🛒 Online Superstore — 10-Day Solo Sprint Plan
 
 > **Realistic 10-day solo MVP plan — no fluff.**
-> One developer. 10 days. The goal is a **working, shippable MVP** — not a 24-week enterprise system.
-> This plan cuts scope ruthlessly and focuses only on what makes the store actually usable on day 10.
 
 ---
 
