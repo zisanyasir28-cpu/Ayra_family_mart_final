@@ -14,7 +14,13 @@ export function validate(schema: ZodSchema, part: RequestPart = 'body') {
       }));
       return next(ApiError.badRequest('Validation failed', details));
     }
-    req[part] = result.data as typeof req[typeof part];
+    // Express 5 makes req.query a read-only getter — use Object.assign to mutate
+    // in-place rather than replacing the reference. For body/params, direct assignment works.
+    if (part === 'query') {
+      Object.assign(req.query, result.data);
+    } else {
+      req[part] = result.data as typeof req[typeof part];
+    }
     next();
   };
 }

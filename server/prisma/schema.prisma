@@ -67,6 +67,14 @@ enum AddressType {
   OTHER
 }
 
+enum StockLogReason {
+  RESTOCK
+  CORRECTION
+  DAMAGE
+  RETURN
+  SALE
+}
+
 // ─── User ─────────────────────────────────────────────────────────────────────
 
 model User {
@@ -86,6 +94,8 @@ model User {
   addresses       Address[]
   orders          Order[]
   refreshTokens   RefreshToken[]
+  reviews         Review[]
+  stockLogs       StockLog[]     @relation("StockLogPerformer")
 
   @@index([email])
   @@map("users")
@@ -203,6 +213,8 @@ model Product {
   images               ProductImage[]
   orderItems           OrderItem[]
   campaignProducts     CampaignProduct[]
+  reviews              Review[]
+  stockLogs            StockLog[]
 
   @@index([categoryId])
   @@index([brandId])
@@ -372,4 +384,43 @@ model CampaignProduct {
 
   @@id([campaignId, productId])
   @@map("campaign_products")
+}
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+model Review {
+  id         String   @id @default(uuid())
+  productId  String
+  userId     String
+  rating     Int      // 1–5
+  comment    String?
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([productId, userId])
+  @@index([productId])
+  @@map("reviews")
+}
+
+// ─── Stock Logs ───────────────────────────────────────────────────────────────
+
+model StockLog {
+  id           String         @id @default(uuid())
+  productId    String
+  changeAmount Int
+  reason       StockLogReason
+  performedBy  String
+  note         String?
+  createdAt    DateTime       @default(now())
+
+  product      Product        @relation(fields: [productId], references: [id])
+  performer    User           @relation("StockLogPerformer", fields: [performedBy], references: [id])
+
+  @@index([productId])
+  @@index([performedBy])
+  @@map("stock_logs")
 }
