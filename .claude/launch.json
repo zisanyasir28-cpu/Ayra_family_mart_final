@@ -1,0 +1,24 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Client (Vite)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace=client"],
+      "port": 5173,
+      "autoPort": true
+    },
+    {
+      "name": "Server (Express + ts-node-dev)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace=server"],
+      "port": 5000
+    },
+    {
+      "name": "Full Stack (Client + Server concurrently)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173
+    }
+  ]
+}

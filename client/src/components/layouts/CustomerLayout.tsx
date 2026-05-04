@@ -262,7 +262,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
         <NavLink
           to="/products"
           end
-          className={({ isActive }) =>
+          className={({ isActive }: { isActive: boolean }) =>
             cn(
               'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition',
               isActive
@@ -287,7 +287,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
           <NavLink
             key={cat.id}
             to={`/products?categoryId=${cat.id}`}
-            className={({ isActive }) =>
+            className={({ isActive }: { isActive: boolean }) =>
               cn(
                 'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition',
                 isActive
@@ -436,7 +436,7 @@ function BottomTabBar() {
           key={to}
           to={to}
           end={to === '/'}
-          className={({ isActive }) =>
+          className={({ isActive }: { isActive: boolean }) =>
             cn(
               'relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium transition',
               isActive ? 'text-green-700' : 'text-muted-foreground',
