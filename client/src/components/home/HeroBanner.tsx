@@ -34,7 +34,7 @@ export function HeroBanner() {
             >
               <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
                 <Star className="h-4 w-4 fill-yellow-300 text-yellow-300" />
-                Bangladesh's #1 Online Superstore
+                Bangladesh's Most Trusted Family Mart
               </span>
             </motion.div>
 

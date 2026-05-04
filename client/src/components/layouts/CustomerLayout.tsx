@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Logo } from '../common/Logo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -36,7 +37,7 @@ function AnnouncementBar() {
             <span className="opacity-50">•</span>
             <span>🎉 Use <strong>WELCOME10</strong> for 10% off your first order</span>
             <span className="opacity-50">•</span>
-            <span>🌿 100% Fresh Products Guaranteed</span>
+            <span>🌿 Ayra Family Mart — Fresh · Fast · Trusted</span>
             <span className="opacity-50">•</span>
             <span>📦 Same-day delivery in Dhaka</span>
             <span className="opacity-50">•</span>
@@ -223,7 +224,7 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
             className="fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto bg-card shadow-xl"
           >
             <div className="flex items-center justify-between border-b border-border p-4">
-              <span className="text-lg font-bold text-green-700">SuperStore</span>
+              <Logo size="sm" />
               <button onClick={onClose} className="rounded-lg p-1.5 transition hover:bg-muted">
                 <X className="h-5 w-5" />
               </button>
@@ -313,9 +314,11 @@ function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* About */}
           <div>
-            <h3 className="mb-4 text-lg font-bold text-green-700">🛒 SuperStore</h3>
+            <div className="mb-4">
+              <Logo asSpan size="sm" />
+            </div>
             <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
-              Bangladesh's premium online superstore. Fresh groceries, household
+              Bangladesh's most trusted family mart. Fresh groceries, household
               essentials and more — delivered to your door.
             </p>
             <div className="flex gap-3">
@@ -384,7 +387,7 @@ function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>📍 Gulshan 2, Dhaka 1212</li>
               <li>📞 +880 1700-000000</li>
-              <li>✉️ support@superstore.com.bd</li>
+              <li>✉️ support@ayrafamilymart.com.bd</li>
               <li className="pt-2 font-medium text-foreground">Working Hours</li>
               <li>Sat – Thu: 8am – 10pm</li>
               <li>Friday: 2pm – 10pm</li>
@@ -405,7 +408,7 @@ function Footer() {
       </div>
       <div className="border-t border-border bg-muted/50 py-4">
         <div className="container text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} SuperStore Bangladesh. All rights reserved.
+          © {new Date().getFullYear()} Ayra Family Mart. All rights reserved.
         </div>
       </div>
     </footer>
@@ -524,12 +527,7 @@ export default function CustomerLayout() {
           </button>
 
           {/* Logo */}
-          <Link to="/" className="flex shrink-0 items-center gap-2 font-bold">
-            <span className="text-xl">🛒</span>
-            <span className="hidden text-lg font-extrabold tracking-tight text-green-700 sm:inline">
-              SuperStore
-            </span>
-          </Link>
+          <Logo size="sm" className="shrink-0" />
 
           {/* Location selector */}
           <button className="hidden items-center gap-1 rounded-lg px-2 py-1 text-xs text-muted-foreground transition hover:bg-muted lg:flex">
