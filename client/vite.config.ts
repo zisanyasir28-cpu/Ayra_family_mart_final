@@ -27,4 +27,4 @@ export default defineConfig(({ command }) => ({
     target: 'es2022',
     sourcemap: true,
   },
-});
+}));
