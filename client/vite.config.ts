@@ -9,6 +9,10 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? `/${REPO_NAME}/` : '/',
   plugins: [react()],
   resolve: {
+    // Force a single copy of React in the monorepo — without this, npm workspace
+    // hoisting can leave a React 18 stub in the root node_modules while client
+    // has React 19, causing the "Invalid hook call" / duplicate-React crash.
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@superstore/shared': path.resolve(__dirname, '../shared/src/index.ts'),
