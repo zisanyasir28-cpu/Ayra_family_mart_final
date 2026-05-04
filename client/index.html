@@ -5,7 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Superstore — Your one-stop online shop in Bangladesh" />
-    <title>Superstore</title>
+    <title>SuperStore 🛒</title>
+    <!-- GitHub Pages SPA redirect handler -->
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem('spa_redirect');
+        if (redirect) {
+          sessionStorage.removeItem('spa_redirect');
+          history.replaceState(null, '', redirect || '/');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

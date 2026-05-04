@@ -2,7 +2,11 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-export default defineConfig({
+const REPO_NAME = 'Ayra_family_mart_final';
+
+export default defineConfig(({ command }) => ({
+  // In production (GitHub Pages) serve under /Ayra_family_mart_final/
+  base: command === 'build' ? `/${REPO_NAME}/` : '/',
   plugins: [react()],
   resolve: {
     alias: {
