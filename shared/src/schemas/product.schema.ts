@@ -1,22 +1,46 @@
 import { z } from 'zod';
 import { ProductStatus, SortOrder } from '../constants/enums';
 
+// ─── FormData-compatible helpers ─────────────────────────────────────────────
+// These preprocessors allow the schema to accept values from both
+// JSON bodies (typed) and multipart/form-data bodies (all strings).
+
+const coerceBool = z.preprocess(
+  (v) => (typeof v === 'boolean' ? v : v === 'true'),
+  z.boolean(),
+);
+
+const coerceTags = z.preprocess(
+  (v) => {
+    if (Array.isArray(v)) return v;
+    if (typeof v === 'string') {
+      try {
+        return JSON.parse(v);
+      } catch {
+        return v ? v.split(',').map((s) => s.trim()).filter(Boolean) : [];
+      }
+    }
+    return [];
+  },
+  z.array(z.string().max(50)).max(20),
+);
+
 export const createProductSchema = z.object({
   name: z.string().min(2).max(255),
   description: z.string().min(10).max(5000),
   sku: z.string().min(1).max(100),
   barcode: z.string().max(100).optional(),
-  priceInPaisa: z.number().int().positive('Price must be a positive integer'),
-  comparePriceInPaisa: z.number().int().positive().optional(),
-  costPriceInPaisa: z.number().int().positive().optional(),
-  stockQuantity: z.number().int().min(0),
-  lowStockThreshold: z.number().int().min(0).default(10),
+  priceInPaisa: z.coerce.number().int().positive('Price must be a positive integer'),
+  comparePriceInPaisa: z.coerce.number().int().positive().optional(),
+  costPriceInPaisa: z.coerce.number().int().positive().optional(),
+  stockQuantity: z.coerce.number().int().min(0),
+  lowStockThreshold: z.coerce.number().int().min(0).default(10),
   unit: z.string().min(1).max(50).default('piece'),
-  weight: z.number().positive().optional(),
+  weight: z.coerce.number().positive().optional(),
   categoryId: z.string().uuid(),
   brandId: z.string().uuid().optional(),
-  tags: z.array(z.string().max(50)).max(20).default([]),
-  isFeatured: z.boolean().default(false),
+  tags: coerceTags.default([]),
+  isFeatured: coerceBool.default(false),
   status: z.nativeEnum(ProductStatus).default(ProductStatus.ACTIVE),
 });
 

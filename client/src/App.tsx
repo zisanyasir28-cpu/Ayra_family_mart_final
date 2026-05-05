@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import CustomerLayout from './components/layouts/CustomerLayout';
+import AdminLayout    from './components/layouts/AdminLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
@@ -14,6 +15,10 @@ const LoginPage           = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage        = lazy(() => import('./pages/auth/RegisterPage'));
 const ForgotPasswordPage  = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage   = lazy(() => import('./pages/auth/ResetPasswordPage'));
+
+// Admin
+const AdminProductsPage   = lazy(() => import('./pages/admin/products/ProductsListPage'));
+const AdminCategoriesPage = lazy(() => import('./pages/admin/categories/CategoriesPage'));
 
 // ─── Loaders ─────────────────────────────────────────────────────────────────
 
@@ -29,6 +34,14 @@ function AuthLoader() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-teal-50">
       <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+    </div>
+  );
+}
+
+function AdminLoader() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
     </div>
   );
 }
@@ -71,6 +84,33 @@ export default function App() {
           </Suspense>
         }
       />
+
+      {/* ── Admin panel — under AdminLayout (auth check inside layout) ──── */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="/admin/products" replace />} />
+        <Route
+          path="products"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminProductsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="categories"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminCategoriesPage />
+            </Suspense>
+          }
+        />
+        {/* Placeholder admin pages */}
+        <Route path="orders"    element={<AdminPlaceholder title="Orders"    emoji="📦" />} />
+        <Route path="customers" element={<AdminPlaceholder title="Customers" emoji="👥" />} />
+        <Route path="coupons"   element={<AdminPlaceholder title="Coupons"   emoji="🎫" />} />
+        <Route path="campaigns" element={<AdminPlaceholder title="Campaigns" emoji="📣" />} />
+        <Route path="settings"  element={<AdminPlaceholder title="Settings"  emoji="⚙️" />} />
+      </Route>
 
       {/* ── Customer storefront — under CustomerLayout ───────────────────── */}
       <Route element={<CustomerLayout />}>
@@ -142,6 +182,16 @@ function PlaceholderPage({ title, emoji }: { title: string; emoji: string }) {
       <span className="text-7xl">{emoji}</span>
       <h1 className="text-2xl font-bold text-foreground">{title}</h1>
       <p className="text-muted-foreground">Coming in the next phase.</p>
+    </div>
+  );
+}
+
+function AdminPlaceholder({ title, emoji }: { title: string; emoji: string }) {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+      <span className="text-6xl">{emoji}</span>
+      <h2 className="text-xl font-bold text-foreground">{title}</h2>
+      <p className="text-sm text-muted-foreground">Coming in a future phase.</p>
     </div>
   );
 }
