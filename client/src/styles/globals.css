@@ -4,82 +4,237 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 142 72% 29%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    /* ── Core semantic tokens ─────────────────────────────────────────────── */
+    --background:          45 30% 98%;
+    --foreground:          215 25% 12%;
+    --card:                0 0% 100%;
+    --card-foreground:     215 25% 12%;
+    --popover:             0 0% 100%;
+    --popover-foreground:  215 25% 12%;
+
+    /* Primary — rich forest green */
+    --primary:             142 70% 28%;
+    --primary-foreground:  0 0% 98%;
+
+    /* Secondary — soft green tint */
+    --secondary:           142 35% 93%;
+    --secondary-foreground: 142 50% 20%;
+
+    /* Muted */
+    --muted:               210 20% 96%;
+    --muted-foreground:    215 16% 47%;
+
+    /* Accent — warm amber/gold */
+    --accent:              43 96% 56%;
+    --accent-foreground:   215 25% 12%;
+
+    /* Destructive */
+    --destructive:         0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142 72% 29%;
-    --radius: 0.5rem;
+
+    /* Border + Input */
+    --border:              214 20% 91%;
+    --input:               214 20% 91%;
+    --ring:                142 70% 28%;
+
+    /* Radius */
+    --radius:              0.625rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 142 72% 42%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background:          215 28% 9%;
+    --foreground:          210 20% 96%;
+    --card:                215 25% 12%;
+    --card-foreground:     210 20% 96%;
+    --popover:             215 25% 12%;
+    --popover-foreground:  210 20% 96%;
+    --primary:             142 68% 42%;
+    --primary-foreground:  0 0% 98%;
+    --secondary:           215 20% 18%;
+    --secondary-foreground: 210 20% 96%;
+    --muted:               215 20% 18%;
+    --muted-foreground:    215 16% 60%;
+    --accent:              43 90% 50%;
+    --accent-foreground:   215 25% 12%;
+    --destructive:         0 62% 35%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142 72% 42%;
+    --border:              215 20% 20%;
+    --input:               215 20% 20%;
+    --ring:                142 68% 42%;
   }
 }
 
+/* ── Base styles ──────────────────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  ::selection {
+    background: hsl(142 70% 28% / 0.18);
+    color: hsl(142 70% 20%);
   }
 }
 
+/* ── Scrollbar utilities ──────────────────────────────────────────────────── */
 @layer utilities {
-  /* Hide scrollbar while keeping scroll functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 9999px;
   }
 }
 
-/* ── Marquee animation for the announcement bar ───────────────────────────── */
+/* ── Gradient text utilities ──────────────────────────────────────────────── */
+@layer utilities {
+  .text-gradient-green {
+    background: linear-gradient(135deg, hsl(142 70% 28%), hsl(160 65% 38%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-gold {
+    background: linear-gradient(135deg, hsl(38 92% 50%), hsl(43 96% 60%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-fire {
+    background: linear-gradient(135deg, hsl(0 84% 60%), hsl(22 90% 55%), hsl(38 92% 55%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ── Glass morphism ───────────────────────────────────────────────────────── */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-md bg-white/80 border border-white/40;
+  }
+  .glass-dark {
+    @apply backdrop-blur-md bg-slate-900/80 border border-white/10;
+  }
+  .glass-green {
+    @apply backdrop-blur-md bg-green-600/20 border border-white/20;
+  }
+}
+
+/* ── Mesh gradient background ─────────────────────────────────────────────── */
+.bg-mesh-green {
+  background-color: hsl(142 70% 28%);
+  background-image:
+    radial-gradient(ellipse 80% 80% at 10% 10%, hsl(142 70% 40% / 0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 90% 15%, hsl(160 65% 38% / 0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 70% at 80% 85%, hsl(170 60% 32% / 0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, hsl(142 70% 22% / 0.6) 0%, transparent 55%);
+}
+
+/* ── Shimmer skeleton ─────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--border)) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% auto;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* ── Marquee ──────────────────────────────────────────────────────────────── */
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-
 .animate-marquee {
-  animation: marquee 28s linear infinite;
+  animation: marquee 30s linear infinite;
+}
+.animate-marquee:hover { animation-play-state: paused; }
+
+/* ── Float animation ──────────────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(2deg); }
+  66%       { transform: translateY(-4px) rotate(-2deg); }
+}
+.animate-float       { animation: float 3.5s ease-in-out infinite; }
+.animate-float-slow  { animation: float-delayed 5s ease-in-out infinite; }
+
+/* ── Pulse glow ───────────────────────────────────────────────────────────── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.35); }
+  50%       { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+/* ── Spin slow ────────────────────────────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
+/* ── Breathe ──────────────────────────────────────────────────────────────── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50%       { transform: scale(1.25); opacity: 0.1; }
+}
+.animate-breathe { animation: breathe 3s ease-in-out infinite; }
+
+/* ── Live dot ─────────────────────────────────────────────────────────────── */
+@keyframes live-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.7; }
+}
+.animate-live { animation: live-dot 1s ease-in-out infinite; }
+
+/* ── Card hover lift (pure CSS fallback) ──────────────────────────────────── */
+@layer utilities {
+  .card-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-lift:hover {
+    @apply -translate-y-1.5 shadow-xl;
+  }
+}
+
+/* ── Section heading style ────────────────────────────────────────────────── */
+@layer components {
+  .section-label {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider;
+  }
+  .section-title {
+    @apply text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl;
+  }
+  .section-header {
+    @apply flex items-end justify-between;
+  }
 }

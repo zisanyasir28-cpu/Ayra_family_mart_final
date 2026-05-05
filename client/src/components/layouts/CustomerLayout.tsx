@@ -1,47 +1,51 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Logo } from '../common/Logo';
-import { CartDrawer } from '../CartDrawer';
+import { Logo }        from '../common/Logo';
+import { CartDrawer }  from '../CartDrawer';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery }    from '@tanstack/react-query';
 import {
-  Search,
-  ShoppingCart,
-  Heart,
-  User,
-  MapPin,
-  Menu,
-  X,
-  ChevronDown,
-  Home,
-  LayoutGrid,
-  Package,
-  LogOut,
-  Settings,
-  Zap,
+  Search, ShoppingCart, Heart, User, MapPin, Menu, X,
+  ChevronDown, Home, LayoutGrid, Package, LogOut, Settings, Zap,
+  Phone, Mail as MailIcon,
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { useCartStore } from '../../store/cartStore';
-import { useAuthStore } from '../../store/authStore';
+import { cn }              from '../../lib/utils';
+import { useCartStore }    from '../../store/cartStore';
+import { useAuthStore }    from '../../store/authStore';
 import { fetchCategories } from '../../services/categories';
 import type { ApiCategory } from '../../types/api';
+
+// ─── Category emoji helper ────────────────────────────────────────────────────
+
+function getCategoryEmoji(slug: string): string {
+  const map: Record<string, string> = {
+    fruits: '🍎', vegetables: '🥦', dairy: '🥛', meat: '🥩',
+    fish: '🐟', bakery: '🍞', beverages: '🧃', snacks: '🍿',
+    grocery: '🛒', cleaning: '🧹', personal: '🧴', electronics: '📱',
+    clothing: '👕', household: '🏠', baby: '👶', health: '💊',
+  };
+  for (const [key, emoji] of Object.entries(map)) {
+    if (slug.includes(key)) return emoji;
+  }
+  return '📦';
+}
 
 // ─── Announcement Bar ─────────────────────────────────────────────────────────
 
 function AnnouncementBar() {
   return (
-    <div className="bg-green-700 py-2 overflow-hidden">
+    <div className="overflow-hidden bg-gradient-to-r from-green-700 via-green-600 to-teal-600 py-2">
       <div className="flex whitespace-nowrap animate-marquee">
         {[0, 1].map((i) => (
-          <span key={i} className="mx-8 inline-flex items-center gap-6 text-sm font-medium text-white">
-            <span>🚚 Free delivery on orders above ৳999</span>
-            <span className="opacity-50">•</span>
-            <span>🎉 Use <strong>WELCOME10</strong> for 10% off your first order</span>
-            <span className="opacity-50">•</span>
-            <span>🌿 Ayra Family Mart — Fresh · Fast · Trusted</span>
-            <span className="opacity-50">•</span>
-            <span>📦 Same-day delivery in Dhaka</span>
-            <span className="opacity-50">•</span>
+          <span key={i} className="mx-6 inline-flex items-center gap-5 text-xs font-medium text-white/90 sm:text-sm">
+            <span className="flex items-center gap-1.5">🚚 <strong>Free delivery</strong> on orders above ৳999</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1.5">🎉 Use <strong className="text-yellow-300">WELCOME10</strong> for 10% off your first order</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1.5">⚡ Express delivery in <strong>60 minutes</strong> in Dhaka</span>
+            <span className="text-white/30">•</span>
+            <span className="flex items-center gap-1.5">🌿 <strong>Ayra Family Mart</strong> — Fresh · Fast · Trusted</span>
+            <span className="text-white/30">•</span>
           </span>
         ))}
       </div>
@@ -52,7 +56,8 @@ function AnnouncementBar() {
 // ─── Search Bar ───────────────────────────────────────────────────────────────
 
 function SearchBar() {
-  const [query, setQuery] = useState('');
+  const [query,   setQuery]   = useState('');
+  const [focused, setFocused] = useState(false);
   const navigate = useNavigate();
 
   function handleSubmit(e: React.FormEvent) {
@@ -62,21 +67,44 @@ function SearchBar() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex-1 max-w-[40%]">
-      <div className="relative flex items-center">
+    <form onSubmit={handleSubmit} className="flex-1 max-w-[42%]">
+      <div
+        className={cn(
+          'relative flex items-center overflow-hidden rounded-2xl border bg-muted/70 transition-all duration-200',
+          focused
+            ? 'border-green-500 bg-white shadow-glow-green ring-2 ring-green-500/15'
+            : 'border-border hover:border-border/80',
+        )}
+      >
+        <Search
+          className={cn(
+            'absolute left-3.5 h-4 w-4 shrink-0 transition-colors',
+            focused ? 'text-green-600' : 'text-muted-foreground',
+          )}
+        />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           placeholder="Search groceries, vegetables, dairy..."
-          className="w-full rounded-xl border border-border bg-muted py-2.5 pl-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition"
+          className="w-full bg-transparent py-2.5 pl-10 pr-12 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none"
         />
-        <button
-          type="submit"
-          className="absolute right-2 flex h-7 w-7 items-center justify-center rounded-lg bg-green-600 text-white transition hover:bg-green-700"
-        >
-          <Search className="h-3.5 w-3.5" />
-        </button>
+        <AnimatePresence>
+          {query.length > 0 && (
+            <motion.button
+              type="submit"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.15 }}
+              className="absolute right-2 flex h-7 w-7 items-center justify-center rounded-xl bg-green-600 text-white shadow-sm transition hover:bg-green-700"
+            >
+              <Search className="h-3.5 w-3.5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
     </form>
   );
@@ -91,11 +119,11 @@ function CartButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="relative flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
+      className="relative flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted active:scale-95"
       aria-label={`Cart (${count} items)`}
     >
       <ShoppingCart className="h-5 w-5" />
-      <span className="hidden sm:inline">Cart</span>
+      <span className="hidden font-semibold sm:inline">Cart</span>
       <AnimatePresence>
         {count > 0 && (
           <motion.span
@@ -103,7 +131,8 @@ function CartButton({ onClick }: { onClick: () => void }) {
             initial={{ scale: 0.4, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.4, opacity: 0 }}
-            className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white"
+            transition={{ type: 'spring', stiffness: 350, damping: 18 }}
+            className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-extrabold text-white shadow-sm"
           >
             {count > 99 ? '99+' : count}
           </motion.span>
@@ -120,7 +149,6 @@ function UserMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handler(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -133,65 +161,85 @@ function UserMenu() {
     return (
       <Link
         to="/login"
-        className="flex items-center gap-1.5 rounded-xl border border-green-600 px-3 py-2 text-sm font-medium text-green-700 transition hover:bg-green-50"
+        className="flex items-center gap-1.5 rounded-xl border border-green-500/30 bg-green-50 px-3.5 py-2 text-sm font-semibold text-green-700 transition hover:bg-green-100 hover:border-green-500/50 active:scale-95"
       >
         <User className="h-4 w-4" />
-        Login
+        <span className="hidden sm:inline">Login</span>
       </Link>
     );
   }
+
+  const initials = user?.name
+    .split(' ')
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase() ?? '?';
 
   return (
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-muted"
+        className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition hover:bg-muted active:scale-95"
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-sm font-semibold text-green-800">
-          {user?.name.charAt(0).toUpperCase()}
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-teal-600 text-xs font-extrabold text-white shadow-sm">
+          {initials}
         </div>
-        <span className="hidden text-sm font-medium text-foreground md:inline">
+        <span className="hidden max-w-[80px] truncate text-sm font-semibold text-foreground md:inline">
           {user?.name.split(' ')[0]}
         </span>
-        <ChevronDown className={cn('h-3.5 w-3.5 text-muted-foreground transition', open && 'rotate-180')} />
+        <ChevronDown
+          className={cn(
+            'hidden h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 md:block',
+            open && 'rotate-180',
+          )}
+        />
       </button>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.96 }}
+            initial={{ opacity: 0, y: -8, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.96 }}
-            transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full z-50 mt-1 w-48 overflow-hidden rounded-xl border border-border bg-card shadow-lg"
+            exit={{ opacity: 0, y: -8, scale: 0.95 }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
+            className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-2xl border border-border bg-card shadow-float"
           >
-            <div className="border-b border-border px-4 py-3">
-              <p className="text-sm font-semibold text-foreground">{user?.name}</p>
-              <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+            {/* Profile header */}
+            <div className="bg-gradient-to-br from-green-50 to-teal-50 px-4 py-3.5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-teal-600 text-sm font-extrabold text-white">
+                  {initials}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-foreground">{user?.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+                </div>
+              </div>
             </div>
-            <nav className="py-1">
-              <Link
-                to="/account"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-foreground transition hover:bg-muted"
-              >
-                <Settings className="h-4 w-4" />
-                My Account
-              </Link>
-              <Link
-                to="/orders"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-foreground transition hover:bg-muted"
-              >
-                <Package className="h-4 w-4" />
-                My Orders
-              </Link>
+
+            <nav className="p-1.5">
+              {[
+                { to: '/account', icon: Settings, label: 'My Account' },
+                { to: '/orders',  icon: Package,  label: 'My Orders'  },
+              ].map(({ to, icon: Icon, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm text-foreground transition hover:bg-muted"
+                >
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  {label}
+                </Link>
+              ))}
+              <div className="my-1.5 h-px bg-border" />
               <button
                 onClick={() => { clearAuth(); setOpen(false); }}
-                className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 transition hover:bg-red-50"
+                className="flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm text-red-600 transition hover:bg-red-50"
               >
                 <LogOut className="h-4 w-4" />
-                Logout
+                Sign Out
               </button>
             </nav>
           </motion.div>
@@ -225,32 +273,62 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto bg-card shadow-xl"
+            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+            className="fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col overflow-hidden bg-card shadow-float"
           >
-            <div className="flex items-center justify-between border-b border-border p-4">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-border bg-gradient-to-r from-green-50 to-teal-50 p-4">
               <Logo size="sm" />
-              <button onClick={onClose} className="rounded-lg p-1.5 transition hover:bg-muted">
-                <X className="h-5 w-5" />
+              <button
+                onClick={onClose}
+                className="flex h-8 w-8 items-center justify-center rounded-xl transition hover:bg-white/80 active:scale-90"
+              >
+                <X className="h-4.5 w-4.5" />
               </button>
             </div>
-            <nav className="p-4">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+
+            {/* Categories */}
+            <div className="flex-1 overflow-y-auto p-3">
+              <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Categories
               </p>
-              {categories.map((cat) => (
+              <nav className="space-y-0.5">
                 <Link
-                  key={cat.id}
-                  to={`/products?categoryId=${cat.id}`}
+                  to="/products"
                   onClick={onClose}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-muted"
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-green-700 transition hover:bg-green-50"
                 >
-                  <span className="text-xl">{getCategoryEmoji(cat.slug)}</span>
-                  <span>{cat.name}</span>
-                  <span className="ml-auto text-xs text-muted-foreground">{cat._count.products}</span>
+                  <LayoutGrid className="h-4 w-4" />
+                  All Products
                 </Link>
-              ))}
-            </nav>
+                <Link
+                  to="/products?deals=true"
+                  onClick={onClose}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                >
+                  <Zap className="h-4 w-4" />
+                  Flash Deals
+                  <span className="ml-auto rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white">HOT</span>
+                </Link>
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    to={`/products?categoryId=${cat.id}`}
+                    onClick={onClose}
+                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition hover:bg-muted"
+                  >
+                    <span className="text-lg leading-none">{getCategoryEmoji(cat.slug)}</span>
+                    <span className="flex-1">{cat.name}</span>
+                    <span className="text-[11px] text-muted-foreground">{cat._count.products}</span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Footer */}
+            <div className="border-t border-border p-4 text-xs text-muted-foreground">
+              📍 Gulshan 2, Dhaka &nbsp;•&nbsp; 📞 +880 1700-000000
+            </div>
           </motion.aside>
         </>
       )}
@@ -262,17 +340,17 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
 
 function CategoryNav({ categories }: { categories: ApiCategory[] }) {
   return (
-    <div className="border-b border-border bg-card">
-      <div className="container flex items-center gap-1 overflow-x-auto scrollbar-hide py-0.5">
+    <div className="border-b border-border/60 bg-card/90">
+      <div className="container flex items-center gap-0.5 overflow-x-auto scrollbar-hide py-1">
         <NavLink
           to="/products"
           end
-          className={({ isActive }: { isActive: boolean }) =>
+          className={({ isActive }) =>
             cn(
-              'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition',
+              'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold transition',
               isActive
                 ? 'bg-green-50 text-green-700'
-                : 'text-foreground hover:bg-muted',
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground',
             )
           }
         >
@@ -280,29 +358,29 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
         </NavLink>
         <NavLink
           to="/products?deals=true"
-          className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50"
+          className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
         >
-          <Zap className="h-3.5 w-3.5" />
+          <Zap className="h-3.5 w-3.5 fill-red-500" />
           Deals
-          <span className="rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+          <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[9px] font-extrabold text-white leading-tight">
             HOT
           </span>
         </NavLink>
-        {categories.slice(0, 10).map((cat) => (
+        {categories.slice(0, 12).map((cat) => (
           <NavLink
             key={cat.id}
             to={`/products?categoryId=${cat.id}`}
-            className={({ isActive }: { isActive: boolean }) =>
+            className={({ isActive }) =>
               cn(
-                'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition',
+                'flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition',
                 isActive
-                  ? 'bg-green-50 text-green-700'
-                  : 'text-foreground hover:bg-muted',
+                  ? 'bg-green-50 font-semibold text-green-700'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground',
               )
             }
           >
-            <span>{getCategoryEmoji(cat.slug)}</span>
-            {cat.name}
+            <span className="text-sm leading-none">{getCategoryEmoji(cat.slug)}</span>
+            <span>{cat.name}</span>
           </NavLink>
         ))}
       </div>
@@ -314,27 +392,31 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
 
 function Footer() {
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="container py-12">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* About */}
-          <div>
-            <div className="mb-4">
-              <Logo asSpan size="sm" />
-            </div>
-            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+    <footer className="border-t border-border bg-gradient-to-b from-card to-muted/30">
+      <div className="container py-14">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+          {/* Brand */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
+            <Logo asSpan size="sm" />
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Bangladesh's most trusted family mart. Fresh groceries, household
-              essentials and more — delivered to your door.
+              essentials and more — delivered to your door, fast.
             </p>
-            <div className="flex gap-3">
-              {['facebook', 'instagram', 'twitter', 'youtube'].map((s) => (
+            <div className="mt-5 flex gap-2">
+              {[
+                { label: 'Facebook',  symbol: '𝑓' },
+                { label: 'Instagram', symbol: '◎' },
+                { label: 'X',         symbol: '𝕏' },
+                { label: 'YouTube',   symbol: '▶' },
+              ].map(({ label, symbol }) => (
                 <a
-                  key={s}
+                  key={label}
                   href="#"
-                  aria-label={s}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground transition hover:bg-green-100 hover:text-green-700"
+                  aria-label={label}
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition hover:border-green-400 hover:bg-green-50 hover:text-green-700"
                 >
-                  {s === 'facebook' ? '𝑓' : s === 'instagram' ? '◎' : s === 'twitter' ? '𝕏' : '▶'}
+                  {symbol}
                 </a>
               ))}
             </div>
@@ -342,19 +424,22 @@ function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h4 className="mb-4 text-xs font-extrabold uppercase tracking-widest text-foreground/70">
               Quick Links
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {[
-                { label: 'Home', to: '/' },
-                { label: 'All Products', to: '/products' },
-                { label: 'Flash Deals', to: '/products?deals=true' },
-                { label: 'New Arrivals', to: '/products?sortBy=newest' },
-                { label: 'Best Sellers', to: '/products?sortBy=popular' },
+                { label: 'Home',          to: '/'                         },
+                { label: 'All Products',  to: '/products'                 },
+                { label: 'Flash Deals',   to: '/products?deals=true'      },
+                { label: 'New Arrivals',  to: '/products?sortBy=newest'   },
+                { label: 'Best Sellers',  to: '/products?sortBy=popular'  },
               ].map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="text-sm text-muted-foreground transition hover:text-green-700">
+                  <Link
+                    to={l.to}
+                    className="text-sm text-muted-foreground transition-all hover:translate-x-1 hover:text-green-700 inline-block"
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -362,21 +447,18 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Customer Service */}
+          {/* Help */}
           <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h4 className="mb-4 text-xs font-extrabold uppercase tracking-widest text-foreground/70">
               Customer Service
             </h4>
-            <ul className="space-y-2">
-              {[
-                'Help Center',
-                'Track Order',
-                'Return Policy',
-                'Privacy Policy',
-                'Terms of Service',
-              ].map((l) => (
+            <ul className="space-y-2.5">
+              {['Help Center', 'Track Order', 'Return Policy', 'Privacy Policy', 'Terms of Service'].map((l) => (
                 <li key={l}>
-                  <a href="#" className="text-sm text-muted-foreground transition hover:text-green-700">
+                  <a
+                    href="#"
+                    className="text-sm text-muted-foreground transition-all hover:translate-x-1 hover:text-green-700 inline-block"
+                  >
                     {l}
                   </a>
                 </li>
@@ -386,23 +468,35 @@ function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h4 className="mb-4 text-xs font-extrabold uppercase tracking-widest text-foreground/70">
               Contact Us
             </h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>📍 Gulshan 2, Dhaka 1212</li>
-              <li>📞 +880 1700-000000</li>
-              <li>✉️ support@ayrafamilymart.com.bd</li>
-              <li className="pt-2 font-medium text-foreground">Working Hours</li>
-              <li>Sat – Thu: 8am – 10pm</li>
-              <li>Friday: 2pm – 10pm</li>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
+                Gulshan 2, Dhaka 1212, Bangladesh
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 shrink-0 text-green-600" />
+                +880 1700-000000
+              </li>
+              <li className="flex items-center gap-2">
+                <MailIcon className="h-4 w-4 shrink-0 text-green-600" />
+                support@ayrafamilymart.com.bd
+              </li>
+              <li className="pt-1">
+                <div className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Working Hours</div>
+                <div className="mt-1">Sat – Thu: 8am – 10pm</div>
+                <div>Friday: 2pm – 10pm</div>
+              </li>
             </ul>
-            {/* Payment logos */}
+
+            {/* Payment methods */}
             <div className="mt-4 flex flex-wrap gap-2">
-              {['SSLCommerz', 'bKash', 'COD'].map((p) => (
+              {['SSLCommerz', 'bKash', 'Nagad', 'COD'].map((p) => (
                 <span
                   key={p}
-                  className="rounded-md border border-border bg-muted px-2 py-1 text-[10px] font-semibold text-muted-foreground"
+                  className="rounded-lg border border-border bg-muted px-2.5 py-1 text-[10px] font-bold text-muted-foreground"
                 >
                   {p}
                 </span>
@@ -411,9 +505,14 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-t border-border bg-muted/50 py-4">
-        <div className="container text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Ayra Family Mart. All rights reserved.
+
+      {/* Bottom bar */}
+      <div className="border-t border-border bg-muted/40 py-4">
+        <div className="container flex flex-col items-center justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
+          <span>© {new Date().getFullYear()} Ayra Family Mart. All rights reserved.</span>
+          <span className="flex items-center gap-1">
+            Made with <span className="text-red-500">❤️</span> in Bangladesh
+          </span>
         </div>
       </div>
     </footer>
@@ -427,157 +526,139 @@ function BottomTabBar({ onCartClick }: { onCartClick: () => void }) {
   const count = itemCount();
 
   const navTabs = [
-    { icon: Home,       label: 'Home',       to: '/',                      end: true  },
-    { icon: LayoutGrid, label: 'Categories', to: '/products',              end: false },
+    { icon: Home,       label: 'Home',       to: '/',       end: true  },
+    { icon: LayoutGrid, label: 'Browse',     to: '/products', end: false },
     { icon: Search,     label: 'Search',     to: '/products?focus=search', end: false },
-    { icon: User,       label: 'Account',    to: '/account',               end: false },
+    { icon: User,       label: 'Account',    to: '/account', end: false },
   ] as const;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-card md:hidden">
-      {/* First two nav tabs */}
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-card/95 backdrop-blur-md shadow-float md:hidden">
       {navTabs.slice(0, 2).map(({ icon: Icon, label, to, end }) => (
         <NavLink
           key={to}
           to={to}
           end={end}
-          className={({ isActive }: { isActive: boolean }) =>
+          className={({ isActive }) =>
             cn(
-              'relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium transition',
+              'flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors',
               isActive ? 'text-green-700' : 'text-muted-foreground',
             )
           }
         >
-          <Icon className="h-5 w-5" />
-          {label}
+          {({ isActive }) => (
+            <>
+              <Icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
+              {label}
+            </>
+          )}
         </NavLink>
       ))}
 
-      {/* Cart tab — opens drawer */}
+      {/* Cart centre button */}
       <button
         onClick={onCartClick}
-        className="relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium text-muted-foreground transition hover:text-green-700"
-        aria-label={`Cart (${count} items)`}
+        className="relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[10px] font-semibold text-muted-foreground transition hover:text-green-700"
       >
         <div className="relative">
           <ShoppingCart className="h-5 w-5" />
-          {count > 0 && (
-            <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-[9px] font-bold text-white">
-              {count > 9 ? '9+' : count}
-            </span>
-          )}
+          <AnimatePresence>
+            {count > 0 && (
+              <motion.span
+                key={count}
+                initial={{ scale: 0.4 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.4 }}
+                className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-[9px] font-extrabold text-white"
+              >
+                {count > 9 ? '9+' : count}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
         Cart
       </button>
 
-      {/* Remaining nav tabs */}
       {navTabs.slice(2).map(({ icon: Icon, label, to, end }) => (
         <NavLink
           key={to}
           to={to}
           end={end}
-          className={({ isActive }: { isActive: boolean }) =>
+          className={({ isActive }) =>
             cn(
-              'relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium transition',
+              'flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors',
               isActive ? 'text-green-700' : 'text-muted-foreground',
             )
           }
         >
-          <Icon className="h-5 w-5" />
-          {label}
+          {({ isActive }) => (
+            <>
+              <Icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
+              {label}
+            </>
+          )}
         </NavLink>
       ))}
     </nav>
   );
 }
 
-// ─── Emoji helper ─────────────────────────────────────────────────────────────
-
-function getCategoryEmoji(slug: string): string {
-  const map: Record<string, string> = {
-    fruits: '🍎',
-    vegetables: '🥦',
-    dairy: '🥛',
-    meat: '🥩',
-    fish: '🐟',
-    bakery: '🍞',
-    beverages: '🧃',
-    snacks: '🍿',
-    grocery: '🛒',
-    cleaning: '🧹',
-    personal: '🧴',
-    electronics: '📱',
-    clothing: '👕',
-    household: '🏠',
-    baby: '👶',
-    health: '💊',
-  };
-  for (const [key, emoji] of Object.entries(map)) {
-    if (slug.includes(key)) return emoji;
-  }
-  return '📦';
-}
-
 // ─── Main Layout ──────────────────────────────────────────────────────────────
 
 export default function CustomerLayout() {
-  const [scrolled, setScrolled]     = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [cartOpen, setCartOpen]     = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [drawerOpen,  setDrawerOpen]  = useState(false);
+  const [cartOpen,    setCartOpen]    = useState(false);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
-    queryFn: fetchCategories,
-    staleTime: 1000 * 60 * 10, // 10 min
+    queryFn:  fetchCategories,
+    staleTime: 1000 * 60 * 10,
   });
 
   useEffect(() => {
-    function onScroll() {
-      setScrolled(window.scrollY > 10);
-    }
+    function onScroll() { setScrolled(window.scrollY > 12); }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Announcement bar */}
       <AnnouncementBar />
 
-      {/* Sticky navbar */}
+      {/* Sticky header */}
       <header
         className={cn(
-          'sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-md transition-shadow',
-          scrolled && 'shadow-sm',
+          'sticky top-0 z-30 border-b bg-card/95 backdrop-blur-md transition-all duration-200',
+          scrolled
+            ? 'border-border/80 shadow-md'
+            : 'border-transparent shadow-none',
         )}
       >
         <div className="container flex items-center gap-3 py-3">
           {/* Mobile hamburger */}
           <button
             onClick={() => setDrawerOpen(true)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition hover:bg-muted md:hidden"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition hover:bg-muted active:scale-90 md:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
 
-          {/* Logo */}
           <Logo size="sm" className="shrink-0" />
 
-          {/* Location selector */}
-          <button className="hidden items-center gap-1 rounded-lg px-2 py-1 text-xs text-muted-foreground transition hover:bg-muted lg:flex">
+          {/* Location */}
+          <button className="hidden items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs text-muted-foreground transition hover:bg-muted lg:flex">
             <MapPin className="h-3.5 w-3.5 shrink-0 text-green-600" />
-            <span className="max-w-[80px] truncate">Dhaka</span>
+            <span className="max-w-[80px] truncate font-medium">Dhaka</span>
             <ChevronDown className="h-3 w-3" />
           </button>
 
-          {/* Search */}
           <SearchBar />
 
-          {/* Actions */}
           <div className="ml-auto flex items-center gap-1">
             <Link
               to="/wishlist"
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-foreground transition hover:bg-muted"
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground transition hover:bg-muted hover:text-foreground"
               aria-label="Wishlist"
             >
               <Heart className="h-5 w-5" />
@@ -587,28 +668,23 @@ export default function CustomerLayout() {
           </div>
         </div>
 
-        {/* Category nav strip */}
         <CategoryNav categories={categories} />
       </header>
 
-      {/* Mobile category drawer */}
       <MobileDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         categories={categories}
       />
 
-      {/* Cart drawer (slides from right on all screen sizes) */}
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
-      {/* Page content */}
       <main className="flex-1 pb-16 md:pb-0">
         <Outlet />
       </main>
 
       <Footer />
 
-      {/* Mobile bottom tab bar */}
       <BottomTabBar onCartClick={() => setCartOpen(true)} />
     </div>
   );
