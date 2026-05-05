@@ -85,8 +85,13 @@ api.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError, null);
       setAccessToken(null);
-      // Redirect to login — the auth store will handle this via an event
-      window.dispatchEvent(new CustomEvent('auth:logout'));
+      // Redirect to login — the auth store will handle this via an event.
+      // Pass the current path so the login page can redirect back after sign-in.
+      window.dispatchEvent(
+        new CustomEvent('auth:logout', {
+          detail: { from: window.location.pathname + window.location.search },
+        }),
+      );
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

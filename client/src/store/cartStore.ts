@@ -1,83 +1,129 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Cart, CartItem } from '@superstore/shared';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+export interface CartItem {
+  productId: string;
+  variantId?: string;
+  name: string;
+  slug: string;
+  image: string;
+  priceInPaisa: number;
+  quantity: number;
+  stock: number;
+  unit: string;
+}
+
+export interface AppliedCoupon {
+  code: string;
+  discountInPaisa: number;
+}
+
+// ─── Key match helper ─────────────────────────────────────────────────────────
+
+function sameItem(a: CartItem, productId: string, variantId?: string): boolean {
+  return a.productId === productId && a.variantId === variantId;
+}
+
+// ─── Store interface ──────────────────────────────────────────────────────────
 
 interface CartState {
-  cart: Cart;
-  addItem: (item: CartItem) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  removeItem: (productId: string) => void;
+  items: CartItem[];
+  coupon: AppliedCoupon | null;
+
+  // ── Computed selectors (call as functions) ──────────────────────────────────
+  itemCount: () => number;
+  subtotalInPaisa: () => number;
+  deliveryFeeInPaisa: () => number;
+  totalInPaisa: () => number;
+
+  // ── Actions ─────────────────────────────────────────────────────────────────
+  addItem: (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => void;
+  removeItem: (productId: string, variantId?: string) => void;
+  updateQuantity: (productId: string, quantity: number, variantId?: string) => void;
   clearCart: () => void;
-  setCoupon: (code: string | null, discountInPaisa: number) => void;
+  applyCoupon: (code: string, discountInPaisa: number) => void;
+  removeCoupon: () => void;
 }
 
-const EMPTY_CART: Cart = {
-  items: [],
-  subtotalInPaisa: 0,
-  discountInPaisa: 0,
-  shippingInPaisa: 0,
-  totalInPaisa: 0,
-  couponCode: null,
-};
-
-function recalculate(cart: Cart): Cart {
-  const subtotalInPaisa = cart.items.reduce(
-    (sum, item) => sum + item.priceInPaisa * item.quantity,
-    0,
-  );
-  const totalInPaisa = Math.max(
-    0,
-    subtotalInPaisa - cart.discountInPaisa + cart.shippingInPaisa,
-  );
-  return { ...cart, subtotalInPaisa, totalInPaisa };
-}
+// ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set) => ({
-      cart: EMPTY_CART,
+    (set, get) => ({
+      items: [],
+      coupon: null,
 
-      addItem: (newItem) =>
+      // ── Selectors ────────────────────────────────────────────────────────────
+      itemCount: () => get().items.reduce((s, i) => s + i.quantity, 0),
+
+      subtotalInPaisa: () =>
+        get().items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0),
+
+      deliveryFeeInPaisa: () => {
+        const sub = get().items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0);
+        return sub > 0 && sub < 99_900 ? 6_000 : 0;
+      },
+
+      totalInPaisa: () => {
+        const sub = get().items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0);
+        const delivery = sub > 0 && sub < 99_900 ? 6_000 : 0;
+        const discount = get().coupon?.discountInPaisa ?? 0;
+        return Math.max(0, sub + delivery - discount);
+      },
+
+      // ── Actions ──────────────────────────────────────────────────────────────
+      addItem: ({ quantity = 1, ...item }) =>
         set((state) => {
-          const existing = state.cart.items.find(
-            (i) => i.productId === newItem.productId,
+          const existing = state.items.find((i) =>
+            sameItem(i, item.productId, item.variantId),
           );
-          const items = existing
-            ? state.cart.items.map((i) =>
-                i.productId === newItem.productId
-                  ? { ...i, quantity: i.quantity + newItem.quantity }
+          if (existing) {
+            return {
+              items: state.items.map((i) =>
+                sameItem(i, item.productId, item.variantId)
+                  ? { ...i, quantity: Math.min(i.quantity + quantity, i.stock) }
                   : i,
-              )
-            : [...state.cart.items, newItem];
-          return { cart: recalculate({ ...state.cart, items }) };
+              ),
+            };
+          }
+          return {
+            items: [
+              ...state.items,
+              { ...item, quantity: Math.min(quantity, item.stock) },
+            ],
+          };
         }),
 
-      updateQuantity: (productId, quantity) =>
-        set((state) => {
-          const items =
-            quantity <= 0
-              ? state.cart.items.filter((i) => i.productId !== productId)
-              : state.cart.items.map((i) =>
-                  i.productId === productId ? { ...i, quantity } : i,
-                );
-          return { cart: recalculate({ ...state.cart, items }) };
-        }),
-
-      removeItem: (productId) =>
-        set((state) => {
-          const items = state.cart.items.filter(
-            (i) => i.productId !== productId,
-          );
-          return { cart: recalculate({ ...state.cart, items }) };
-        }),
-
-      clearCart: () => set({ cart: EMPTY_CART }),
-
-      setCoupon: (couponCode, discountInPaisa) =>
+      removeItem: (productId, variantId) =>
         set((state) => ({
-          cart: recalculate({ ...state.cart, couponCode, discountInPaisa }),
+          items: state.items.filter((i) => !sameItem(i, productId, variantId)),
         })),
+
+      updateQuantity: (productId, quantity, variantId) =>
+        set((state) => {
+          if (quantity <= 0) {
+            return {
+              items: state.items.filter((i) => !sameItem(i, productId, variantId)),
+            };
+          }
+          return {
+            items: state.items.map((i) =>
+              sameItem(i, productId, variantId)
+                ? { ...i, quantity: Math.min(quantity, i.stock) }
+                : i,
+            ),
+          };
+        }),
+
+      clearCart: () => set({ items: [], coupon: null }),
+
+      applyCoupon: (code, discountInPaisa) =>
+        set({ coupon: { code, discountInPaisa } }),
+
+      removeCoupon: () => set({ coupon: null }),
     }),
-    { name: 'superstore-cart' },
+    { name: 'ayra-cart' },
   ),
 );

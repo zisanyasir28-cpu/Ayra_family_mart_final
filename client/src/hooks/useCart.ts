@@ -2,55 +2,56 @@ import { useCartStore } from '../store/cartStore';
 import type { ApiProduct } from '../types/api';
 
 /**
- * Convenience hook that wraps cartStore and provides
- * product-aware helpers for the product card / detail page.
+ * Convenience hook — wraps cartStore and provides product-aware helpers
+ * for use in ProductCard / product detail page.
  */
 export function useCart() {
-  const { cart, addItem, updateQuantity, removeItem, clearCart, setCoupon } =
-    useCartStore();
+  const store = useCartStore();
 
   function getItemQuantity(productId: string): number {
-    return cart.items.find((i) => i.productId === productId)?.quantity ?? 0;
+    return (
+      store.items.find((i) => i.productId === productId)?.quantity ?? 0
+    );
   }
 
   function addToCart(product: ApiProduct, quantity = 1): void {
-    addItem({
-      productId: product.id,
-      quantity,
+    const image = product.images[0]?.url ?? '';
+    store.addItem({
+      productId:    product.id,
+      name:         product.name,
+      slug:         product.slug,
+      image,
       priceInPaisa: product.effectivePriceInPaisa,
-      product: {
-        id:            product.id,
-        name:          product.name,
-        slug:          product.slug,
-        images:        product.images,
-        stockQuantity: product.stockQuantity,
-        unit:          product.unit,
-      },
+      stock:        product.stockQuantity,
+      unit:         product.unit,
+      quantity,
     });
   }
 
   function increment(productId: string, currentQty: number, max: number): void {
-    if (currentQty < max) updateQuantity(productId, currentQty + 1);
+    if (currentQty < max) store.updateQuantity(productId, currentQty + 1);
   }
 
   function decrement(productId: string, currentQty: number): void {
     if (currentQty > 1) {
-      updateQuantity(productId, currentQty - 1);
+      store.updateQuantity(productId, currentQty - 1);
     } else {
-      removeItem(productId);
+      store.removeItem(productId);
     }
   }
 
   return {
-    cart,
+    items:          store.items,
+    coupon:         store.coupon,
     addToCart,
-    updateQuantity,
-    removeItem,
-    clearCart,
-    setCoupon,
+    updateQuantity: store.updateQuantity,
+    removeItem:     store.removeItem,
+    clearCart:      store.clearCart,
+    applyCoupon:    store.applyCoupon,
+    removeCoupon:   store.removeCoupon,
     getItemQuantity,
     increment,
     decrement,
-    totalItems: cart.items.reduce((s, i) => s + i.quantity, 0),
+    totalItems:     store.itemCount(),
   };
 }

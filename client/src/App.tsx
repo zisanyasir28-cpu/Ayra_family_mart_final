@@ -1,10 +1,21 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import CustomerLayout from './components/layouts/CustomerLayout';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
-// Lazy-loaded pages
-const HomePage      = lazy(() => import('./pages/customer/HomePage'));
-const ProductsPage  = lazy(() => import('./pages/customer/ProductsPage'));
+// ─── Lazy-loaded pages ────────────────────────────────────────────────────────
+
+// Storefront
+const HomePage     = lazy(() => import('./pages/customer/HomePage'));
+const ProductsPage = lazy(() => import('./pages/customer/ProductsPage'));
+
+// Auth (outside CustomerLayout — own centered layout)
+const LoginPage           = lazy(() => import('./pages/auth/LoginPage'));
+const RegisterPage        = lazy(() => import('./pages/auth/RegisterPage'));
+const ForgotPasswordPage  = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const ResetPasswordPage   = lazy(() => import('./pages/auth/ResetPasswordPage'));
+
+// ─── Loaders ─────────────────────────────────────────────────────────────────
 
 function PageLoader() {
   return (
@@ -14,11 +25,56 @@ function PageLoader() {
   );
 }
 
+function AuthLoader() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-teal-50">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+    </div>
+  );
+}
+
+// ─── App ─────────────────────────────────────────────────────────────────────
+
 export default function App() {
   return (
     <Routes>
-      {/* Customer-facing storefront under CustomerLayout */}
+      {/* ── Auth pages — standalone (no navbar/footer) ──────────────────── */}
+      <Route
+        path="/login"
+        element={
+          <Suspense fallback={<AuthLoader />}>
+            <LoginPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <Suspense fallback={<AuthLoader />}>
+            <RegisterPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <Suspense fallback={<AuthLoader />}>
+            <ForgotPasswordPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <Suspense fallback={<AuthLoader />}>
+            <ResetPasswordPage />
+          </Suspense>
+        }
+      />
+
+      {/* ── Customer storefront — under CustomerLayout ───────────────────── */}
       <Route element={<CustomerLayout />}>
+        {/* Public routes */}
         <Route
           path="/"
           element={
@@ -35,18 +91,50 @@ export default function App() {
             </Suspense>
           }
         />
-        {/* Placeholder routes — will be built in future phases */}
-        <Route path="/cart"     element={<PlaceholderPage title="Cart" emoji="🛒" />} />
+
+        {/* Protected routes — redirect to /login if unauthenticated */}
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <PlaceholderPage title="My Account" emoji="👤" />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <PlaceholderPage title="My Orders" emoji="📦" />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <PlaceholderPage title="Checkout" emoji="💳" />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Public placeholder routes */}
         <Route path="/wishlist" element={<PlaceholderPage title="Wishlist" emoji="❤️" />} />
-        <Route path="/account"  element={<PlaceholderPage title="My Account" emoji="👤" />} />
-        <Route path="/orders"   element={<PlaceholderPage title="My Orders" emoji="📦" />} />
-        <Route path="/login"    element={<PlaceholderPage title="Login" emoji="🔑" />} />
+
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
   );
 }
+
+// ─── Placeholder (removed once real pages are built) ─────────────────────────
 
 function PlaceholderPage({ title, emoji }: { title: string; emoji: string }) {
   return (

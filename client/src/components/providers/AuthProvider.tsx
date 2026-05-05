@@ -10,28 +10,39 @@ interface MeResponse {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { setUser, clearAuth, setLoading } = useAuthStore();
+  const { setUser, clearAuth } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Attempt silent token refresh on mount
+    // Attempt silent token refresh on every page load.
+    // The httpOnly refresh-token cookie is sent automatically.
     api
       .post<MeResponse>('/auth/refresh')
       .then(({ data }) => {
         setUser(data.data.user, data.data.accessToken);
       })
       .catch(() => {
+        // No valid refresh token — mark as unauthenticated.
+        // ProtectedRoute handles the redirect when needed.
         clearAuth();
       });
 
-    // Listen for forced logout from axios interceptor
-    const handleLogout = () => {
+    // Listen for forced-logout events fired by the 401 response interceptor
+    // (e.g. refresh token expired mid-session).
+    function handleLogout(e: Event) {
       clearAuth();
-      navigate('/login', { replace: true });
-    };
+      const from = (e as CustomEvent<{ from?: string }>).detail?.from;
+      const safePath = from && from !== '/login' ? from : undefined;
+      const to = safePath
+        ? `/login?redirect=${encodeURIComponent(safePath)}`
+        : '/login';
+      navigate(to, { replace: true });
+    }
+
     window.addEventListener('auth:logout', handleLogout);
     return () => window.removeEventListener('auth:logout', handleLogout);
-  }, [setUser, clearAuth, setLoading, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <>{children}</>;
 }

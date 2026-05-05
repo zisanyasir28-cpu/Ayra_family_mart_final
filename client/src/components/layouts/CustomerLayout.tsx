@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Logo } from '../common/Logo';
+import { CartDrawer } from '../CartDrawer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -83,28 +84,32 @@ function SearchBar() {
 
 // ─── Cart Button ──────────────────────────────────────────────────────────────
 
-function CartButton() {
-  const { cart } = useCartStore();
-  const totalItems = cart.items.reduce((s, i) => s + i.quantity, 0);
+function CartButton({ onClick }: { onClick: () => void }) {
+  const { itemCount } = useCartStore();
+  const count = itemCount();
 
   return (
-    <Link
-      to="/cart"
+    <button
+      onClick={onClick}
       className="relative flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
+      aria-label={`Cart (${count} items)`}
     >
       <ShoppingCart className="h-5 w-5" />
       <span className="hidden sm:inline">Cart</span>
-      {totalItems > 0 && (
-        <motion.span
-          key={totalItems}
-          initial={{ scale: 0.5 }}
-          animate={{ scale: 1 }}
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white"
-        >
-          {totalItems > 99 ? '99+' : totalItems}
-        </motion.span>
-      )}
-    </Link>
+      <AnimatePresence>
+        {count > 0 && (
+          <motion.span
+            key={count}
+            initial={{ scale: 0.4, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.4, opacity: 0 }}
+            className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white"
+          >
+            {count > 99 ? '99+' : count}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
   );
 }
 
@@ -417,25 +422,25 @@ function Footer() {
 
 // ─── Bottom Mobile Tab Bar ────────────────────────────────────────────────────
 
-function BottomTabBar() {
-  const { cart } = useCartStore();
-  const totalItems = cart.items.reduce((s, i) => s + i.quantity, 0);
+function BottomTabBar({ onCartClick }: { onCartClick: () => void }) {
+  const { itemCount } = useCartStore();
+  const count = itemCount();
 
-  const tabs = [
-    { icon: Home,        label: 'Home',       to: '/',                    isCart: false },
-    { icon: LayoutGrid,  label: 'Categories', to: '/products',            isCart: false },
-    { icon: Search,      label: 'Search',     to: '/products?focus=search', isCart: false },
-    { icon: ShoppingCart, label: 'Cart',      to: '/cart',                isCart: true  },
-    { icon: User,        label: 'Account',    to: '/account',             isCart: false },
+  const navTabs = [
+    { icon: Home,       label: 'Home',       to: '/',                      end: true  },
+    { icon: LayoutGrid, label: 'Categories', to: '/products',              end: false },
+    { icon: Search,     label: 'Search',     to: '/products?focus=search', end: false },
+    { icon: User,       label: 'Account',    to: '/account',               end: false },
   ] as const;
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-card md:hidden">
-      {tabs.map(({ icon: Icon, label, to, isCart }) => (
+      {/* First two nav tabs */}
+      {navTabs.slice(0, 2).map(({ icon: Icon, label, to, end }) => (
         <NavLink
           key={to}
           to={to}
-          end={to === '/'}
+          end={end}
           className={({ isActive }: { isActive: boolean }) =>
             cn(
               'relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium transition',
@@ -443,14 +448,42 @@ function BottomTabBar() {
             )
           }
         >
-          <div className="relative">
-            <Icon className="h-5 w-5" />
-            {isCart && totalItems > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-[9px] font-bold text-white">
-                {totalItems > 9 ? '9+' : totalItems}
-              </span>
-            )}
-          </div>
+          <Icon className="h-5 w-5" />
+          {label}
+        </NavLink>
+      ))}
+
+      {/* Cart tab — opens drawer */}
+      <button
+        onClick={onCartClick}
+        className="relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium text-muted-foreground transition hover:text-green-700"
+        aria-label={`Cart (${count} items)`}
+      >
+        <div className="relative">
+          <ShoppingCart className="h-5 w-5" />
+          {count > 0 && (
+            <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-[9px] font-bold text-white">
+              {count > 9 ? '9+' : count}
+            </span>
+          )}
+        </div>
+        Cart
+      </button>
+
+      {/* Remaining nav tabs */}
+      {navTabs.slice(2).map(({ icon: Icon, label, to, end }) => (
+        <NavLink
+          key={to}
+          to={to}
+          end={end}
+          className={({ isActive }: { isActive: boolean }) =>
+            cn(
+              'relative flex flex-1 flex-col items-center justify-center py-2 text-[10px] font-medium transition',
+              isActive ? 'text-green-700' : 'text-muted-foreground',
+            )
+          }
+        >
+          <Icon className="h-5 w-5" />
           {label}
         </NavLink>
       ))}
@@ -488,8 +521,9 @@ function getCategoryEmoji(slug: string): string {
 // ─── Main Layout ──────────────────────────────────────────────────────────────
 
 export default function CustomerLayout() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [cartOpen, setCartOpen]     = useState(false);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
@@ -548,7 +582,7 @@ export default function CustomerLayout() {
             >
               <Heart className="h-5 w-5" />
             </Link>
-            <CartButton />
+            <CartButton onClick={() => setCartOpen(true)} />
             <UserMenu />
           </div>
         </div>
@@ -557,12 +591,15 @@ export default function CustomerLayout() {
         <CategoryNav categories={categories} />
       </header>
 
-      {/* Mobile drawer */}
+      {/* Mobile category drawer */}
       <MobileDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         categories={categories}
       />
+
+      {/* Cart drawer (slides from right on all screen sizes) */}
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Page content */}
       <main className="flex-1 pb-16 md:pb-0">
@@ -572,7 +609,7 @@ export default function CustomerLayout() {
       <Footer />
 
       {/* Mobile bottom tab bar */}
-      <BottomTabBar />
+      <BottomTabBar onCartClick={() => setCartOpen(true)} />
     </div>
   );
 }
