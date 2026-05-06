@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { fetchCategories } from '../../services/categories';
 import { ArrowRightIcon } from '../common/HandIcon';
 import { cn } from '../../lib/utils';
@@ -27,119 +26,64 @@ function getMeta(slug: string) {
   return { emoji: '🛒', tint: 'from-cream/15 to-cream/5' };
 }
 
-// ─── Single accordion-style card ──────────────────────────────────────────────
-
 interface CardProps {
-  id:          string;
-  name:        string;
-  slug:        string;
-  count:       number;
-  hovered:     boolean;
-  onHover:     () => void;
-  index:       number;
+  id:    string;
+  name:  string;
+  slug:  string;
+  count: number;
+  index: number;
 }
 
-function CategoryCard({ id, name, slug, count, hovered, onHover, index }: CardProps) {
+function CategoryCard({ id, name, slug, count, index }: CardProps) {
   const meta = getMeta(slug);
 
   return (
     <motion.div
-      onMouseEnter={onHover}
-      onFocus={onHover}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ delay: index * 0.05, type: 'spring', stiffness: 200, damping: 24 }}
-      animate={{
-        flexGrow: hovered ? 4 : 1,
-      }}
-      style={{ flexBasis: 0, willChange: 'flex-grow' }}
-      className="relative min-h-[280px] sm:min-h-[360px]"
+      transition={{ delay: Math.min(index * 0.04, 0.24), type: 'spring', stiffness: 220, damping: 24 }}
+      className="h-full"
     >
       <Link
         to={`/products?categoryId=${id}`}
-        className={cn(
-          'group relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-colors duration-500',
-          hovered && 'border-saffron/40',
-        )}
+        className="group relative flex h-full w-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface p-5 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-saffron/40 active:scale-[0.98] sm:p-6"
+        style={{ willChange: 'transform' }}
       >
-        {/* Tinted background gradient */}
+        {/* Tinted background — opacity transition only (cheap) */}
         <div
           className={cn(
-            'absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-700',
+            'absolute inset-0 bg-gradient-to-br opacity-0 transition-opacity duration-500 group-hover:opacity-100',
             meta.tint,
-            hovered && 'opacity-100',
           )}
         />
-        <div className="bg-noise pointer-events-none absolute inset-0 opacity-30" />
 
-        {/* Top: emoji */}
+        {/* Top row: emoji */}
         <div className="relative z-10 flex items-start justify-between">
-          <motion.span
-            animate={{ scale: hovered ? 1.4 : 1, rotate: hovered ? -8 : 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-            className="text-5xl leading-none sm:text-6xl"
-          >
+          <span className="text-4xl leading-none transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6 sm:text-5xl">
             {meta.emoji}
-          </motion.span>
-          <AnimatePresence>
-            {hovered && (
-              <motion.span
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{    opacity: 0, x: -8 }}
-                transition={{ duration: 0.3 }}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-cream text-bg"
-              >
-                <ArrowRightIcon size={14} strokeWidth={2} className="-rotate-45" />
-              </motion.span>
-            )}
-          </AnimatePresence>
+          </span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream/0 text-cream/0 transition-all duration-300 group-hover:bg-cream group-hover:text-bg">
+            <ArrowRightIcon size={13} strokeWidth={2} className="-rotate-45" />
+          </span>
         </div>
 
-        {/* Bottom: content */}
-        <div className="relative z-10 mt-auto">
+        {/* Bottom: name + count */}
+        <div className="relative z-10 mt-6">
           <p className="text-[10px] uppercase tracking-[0.22em] text-cream/55">
             {count} item{count === 1 ? '' : 's'}
           </p>
-          <h3
-            className={cn(
-              'mt-2 font-display font-bold leading-tight text-cream transition-all duration-500',
-              hovered ? 'text-3xl sm:text-4xl' : 'text-xl sm:text-2xl',
-            )}
-          >
+          <h3 className="mt-1.5 font-display text-lg font-bold leading-tight text-cream sm:text-xl md:text-2xl">
             {name}
           </h3>
-
-          {/* Reveal text on hover */}
-          <AnimatePresence>
-            {hovered && (
-              <motion.p
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{    opacity: 0, y: 8 }}
-                transition={{ duration: 0.35, delay: 0.05 }}
-                className="mt-3 max-w-md font-display text-sm italic text-cream/70"
-              >
-                Browse the full collection — fresh stock, daily.
-              </motion.p>
-            )}
-          </AnimatePresence>
         </div>
 
-        {/* Bottom edge underline */}
-        <span
-          className={cn(
-            'pointer-events-none absolute inset-x-6 bottom-4 h-px bg-gradient-to-r from-transparent via-saffron to-transparent transition-opacity duration-500',
-            hovered ? 'opacity-100' : 'opacity-0',
-          )}
-        />
+        {/* Bottom edge accent line */}
+        <span className="pointer-events-none absolute inset-x-5 bottom-3 h-px scale-x-0 bg-gradient-to-r from-transparent via-saffron to-transparent transition-transform duration-500 group-hover:scale-x-100 sm:inset-x-6" />
       </Link>
     </motion.div>
   );
 }
-
-// ─── Main ────────────────────────────────────────────────────────────────────
 
 export function CategoryStrip() {
   const { data: categories = [], isLoading } = useQuery({
@@ -149,16 +93,13 @@ export function CategoryStrip() {
   });
 
   const sorted = [...categories].sort((a, b) => b._count.products - a._count.products);
-  const tiles  = sorted.slice(0, 6);
-
-  // Track which card is hovered/focused — drives the "expand" animation
-  const [activeIdx, setActiveIdx] = useState(0);
+  const tiles  = sorted.slice(0, 8);
 
   return (
-    <section className="bg-bg py-20 sm:py-24">
+    <section className="bg-bg py-16 sm:py-20 md:py-24">
       <div className="container">
         {/* Header */}
-        <div className="mb-12 flex items-end justify-between gap-6">
+        <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
           <div>
             <div className="eyebrow">
               <span className="eyebrow-dot" />
@@ -169,55 +110,33 @@ export function CategoryStrip() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.6 }}
-              className="display-lg mt-4 max-w-2xl text-cream"
+              className="display-lg mt-3 max-w-2xl text-cream sm:mt-4"
             >
-              Hover to <em className="text-saffron">explore.</em>
+              Pick an <em className="text-saffron">aisle.</em>
             </motion.h2>
           </div>
           <Link
             to="/products"
-            className="hidden items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm text-cream transition-colors hover:border-saffron hover:text-saffron md:inline-flex"
+            className="hidden shrink-0 items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-cream transition-colors hover:border-saffron hover:text-saffron sm:inline-flex"
           >
-            All categories
-            <ArrowRightIcon size={14} />
+            <span>All</span>
+            <ArrowRightIcon size={13} />
           </Link>
         </div>
 
-        {/* Accordion strip — desktop */}
-        <div className="hidden gap-3 md:flex">
+        {/* Grid — equal-sized tiles, no layout animation */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
           {isLoading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="min-h-[360px] flex-1 skeleton rounded-2xl" />
+            ? Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="aspect-[4/3] skeleton rounded-2xl sm:aspect-[5/4]" />
               ))
             : tiles.map((cat, i) => (
-                <CategoryCard
-                  key={cat.id}
-                  id={cat.id}
-                  name={cat.name}
-                  slug={cat.slug}
-                  count={cat._count.products}
-                  hovered={activeIdx === i}
-                  onHover={() => setActiveIdx(i)}
-                  index={i}
-                />
-              ))}
-        </div>
-
-        {/* Mobile: 2-col grid (each tile is hovered=true so they look right) */}
-        <div className="grid grid-cols-2 gap-3 md:hidden">
-          {isLoading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="min-h-[200px] skeleton rounded-2xl" />
-              ))
-            : tiles.map((cat, i) => (
-                <div key={cat.id} className="min-h-[200px]">
+                <div key={cat.id} className="aspect-[4/3] sm:aspect-[5/4]">
                   <CategoryCard
                     id={cat.id}
                     name={cat.name}
                     slug={cat.slug}
                     count={cat._count.products}
-                    hovered
-                    onHover={() => {}}
                     index={i}
                   />
                 </div>
