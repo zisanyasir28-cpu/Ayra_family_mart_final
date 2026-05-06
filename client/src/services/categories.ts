@@ -1,12 +1,18 @@
 import { api } from '../lib/api';
 import type { ApiCategory } from '../types/api';
 import type { ApiSuccessResponse } from '@superstore/shared';
+import { demoCategories } from '../lib/demoProducts';
 
 // ─── Public ───────────────────────────────────────────────────────────────────
 
 export async function fetchCategories(): Promise<ApiCategory[]> {
-  const res = await api.get<ApiSuccessResponse<ApiCategory[]>>('/categories');
-  return res.data.data;
+  try {
+    const res = await api.get<ApiSuccessResponse<ApiCategory[]>>('/categories');
+    if (res.data.data.length === 0) throw new Error('empty');
+    return res.data.data;
+  } catch {
+    return demoCategories;
+  }
 }
 
 export async function fetchCategoryBySlug(slug: string): Promise<ApiCategory> {

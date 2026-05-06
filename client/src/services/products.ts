@@ -2,6 +2,7 @@ import { api } from '../lib/api';
 import type { ApiProduct, PaginatedData } from '../types/api';
 import type { ApiSuccessResponse, PaginationMeta } from '@superstore/shared';
 import { takaToPaisa } from '@/lib/utils';
+import { demoProducts, demoFeatured } from '../lib/demoProducts';
 
 // ─── Public storefront ────────────────────────────────────────────────────────
 
@@ -33,18 +34,42 @@ export async function fetchProducts(
   if (params.isFeatured != null) query['isFeatured'] = String(params.isFeatured);
   if (params.status)             query['status']     = params.status;
 
-  const res = await api.get<{
-    success: true;
-    data: ApiProduct[];
-    meta: { pagination: PaginationMeta };
-  }>('/products', { params: query });
+  try {
+    const res = await api.get<{
+      success: true;
+      data: ApiProduct[];
+      meta: { pagination: PaginationMeta };
+    }>('/products', { params: query });
 
-  return { data: res.data.data, meta: res.data.meta };
+    if (res.data.data.length === 0) throw new Error('empty');
+    return { data: res.data.data, meta: res.data.meta };
+  } catch {
+    // Fallback to demo data when API unavailable / empty
+    const limit = params.limit ?? 12;
+    return {
+      data: demoProducts.slice(0, limit),
+      meta: {
+        pagination: {
+          page: params.page ?? 1,
+          limit,
+          total: demoProducts.length,
+          totalPages: Math.ceil(demoProducts.length / limit),
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      },
+    };
+  }
 }
 
 export async function fetchFeaturedProducts(): Promise<ApiProduct[]> {
-  const res = await api.get<ApiSuccessResponse<ApiProduct[]>>('/products/featured');
-  return res.data.data;
+  try {
+    const res = await api.get<ApiSuccessResponse<ApiProduct[]>>('/products/featured');
+    if (res.data.data.length === 0) throw new Error('empty');
+    return res.data.data;
+  } catch {
+    return demoFeatured;
+  }
 }
 
 export async function fetchProductBySlug(slug: string): Promise<ApiProduct> {

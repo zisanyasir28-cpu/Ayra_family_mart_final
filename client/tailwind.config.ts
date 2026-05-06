@@ -9,13 +9,14 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: '2rem',
+      padding: '1.5rem',
       screens: {
         '2xl': '1400px',
       },
     },
     extend: {
       colors: {
+        /* Semantic */
         border:     'hsl(var(--border))',
         input:      'hsl(var(--input))',
         ring:       'hsl(var(--ring))',
@@ -49,30 +50,40 @@ const config: Config = {
           DEFAULT:    'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+
+        /* Brand palette — direct */
+        bg:         'hsl(var(--bg))',
+        surface:    'hsl(var(--surface))',
+        'surface-2': 'hsl(var(--surface-2))',
+        line:       'hsl(var(--line))',
+        cream:      'hsl(var(--foreground))',
+        saffron:    'hsl(var(--saffron))',
+        coral:      'hsl(var(--coral))',
+        sage:       'hsl(var(--sage))',
+        blush:      'hsl(var(--blush))',
+        plum:       'hsl(var(--plum))',
+      },
+
+      fontFamily: {
+        display: ['Fraunces', 'Georgia', 'serif'],
+        body:    ['Inter', 'system-ui', 'sans-serif'],
+        bangla:  ['Hind Siliguri', 'system-ui', 'sans-serif'],
       },
 
       borderRadius: {
-        lg:   'var(--radius)',
-        md:   'calc(var(--radius) - 2px)',
-        sm:   'calc(var(--radius) - 4px)',
-        '2xl': '1rem',
-        '3xl': '1.5rem',
+        lg:    'var(--radius)',
+        md:    'calc(var(--radius) - 4px)',
+        sm:    'calc(var(--radius) - 6px)',
+        '2xl': '1.25rem',
+        '3xl': '1.75rem',
         '4xl': '2rem',
       },
 
       boxShadow: {
-        'glow-green': '0 0 20px hsl(142 70% 28% / 0.25)',
-        'glow-gold':  '0 0 20px hsl(43 96% 56% / 0.35)',
-        'glow-red':   '0 0 20px hsl(0 84% 60% / 0.25)',
-        'card':       '0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)',
-        'card-hover': '0 10px 25px -5px rgb(0 0 0 / 0.1), 0 4px 10px -6px rgb(0 0 0 / 0.08)',
-        'float':      '0 20px 40px -10px rgb(0 0 0 / 0.15)',
-      },
-
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':  'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'mesh-green':      'var(--mesh-green)',
+        'soft':       '0 4px 24px -8px hsl(33 20% 4% / 0.5)',
+        'lift':       '0 18px 40px -16px hsl(33 20% 2% / 0.6)',
+        'saffron':    '0 0 32px -8px hsl(35 100% 66% / 0.45)',
+        'coral':      '0 0 32px -8px hsl(12 100% 64% / 0.45)',
       },
 
       keyframes: {
@@ -84,46 +95,15 @@ const config: Config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to:   { height: '0' },
         },
-        marquee: {
-          '0%':   { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
-        },
-        shimmer: {
-          from: { backgroundPosition: '-200% center' },
-          to:   { backgroundPosition:  '200% center' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%':      { transform: 'translateY(-10px)' },
-        },
-        'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 0 0 hsl(142 70% 28% / 0.35)' },
-          '50%':      { boxShadow: '0 0 0 10px hsl(142 70% 28% / 0)' },
-        },
-        breathe: {
-          '0%, 100%': { transform: 'scale(1)',    opacity: '0.4' },
-          '50%':      { transform: 'scale(1.25)', opacity: '0.1' },
-        },
-        'spin-slow': {
-          from: { transform: 'rotate(0deg)' },
-          to:   { transform: 'rotate(360deg)' },
-        },
       },
-
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up':   'accordion-up 0.2s ease-out',
-        marquee:          'marquee 30s linear infinite',
-        shimmer:          'shimmer 1.6s linear infinite',
-        float:            'float 3.5s ease-in-out infinite',
-        'pulse-glow':     'pulse-glow 2.2s cubic-bezier(0.4,0,0.6,1) infinite',
-        breathe:          'breathe 3s ease-in-out infinite',
-        'spin-slow':      'spin-slow 8s linear infinite',
       },
 
       transitionTimingFunction: {
-        'spring':        'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'smooth-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'editorial': 'cubic-bezier(0.22, 1, 0.36, 1)',
+        'spring':    'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
     },
   },
