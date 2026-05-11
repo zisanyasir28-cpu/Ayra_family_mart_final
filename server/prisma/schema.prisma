@@ -96,6 +96,7 @@ model User {
   refreshTokens   RefreshToken[]
   reviews         Review[]
   stockLogs       StockLog[]     @relation("StockLogPerformer")
+  couponUsages    CouponUsage[]
 
   @@index([email])
   @@map("users")
@@ -270,6 +271,7 @@ model Order {
   items              OrderItem[]
   payment            Payment?
   statusHistory      OrderStatusHistory[]
+  couponUsage        CouponUsage?
 
   @@index([userId])
   @@index([status])
@@ -341,15 +343,33 @@ model Coupon {
   maxDiscountInPaisa    Int?
   usageLimit            Int?
   usageCount            Int          @default(0)
+  perUserLimit          Int?
   isActive              Boolean      @default(true)
   startsAt              DateTime
   expiresAt             DateTime?
   createdAt             DateTime     @default(now())
   updatedAt             DateTime     @updatedAt
 
+  usages                CouponUsage[]
+
   @@index([code])
   @@index([isActive])
   @@map("coupons")
+}
+
+model CouponUsage {
+  id        String   @id @default(uuid())
+  couponId  String
+  userId    String
+  orderId   String   @unique
+  createdAt DateTime @default(now())
+
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([couponId, userId])
+  @@map("coupon_usages")
 }
 
 // ─── Campaign ─────────────────────────────────────────────────────────────────

@@ -7,7 +7,11 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git config *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(ls \"C:\\\\Users\\\\ASUS ZenBook\\\\.claude\\\\projects\\\\C--Users-ASUS-ZenBook-Desktop-Ayra-family-mart-final\\\\\" 2>/dev/null)",
+      "Bash(npx prisma *)",
+      "Bash(npx vitest *)",
+      "Bash(npx vite *)"
     ]
   }
 }

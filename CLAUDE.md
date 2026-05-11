@@ -1,11 +1,11 @@
 # Superstore — Production Build
 
 ## Business context
-Online superstore for Bangladesh. Customers buy groceries, daily goods, electronics, clothing, household products. Admin manages products, pricing, orders, discounts, and campaigns.
+Online superstore for Bangladesh (primarily for Sirajganj City only). Customers buy groceries, daily goods, electronics, clothing, household products. Admin manages products, pricing, orders, discounts, and campaigns.
 
 ## Tech stack
-Frontend: React 18 + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zustand + TanStack Query v5 + React Hook Form + Zod + React Router v6 + Framer Motion
-Backend: Node.js 20 + Express 5 + TypeScript + Prisma ORM + Zod (validation) + Helmet + express-rate-limit + morgan
+Frontend: React 19 + Vite + TypeScript + Tailwind CSS v4 + shadcn/ui + Zustand + TanStack Query v5 + React Hook Form + Zod + React Router v7 + Motion (v12)
+Backend: Node.js 24 + Express 5 + TypeScript + Prisma ORM v7 + Zod (validation) + Helmet + express-rate-limit + morgan
 Database: PostgreSQL (Supabase) + Redis (Upstash, for caching + sessions)
 Storage: Cloudinary (images)
 Search: PostgreSQL full-text search (pg_trgm extension) — upgrade to Meilisearch in v2

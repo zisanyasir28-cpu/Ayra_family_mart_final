@@ -5,3 +5,5 @@ export * from './cart.schema';
 export * from './user.schema';
 export * from './category.schema';
 export * from './inventory.schema';
+export * from './address.schema';
+export * from './coupon.schema';
