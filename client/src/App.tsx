@@ -7,8 +7,12 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
 // Storefront
-const HomePage     = lazy(() => import('./pages/customer/HomePage'));
-const ProductsPage = lazy(() => import('./pages/customer/ProductsPage'));
+const HomePage         = lazy(() => import('./pages/customer/HomePage'));
+const ProductsPage     = lazy(() => import('./pages/customer/ProductsPage'));
+const CheckoutPage     = lazy(() => import('./pages/customer/CheckoutPage'));
+const OrdersPage       = lazy(() => import('./pages/customer/OrdersPage'));
+const OrderDetailPage  = lazy(() => import('./pages/customer/OrderDetailPage'));
+const OrderSuccessPage = lazy(() => import('./pages/customer/OrderSuccessPage'));
 
 // Auth (outside CustomerLayout — own centered layout)
 const LoginPage           = lazy(() => import('./pages/auth/LoginPage'));
@@ -148,7 +152,27 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoader />}>
-                <PlaceholderPage title="My Orders" emoji="📦" />
+                <OrdersPage />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/success/:id"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <OrderSuccessPage />
+              </Suspense>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders/:id"
+          element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoader />}>
+                <OrderDetailPage />
               </Suspense>
             </ProtectedRoute>
           }
@@ -158,7 +182,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoader />}>
-                <PlaceholderPage title="Checkout" emoji="💳" />
+                <CheckoutPage />
               </Suspense>
             </ProtectedRoute>
           }

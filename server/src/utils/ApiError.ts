@@ -24,8 +24,8 @@ export class ApiError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 
-  static badRequest(message: string, details?: unknown): ApiError {
-    return new ApiError(400, 'VALIDATION_ERROR', message, details);
+  static badRequest(message: string, details?: unknown, code: ErrorCode = 'VALIDATION_ERROR'): ApiError {
+    return new ApiError(400, code, message, details);
   }
 
   static unauthorized(message = 'Unauthorized'): ApiError {
@@ -36,12 +36,12 @@ export class ApiError extends Error {
     return new ApiError(403, 'FORBIDDEN', message);
   }
 
-  static notFound(resource = 'Resource'): ApiError {
-    return new ApiError(404, 'NOT_FOUND', `${resource} not found`);
+  static notFound(resource = 'Resource', code: ErrorCode = 'NOT_FOUND'): ApiError {
+    return new ApiError(404, code, `${resource} not found`);
   }
 
-  static conflict(message: string): ApiError {
-    return new ApiError(409, 'ALREADY_EXISTS', message);
+  static conflict(message: string, details?: unknown, code: ErrorCode = 'ALREADY_EXISTS'): ApiError {
+    return new ApiError(409, code, message, details);
   }
 
   static tooManyRequests(message = 'Too many requests'): ApiError {
