@@ -1,4 +1,4 @@
-import type { ApiOrder, ApiDashboardStats, ApiCustomer, ApiCustomerDetail } from '@/types/api';
+import type { ApiOrder, ApiDashboardStats, ApiCustomer, ApiCustomerDetail, ApiCoupon, ApiCampaign } from '@/types/api';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -259,3 +259,127 @@ export const demoDashboardStats: ApiDashboardStats = {
 
 // keep unused import happy
 void zeroMetrics;
+
+// ─── Demo coupons ─────────────────────────────────────────────────────────────
+
+function daysFromNow(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString();
+}
+
+export const demoCoupons: ApiCoupon[] = [
+  {
+    id:                    'demo-coupon-1',
+    code:                  'WELCOME10',
+    description:           'New-user welcome: 10% off your first order',
+    discountType:          'PERCENTAGE',
+    discountValue:         10,
+    minOrderAmountInPaisa: 50000,
+    maxDiscountInPaisa:    10000,
+    usageLimit:            500,
+    usageCount:            142,
+    perUserLimit:          1,
+    isActive:              true,
+    startsAt:              daysAgo(30),
+    expiresAt:             daysFromNow(60),
+    createdAt:             daysAgo(30),
+    updatedAt:             daysAgo(2),
+    status:                'active',
+    usagePercent:          28,
+  },
+  {
+    id:                    'demo-coupon-2',
+    code:                  'EID2026',
+    description:           'Eid special — ৳50 off',
+    discountType:          'FIXED_AMOUNT',
+    discountValue:         5000,
+    minOrderAmountInPaisa: 30000,
+    maxDiscountInPaisa:    null,
+    usageLimit:            1000,
+    usageCount:            1000,
+    perUserLimit:          1,
+    isActive:              true,
+    startsAt:              daysAgo(60),
+    expiresAt:             daysAgo(5),
+    createdAt:             daysAgo(60),
+    updatedAt:             daysAgo(5),
+    status:                'expired',
+    usagePercent:          100,
+  },
+  {
+    id:                    'demo-coupon-3',
+    code:                  'NEWUSER15',
+    description:           'Upcoming launch: 15% off',
+    discountType:          'PERCENTAGE',
+    discountValue:         15,
+    minOrderAmountInPaisa: 100000,
+    maxDiscountInPaisa:    20000,
+    usageLimit:            200,
+    usageCount:            0,
+    perUserLimit:          1,
+    isActive:              true,
+    startsAt:              daysFromNow(7),
+    expiresAt:             daysFromNow(30),
+    createdAt:             daysAgo(1),
+    updatedAt:             daysAgo(1),
+    status:                'upcoming',
+    usagePercent:          0,
+  },
+];
+
+// ─── Demo campaigns ───────────────────────────────────────────────────────────
+
+export const demoCampaigns: ApiCampaign[] = [
+  {
+    id:            'demo-campaign-1',
+    name:          'Flash Sale: Fresh Produce',
+    slug:          'flash-sale-fresh-produce',
+    description:   '20% off all fresh fruits and vegetables — this weekend only.',
+    bannerUrl:     null,
+    status:        'ACTIVE',
+    discountType:  'PERCENTAGE',
+    discountValue: 20,
+    startsAt:      daysAgo(1),
+    endsAt:        daysFromNow(2),
+    createdAt:     daysAgo(3),
+    updatedAt:     daysAgo(1),
+    productCount:  24,
+    timeStatus:    'active',
+    totalDiscountGivenInPaisa: 154200,
+  },
+  {
+    id:            'demo-campaign-2',
+    name:          'Eid Mubarak Special',
+    slug:          'eid-mubarak-special',
+    description:   '৳100 off groceries above ৳1500 — starting next week.',
+    bannerUrl:     null,
+    status:        'DRAFT',
+    discountType:  'FIXED_AMOUNT',
+    discountValue: 10000,
+    startsAt:      daysFromNow(5),
+    endsAt:        daysFromNow(12),
+    createdAt:     daysAgo(2),
+    updatedAt:     daysAgo(2),
+    productCount:  56,
+    timeStatus:    'upcoming',
+    totalDiscountGivenInPaisa: 0,
+  },
+  {
+    id:            'demo-campaign-3',
+    name:          'January Clearance',
+    slug:          'january-clearance',
+    description:   '15% off household products to clear last year\'s stock.',
+    bannerUrl:     null,
+    status:        'ENDED',
+    discountType:  'PERCENTAGE',
+    discountValue: 15,
+    startsAt:      daysAgo(45),
+    endsAt:        daysAgo(15),
+    createdAt:     daysAgo(50),
+    updatedAt:     daysAgo(15),
+    productCount:  18,
+    timeStatus:    'ended',
+    totalDiscountGivenInPaisa: 412800,
+  },
+];

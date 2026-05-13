@@ -38,7 +38,7 @@ function listCacheKey(params: Record<string, unknown>): string {
   return `products:list:${JSON.stringify(sorted)}`;
 }
 
-async function invalidateProductCaches(productId?: string): Promise<void> {
+export async function invalidateProductCaches(productId?: string): Promise<void> {
   const patterns = ['products:list:*', 'products:featured', 'products:low-stock'];
   if (productId) patterns.push(`products:${productId}`);
 
@@ -495,25 +495,61 @@ export const deleteProduct = asyncHandler(
   },
 );
 
+function buildBulkWhere(body: BulkPriceUpdateInput): Prisma.ProductWhereInput {
+  switch (body.type) {
+    case 'by_ids':
+      return { id: { in: body.ids! } };
+    case 'by_category':
+      return { categoryId: body.categoryId!, status: 'ACTIVE' };
+    case 'all_active':
+      return { status: 'ACTIVE' };
+  }
+}
+
+function computeNewPrice(oldPrice: number, body: BulkPriceUpdateInput): number {
+  return body.changeType === 'percentage'
+    ? Math.max(1, Math.round(oldPrice * (1 + body.changeValue / 100)))
+    : Math.max(1, oldPrice + Math.round(body.changeValue * 100));
+}
+
+/**
+ * POST /api/v1/products/bulk-price/preview  (admin)
+ * Read-only — returns affected count and a sample of before/after prices.
+ */
+export const bulkPricePreview = asyncHandler(
+  async (req: Request, res: Response) => {
+    const body  = req.body as BulkPriceUpdateInput;
+    const where = buildBulkWhere(body);
+
+    const [affectedCount, sample] = await Promise.all([
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where,
+        select: { id: true, name: true, priceInPaisa: true },
+        take: 5,
+        orderBy: { name: 'asc' },
+      }),
+    ]);
+
+    const sampleProducts = sample.map((p) => ({
+      id:           p.id,
+      name:         p.name,
+      oldPriceInPaisa: p.priceInPaisa,
+      newPriceInPaisa: computeNewPrice(p.priceInPaisa, body),
+    }));
+
+    return sendSuccess(res, { affectedCount, sampleProducts });
+  },
+);
+
 /**
  * POST /api/v1/products/bulk-price  (admin)
  * Accepts percentage or fixed-amount adjustment across a set of products.
  */
 export const bulkUpdatePrice = asyncHandler(
   async (req: Request, res: Response) => {
-    const body = req.body as BulkPriceUpdateInput;
-
-    // Build the where clause
-    const where: Prisma.ProductWhereInput = (() => {
-      switch (body.type) {
-        case 'by_ids':
-          return { id: { in: body.ids! } };
-        case 'by_category':
-          return { categoryId: body.categoryId!, status: 'ACTIVE' };
-        case 'all_active':
-          return { status: 'ACTIVE' };
-      }
-    })();
+    const body  = req.body as BulkPriceUpdateInput;
+    const where = buildBulkWhere(body);
 
     // Fetch products to calculate new prices
     const products = await prisma.product.findMany({
@@ -527,20 +563,12 @@ export const bulkUpdatePrice = asyncHandler(
 
     // Run all price updates in a single transaction
     await prisma.$transaction(
-      products.map((p) => {
-        const newPrice =
-          body.changeType === 'percentage'
-            ? Math.max(
-                1,
-                Math.round(p.priceInPaisa * (1 + body.changeValue / 100)),
-              )
-            : Math.max(1, p.priceInPaisa + Math.round(body.changeValue * 100));
-
-        return prisma.product.update({
+      products.map((p) =>
+        prisma.product.update({
           where: { id: p.id },
-          data:  { priceInPaisa: newPrice },
-        });
-      }),
+          data:  { priceInPaisa: computeNewPrice(p.priceInPaisa, body) },
+        }),
+      ),
     );
 
     await invalidateProductCaches();

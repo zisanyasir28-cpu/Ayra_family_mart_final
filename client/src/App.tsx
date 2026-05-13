@@ -27,6 +27,8 @@ const AdminCategoriesPage  = lazy(() => import('./pages/admin/categories/Categor
 const AdminOrdersListPage  = lazy(() => import('./pages/admin/orders/OrdersListPage'));
 const AdminOrderDetailPage = lazy(() => import('./pages/admin/orders/OrderDetailPage'));
 const AdminCustomersPage   = lazy(() => import('./pages/admin/customers/CustomersPage'));
+const AdminCouponsPage     = lazy(() => import('./pages/admin/coupons/CouponsPage'));
+const AdminCampaignsPage   = lazy(() => import('./pages/admin/campaigns/CampaignsPage'));
 
 // ─── Loaders ─────────────────────────────────────────────────────────────────
 
@@ -144,9 +146,22 @@ export default function App() {
             </Suspense>
           }
         />
-        {/* Placeholder admin pages */}
-        <Route path="coupons"   element={<AdminPlaceholder title="Coupons"   emoji="🎫" />} />
-        <Route path="campaigns" element={<AdminPlaceholder title="Campaigns" emoji="📣" />} />
+        <Route
+          path="coupons"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminCouponsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="campaigns"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminCampaignsPage />
+            </Suspense>
+          }
+        />
         <Route path="settings"  element={<AdminPlaceholder title="Settings"  emoji="⚙️" />} />
       </Route>
 

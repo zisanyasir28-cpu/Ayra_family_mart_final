@@ -171,3 +171,63 @@ export interface ApiDashboardStats {
   topSellingProducts:   { productId: string; productName: string; qtySold: number; revenueInPaisa: number }[];
   revenueByDay:         ApiRevenueDay[];
 }
+
+// ─── Admin: Coupons ──────────────────────────────────────────────────────────
+
+export type ApiCouponStatus = 'active' | 'inactive' | 'upcoming' | 'expired' | 'exhausted';
+export type ApiDiscountType = 'PERCENTAGE' | 'FIXED_AMOUNT';
+
+export interface ApiCoupon {
+  id:                    string;
+  code:                  string;
+  description:           string | null;
+  discountType:          ApiDiscountType;
+  discountValue:         number;
+  minOrderAmountInPaisa: number | null;
+  maxDiscountInPaisa:    number | null;
+  usageLimit:            number | null;
+  usageCount:            number;
+  perUserLimit:          number | null;
+  isActive:              boolean;
+  startsAt:              string;
+  expiresAt:             string | null;
+  createdAt:             string;
+  updatedAt:             string;
+  status:                ApiCouponStatus;
+  usagePercent:          number | null;
+}
+
+// ─── Admin: Campaigns ────────────────────────────────────────────────────────
+
+export type ApiCampaignTimeStatus = 'upcoming' | 'active' | 'ended';
+export type ApiCampaignStatus     = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ENDED';
+
+export interface ApiCampaign {
+  id:                        string;
+  name:                      string;
+  slug:                      string;
+  description:               string | null;
+  bannerUrl:                 string | null;
+  status:                    ApiCampaignStatus;
+  discountType:              ApiDiscountType;
+  discountValue:             number;
+  startsAt:                  string;
+  endsAt:                    string | null;
+  createdAt:                 string;
+  updatedAt:                 string;
+  productCount:              number;
+  timeStatus:                ApiCampaignTimeStatus;
+  totalDiscountGivenInPaisa: number;
+}
+
+// ─── Admin: Bulk price preview ───────────────────────────────────────────────
+
+export interface ApiBulkPricePreview {
+  affectedCount:   number;
+  sampleProducts:  {
+    id:              string;
+    name:            string;
+    oldPriceInPaisa: number;
+    newPriceInPaisa: number;
+  }[];
+}

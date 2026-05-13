@@ -12,6 +12,7 @@ import {
   updateProduct,
   deleteProduct,
   bulkUpdatePrice,
+  bulkPricePreview,
   getLowStockProducts,
 } from '../controllers/product.controller';
 import {
@@ -66,6 +67,13 @@ router.patch(
 );
 
 router.delete('/:id', requireAdmin, deleteProduct);
+
+router.post(
+  '/bulk-price/preview',
+  requireAdmin,
+  validate(bulkPriceUpdateSchema),
+  bulkPricePreview,
+);
 
 router.post(
   '/bulk-price',
