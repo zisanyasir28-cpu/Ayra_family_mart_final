@@ -1,5 +1,6 @@
 import { api } from '@/lib/api';
 import type { ApiOrder, PaginatedData } from '@/types/api';
+import { demoOrders } from '@/lib/demoData';
 
 export interface AdminOrderParams {
   page?:     number;
@@ -13,15 +14,32 @@ export interface AdminOrderParams {
 type OrdersResponse = { success: true } & PaginatedData<ApiOrder>;
 type OrderResponse  = { success: true; data: ApiOrder };
 
-export const fetchAdminOrders = (params: AdminOrderParams): Promise<OrdersResponse> =>
-  api
-    .get<OrdersResponse>('/admin/orders', { params })
-    .then((r: { data: OrdersResponse }) => r.data);
+export async function fetchAdminOrders(params: AdminOrderParams): Promise<OrdersResponse> {
+  try {
+    const r = await api.get<OrdersResponse>('/admin/orders', { params });
+    return r.data;
+  } catch {
+    const limit = params.limit ?? 20;
+    const page  = params.page  ?? 1;
+    const filtered = params.status
+      ? demoOrders.filter((o) => o.status === params.status)
+      : demoOrders;
+    return {
+      success: true,
+      data: filtered,
+      meta: { pagination: { page, limit, total: filtered.length, totalPages: 1, hasNextPage: false, hasPrevPage: false } },
+    };
+  }
+}
 
-export const fetchAdminOrderById = (id: string): Promise<ApiOrder> =>
-  api
-    .get<OrderResponse>(`/admin/orders/${id}`)
-    .then((r: { data: OrderResponse }) => r.data.data);
+export async function fetchAdminOrderById(id: string): Promise<ApiOrder> {
+  try {
+    const r = await api.get<OrderResponse>(`/admin/orders/${id}`);
+    return r.data.data;
+  } catch {
+    return demoOrders.find((o) => o.id === id) ?? demoOrders[0]!;
+  }
+}
 
 export const updateOrderStatus = (
   id: string,

@@ -7,6 +7,7 @@ import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
+import { DEMO_MODE, DEMO_USERS, DEMO_PASSWORDS } from '@/lib/demoMode';
 import { cn } from '@/lib/utils';
 import { ArrowRightIcon } from '@/components/common/HandIcon';
 import type { UserPublic } from '@superstore/shared';
@@ -38,6 +39,18 @@ export default function LoginPage() {
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
   async function onSubmit(values: FormValues) {
+    if (DEMO_MODE) {
+      const user = DEMO_USERS[values.email];
+      if (user && DEMO_PASSWORDS[values.email] === values.password) {
+        setAuth(user, 'demo-access-token');
+        toast.success(`Welcome back, ${user.name.split(' ')[0]}.`);
+        navigate(redirect, { replace: true });
+      } else {
+        setError('root', { message: 'Invalid email or password' });
+      }
+      return;
+    }
+
     try {
       const { data } = await api.post<LoginResponse>('/auth/login', values);
       setAuth(data.data.user, data.data.accessToken);

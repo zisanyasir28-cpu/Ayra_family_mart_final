@@ -1,4 +1,7 @@
-import 'dotenv/config';
+import { resolve } from 'path';
+import dotenv from 'dotenv';
+// __dirname is server/src — go up one level to find server/.env
+dotenv.config({ path: resolve(__dirname, '../.env') });
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -10,7 +13,9 @@ import { errorHandler } from './middleware/errorHandler';
 import apiRouter from './routes/index';
 
 const app = express();
-const PORT = process.env['PORT'] ?? 5000;
+// If the process harness injects PORT=5173 (Vite's port), fall back to 5000
+const _ENV_PORT = parseInt(process.env['PORT'] ?? '5000', 10);
+const PORT = _ENV_PORT === 5173 ? 5000 : _ENV_PORT;
 
 // ─── Security ────────────────────────────────────────────────────────────────
 app.use(helmet());

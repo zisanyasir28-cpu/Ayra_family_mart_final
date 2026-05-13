@@ -35,6 +35,10 @@ jobs:
         run: npm run build --workspace=client
         env:
           NODE_ENV: production
+          VITE_DEMO_MODE: 'true'
+
+      - name: Copy index.html to 404.html for SPA deep-link support
+        run: cp client/dist/index.html client/dist/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
