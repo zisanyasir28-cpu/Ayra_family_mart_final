@@ -17,7 +17,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
-    "ignoreDeprecations": "6.0",
     "types": ["vite/client"],
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
