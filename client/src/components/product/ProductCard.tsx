@@ -44,7 +44,7 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
   return (
     <div
       className={cn(
-        'group relative flex h-full flex-col rounded-2xl bg-surface ring-1 ring-line transition-[transform,box-shadow,border-color] duration-300 ease-editorial hover:-translate-y-1 hover:ring-saffron/40 hover:shadow-lift',
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl bg-surface ring-1 ring-line transition-[transform,box-shadow,border-color] duration-300 ease-editorial hover:-translate-y-1 hover:ring-saffron/40 hover:shadow-lift',
         emphasis && 'hover:-translate-y-1.5',
         className,
       )}
@@ -143,13 +143,14 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
         </span>
 
         {/* Price + cart */}
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
-          <div className="flex items-baseline gap-1.5 sm:gap-2">
-            <span className="font-display text-lg font-black text-cream sm:text-xl">
+        <div className="mt-auto flex items-center justify-between gap-1.5 pt-3 sm:gap-2">
+          {/* Price group — can shrink so the button never overflows */}
+          <div className="min-w-0 shrink flex items-baseline gap-1 sm:gap-1.5">
+            <span className="font-display text-sm font-black text-cream sm:text-base md:text-lg">
               {formatPaisa(product.effectivePriceInPaisa)}
             </span>
             {hasDiscount && (
-              <span className="font-display text-[11px] italic text-cream/35 line-through sm:text-xs">
+              <span className="font-display text-[10px] italic text-cream/35 line-through sm:text-[11px]">
                 {formatPaisa(compare)}
               </span>
             )}
@@ -166,14 +167,14 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
                   transition={{ duration: 0.16 }}
                   onClick={handleAdd}
                   className={cn(
-                    'flex h-9 w-9 items-center justify-center rounded-full transition-colors active:scale-90',
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors active:scale-90 sm:h-9 sm:w-9',
                     addedFlash
                       ? 'bg-sage text-bg'
                       : 'bg-cream text-bg hover:bg-saffron',
                   )}
                   aria-label="Add to cart"
                 >
-                  {addedFlash ? '✓' : <PlusIcon size={16} strokeWidth={2} />}
+                  {addedFlash ? '✓' : <PlusIcon size={14} strokeWidth={2} />}
                 </motion.button>
               ) : (
                 <motion.div
@@ -182,24 +183,24 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{    opacity: 0, scale: 0.85 }}
                   transition={{ duration: 0.16 }}
-                  className="flex items-center gap-1 rounded-full bg-cream p-0.5 text-bg"
+                  className="flex shrink-0 items-center gap-0.5 rounded-full bg-cream p-0.5 text-bg sm:gap-1"
                 >
                   <button
                     onClick={() => decrement(product.id, qty)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-bg/10 active:scale-90"
+                    className="flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:bg-bg/10 active:scale-90 sm:h-7 sm:w-7"
                     aria-label="Decrease quantity"
                   >
-                    <MinusIcon size={12} strokeWidth={2} />
+                    <MinusIcon size={11} strokeWidth={2} />
                   </button>
-                  <span className="min-w-[1.5rem] text-center font-display text-sm font-bold tabular-nums">
+                  <span className="min-w-[1.25rem] text-center font-display text-xs font-bold tabular-nums sm:min-w-[1.5rem] sm:text-sm">
                     {qty}
                   </span>
                   <button
                     onClick={() => increment(product.id, qty, product.stockQuantity)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full bg-bg text-cream transition-colors hover:bg-saffron hover:text-bg active:scale-90"
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-bg text-cream transition-colors hover:bg-saffron hover:text-bg active:scale-90 sm:h-7 sm:w-7"
                     aria-label="Increase quantity"
                   >
-                    <PlusIcon size={12} strokeWidth={2} />
+                    <PlusIcon size={11} strokeWidth={2} />
                   </button>
                 </motion.div>
               )}
