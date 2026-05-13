@@ -143,8 +143,8 @@ export default function CheckoutPage() {
         <Stepper current={step} steps={STEPS} />
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+      <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3 lg:grid-cols-5">
+        <div className="md:col-span-2 lg:col-span-3">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.section
@@ -357,7 +357,7 @@ export default function CheckoutPage() {
           </AnimatePresence>
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="md:col-span-1 lg:col-span-2">
           <OrderSummary paymentMethod={paymentMethod} />
         </div>
       </div>

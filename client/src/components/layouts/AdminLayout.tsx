@@ -274,7 +274,7 @@ function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-card shadow-2xl md:hidden"
+            className="fixed inset-y-0 left-0 z-50 flex w-[280px] max-w-[85vw] flex-col bg-card shadow-2xl md:hidden"
           >
             <button
               onClick={onClose}
@@ -323,7 +323,7 @@ function AdminHeader({ onMenuClick }: HeaderProps) {
   const pageTitle = crumbs[crumbs.length - 1]?.label ?? 'Admin';
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-4 border-b border-border bg-card px-6">
+    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-border bg-card px-4 sm:gap-4 sm:px-6">
       {/* Mobile hamburger */}
       <button
         onClick={onMenuClick}
@@ -435,7 +435,7 @@ export default function AdminLayout() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <AdminHeader onMenuClick={() => setMobileOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           <Outlet />
         </main>
       </div>

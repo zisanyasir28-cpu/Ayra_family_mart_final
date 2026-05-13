@@ -116,16 +116,16 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Period tabs */}
-          <div className="flex items-center gap-1 rounded-xl border border-border bg-card p-1">
+          <div className="flex overflow-x-auto scrollbar-hide items-center gap-1 rounded-xl border border-border bg-card p-1">
             {PERIODS.map((p) => (
               <button
                 key={p.value}
                 type="button"
                 onClick={() => setPeriod(p.value)}
                 className={cn(
-                  'rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                  'shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors',
                   period === p.value
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground',
@@ -140,7 +140,7 @@ export default function DashboardPage() {
             type="button"
             onClick={() => refetch()}
             title="Refresh"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
           >
             <RefreshCw className={cn('h-4 w-4', isFetching && 'animate-spin')} />
           </button>

@@ -265,7 +265,7 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-            className="fixed inset-y-0 left-0 z-50 flex w-[300px] flex-col overflow-hidden bg-surface"
+            className="fixed inset-y-0 left-0 z-50 flex w-[280px] max-w-[85vw] flex-col overflow-hidden bg-surface"
           >
             <div className="flex items-center justify-between border-b border-line px-5 py-4">
               <Logo size="sm" />
@@ -412,7 +412,7 @@ function Footer() {
         </div>
 
         {/* Links + contact */}
-        <div className="grid grid-cols-2 gap-10 pt-12 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 pt-12 md:grid-cols-4 md:gap-10">
           <div>
             <h4 className="mb-5 text-[10px] uppercase tracking-[0.22em] text-cream/40">Wander</h4>
             <ul className="space-y-3">
