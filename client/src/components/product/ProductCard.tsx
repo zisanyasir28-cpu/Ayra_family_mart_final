@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { cn, formatPaisa } from '../../lib/utils';
 import { useCart } from '../../hooks/useCart';
 import { HeartLineIcon, PlusIcon, MinusIcon } from '../common/HandIcon';
+import { useWishlistStore } from '../../store/wishlistStore';
+import { useAuthStore }     from '../../store/authStore';
+import { toggleWishlistItem } from '../../services/wishlist';
 import type { ApiProduct } from '../../types/api';
 
 interface ProductCardProps {
@@ -19,9 +23,30 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
   const isOutOfStock = product.stockQuantity === 0;
   const isLowStock   = !isOutOfStock && product.stockQuantity <= 5;
 
+  const { isWishlisted, toggle }    = useWishlistStore();
+  const { isAuthenticated }         = useAuthStore();
+  const wishlisted                  = isWishlisted(product.id);
+
   const [imgError,   setImgError]   = useState(false);
-  const [wishlist,   setWishlist]   = useState(false);
   const [addedFlash, setAddedFlash] = useState(false);
+
+  async function handleWishlist(e: React.MouseEvent) {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      toast.error('Please log in to save to wishlist', { icon: '🔒' });
+      return;
+    }
+    toggle(product.id); // optimistic
+    try {
+      const { added } = await toggleWishlistItem(product.id);
+      // If server disagrees with our toggle direction, revert
+      if (!added && wishlisted) return;  // was wishlisted, now removed ✓
+      if (added && !wishlisted) return;  // was not wishlisted, now added ✓
+      toggle(product.id); // revert — server state differs
+    } catch {
+      toggle(product.id); // revert on API error (demo mode is fine)
+    }
+  }
 
   const firstImage  = product.images[0];
   const secondImage = product.images[1] ?? null;
@@ -102,16 +127,16 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
         {/* Wishlist (only desktop hover) */}
         {!isLowStock && (
           <button
-            onClick={(e) => { e.preventDefault(); setWishlist((v) => !v); }}
+            onClick={handleWishlist}
             className={cn(
               'absolute right-2.5 top-2.5 hidden h-9 w-9 items-center justify-center rounded-full transition-all duration-300 sm:flex sm:right-3 sm:top-3',
-              wishlist
+              wishlisted
                 ? 'bg-coral text-bg opacity-100'
                 : 'bg-bg/70 text-cream opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 backdrop-blur-sm',
             )}
-            aria-label={wishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           >
-            <HeartLineIcon size={16} filled={wishlist} />
+            <HeartLineIcon size={16} filled={wishlisted} />
           </button>
         )}
 

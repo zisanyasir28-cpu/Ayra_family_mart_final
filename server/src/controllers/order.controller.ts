@@ -8,6 +8,7 @@ import { sendSuccess, sendCreated, buildPagination } from '../utils/ApiResponse'
 import { generateOrderNumber } from '../utils/generateOrderNumber';
 import { validateCouponForUser } from '../services/coupon.service';
 import { sendOrderConfirmation, sendOrderStatusChange } from '../lib/email';
+import { createNotification } from './notification.controller';
 import { initiatePayment } from '../lib/sslcommerz';
 import type {
   CreateOrderInput,
@@ -201,6 +202,14 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // 3. Post-transaction side effects
+  void createNotification(
+    userId,
+    'ORDER_CREATED',
+    'Order Placed!',
+    `Your order ${order.orderNumber} has been confirmed.`,
+    order.id,
+  ).catch(() => {});
+
   if (body.paymentMethod === 'COD') {
     void sendOrderConfirmation(
       {
@@ -447,6 +456,14 @@ export const adminUpdateOrderStatus = asyncHandler(async (req: Request, res: Res
     status,
     note,
   ).catch((e) => console.error('[email] status change failed', e));
+
+  void createNotification(
+    order.userId,
+    'ORDER_STATUS',
+    `Order ${order.orderNumber} Update`,
+    `Your order status has changed to ${status.replace(/_/g, ' ')}.`,
+    order.id,
+  ).catch(() => {});
 
   return sendSuccess(res, order);
 });

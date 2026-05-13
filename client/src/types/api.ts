@@ -231,3 +231,52 @@ export interface ApiBulkPricePreview {
     newPriceInPaisa: number;
   }[];
 }
+
+// ─── User profile ────────────────────────────────────────────────────────────
+
+export interface ApiUserProfile {
+  id:              string;
+  email:           string;
+  name:            string;
+  phone:           string | null;
+  role:            string;
+  avatarUrl:       string | null;
+  isEmailVerified: boolean;
+  createdAt:       string;
+  updatedAt:       string;
+}
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+export interface ApiReview {
+  id:         string;
+  productId:  string;
+  userId:     string;
+  rating:     number;
+  comment:    string | null;
+  isVerified: boolean;
+  createdAt:  string;
+  updatedAt:  string;
+  user:       { name: string; avatarUrl: string | null };
+}
+
+// ─── Wishlist ─────────────────────────────────────────────────────────────────
+
+export interface ApiWishlistItem {
+  id:        string;
+  productId: string;
+  createdAt: string;
+  product:   ApiProduct;
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+export interface ApiNotification {
+  id:        string;
+  type:      string;
+  title:     string;
+  message:   string;
+  isRead:    boolean;
+  orderId:   string | null;
+  createdAt: string;
+}

@@ -61,7 +61,7 @@ type CampaignSnippet = {
   discountValue: number;
 };
 
-function calcEffectivePrice(
+export function calcEffectivePrice(
   priceInPaisa: number,
   campaign: CampaignSnippet | null,
 ): number {
@@ -84,7 +84,7 @@ const activeCampaignFilter: Prisma.CampaignProductWhereInput = {
   },
 };
 
-const productListInclude = {
+export const productListInclude = {
   images: { orderBy: { sortOrder: 'asc' as const }, take: 1 },
   category: { select: { id: true, name: true, slug: true } },
   campaignProducts: {

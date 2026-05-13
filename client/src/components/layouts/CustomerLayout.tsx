@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Heart, User, Menu, X, ChevronDown,
   Home, LayoutGrid, Package, LogOut, Settings, Zap,
-  MapPin, Phone, Mail as MailIcon,
+  MapPin, Phone, Mail as MailIcon, Bell, ShoppingBag, Info,
 } from 'lucide-react';
 import { Logo }            from '../common/Logo';
 import { CartDrawer }      from '../CartDrawer';
@@ -15,7 +15,13 @@ import { cn }              from '../../lib/utils';
 import { useCartStore }    from '../../store/cartStore';
 import { useAuthStore }    from '../../store/authStore';
 import { fetchCategories } from '../../services/categories';
-import type { ApiCategory } from '../../types/api';
+import {
+  fetchUnreadCount,
+  fetchNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
+} from '../../services/notifications';
+import type { ApiCategory, ApiNotification } from '../../types/api';
 
 // ─── Category emoji helper ────────────────────────────────────────────────────
 
@@ -150,6 +156,152 @@ function CartButton({ onClick }: { onClick: () => void }) {
         )}
       </AnimatePresence>
     </button>
+  );
+}
+
+// ─── Notification Bell ────────────────────────────────────────────────────────
+
+function relativeTime(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
+function notifIcon(type: string) {
+  if (type === 'ORDER_STATUS' || type === 'ORDER_CREATED') return ShoppingBag;
+  return Info;
+}
+
+function NotificationBell() {
+  const { isAuthenticated } = useAuthStore();
+  const [open, setOpen]     = useState(false);
+  const [items, setItems]   = useState<ApiNotification[]>([]);
+  const ref                 = useRef<HTMLDivElement>(null);
+  const qc                  = useQueryClient();
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey:       ['notifications', 'unread-count'],
+    queryFn:        fetchUnreadCount,
+    refetchInterval: 30_000,
+    enabled:        isAuthenticated,
+  });
+
+  // Load notifications when dropdown opens
+  useEffect(() => {
+    if (!open) return;
+    fetchNotifications({ limit: 10 }).then((r) => setItems(r.data));
+  }, [open]);
+
+  // Close on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  if (!isAuthenticated) return null;
+
+  async function handleMarkAll() {
+    await markAllNotificationsRead();
+    setItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    void qc.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+  }
+
+  async function handleMarkOne(id: string) {
+    await markNotificationRead(id);
+    setItems((prev) => prev.map((n) => n.id === id ? { ...n, isRead: true } : n));
+    void qc.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="relative flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream"
+        aria-label="Notifications"
+      >
+        <Bell className="h-5 w-5" />
+        {unreadCount > 0 && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral font-display text-[9px] font-extrabold text-bg">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        )}
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{    opacity: 0, y: -8, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-line bg-surface shadow-lift"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-line bg-surface-2 px-4 py-3">
+              <span className="font-display text-sm font-bold text-cream">Notifications</span>
+              {items.some((n) => !n.isRead) && (
+                <button
+                  onClick={handleMarkAll}
+                  className="text-[11px] text-saffron hover:underline"
+                >
+                  Mark all read
+                </button>
+              )}
+            </div>
+
+            {/* List */}
+            <div className="max-h-80 overflow-y-auto">
+              {items.length === 0 ? (
+                <div className="flex flex-col items-center gap-2 py-10 text-center">
+                  <Bell className="h-8 w-8 text-cream/20" />
+                  <p className="text-sm text-cream/45">No notifications yet</p>
+                </div>
+              ) : (
+                items.map((n) => {
+                  const Icon = notifIcon(n.type);
+                  return (
+                    <button
+                      key={n.id}
+                      onClick={() => { void handleMarkOne(n.id); setOpen(false); }}
+                      className={cn(
+                        'flex w-full gap-3 px-4 py-3 text-left transition hover:bg-surface-2',
+                        !n.isRead && 'bg-saffron/5',
+                      )}
+                    >
+                      <div className={cn(
+                        'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
+                        n.type === 'ORDER_STATUS' || n.type === 'ORDER_CREATED'
+                          ? 'bg-saffron/15 text-saffron'
+                          : 'bg-cream/10 text-cream/60',
+                      )}>
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-display text-xs font-semibold text-cream">
+                          {n.title}
+                          {!n.isRead && (
+                            <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-coral align-middle" />
+                          )}
+                        </p>
+                        <p className="line-clamp-2 text-[11px] text-cream/55">{n.message}</p>
+                        <p className="mt-0.5 text-[10px] text-cream/35">{relativeTime(n.createdAt)}</p>
+                      </div>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -653,6 +805,7 @@ export default function CustomerLayout() {
             >
               <Heart className="h-5 w-5" />
             </Link>
+            <NotificationBell />
             <CartButton onClick={() => setCartOpen(true)} />
             <UserMenu />
           </div>

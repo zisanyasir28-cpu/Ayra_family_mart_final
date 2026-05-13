@@ -97,6 +97,8 @@ model User {
   reviews         Review[]
   stockLogs       StockLog[]     @relation("StockLogPerformer")
   couponUsages    CouponUsage[]
+  wishlistItems   WishlistItem[]
+  notifications   Notification[]
 
   @@index([email])
   @@map("users")
@@ -216,6 +218,7 @@ model Product {
   campaignProducts     CampaignProduct[]
   reviews              Review[]
   stockLogs            StockLog[]
+  wishlistItems        WishlistItem[]
 
   @@index([categoryId])
   @@index([brandId])
@@ -443,4 +446,39 @@ model StockLog {
   @@index([productId])
   @@index([performedBy])
   @@map("stock_logs")
+}
+
+// ─── Wishlist ─────────────────────────────────────────────────────────────────
+
+model WishlistItem {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@map("wishlist_items")
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // ORDER_STATUS | ORDER_CREATED | REVIEW_APPROVED | GENERAL
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  orderId   String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId])
+  @@map("notifications")
 }

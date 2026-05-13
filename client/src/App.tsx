@@ -13,6 +13,8 @@ const CheckoutPage     = lazy(() => import('./pages/customer/CheckoutPage'));
 const OrdersPage       = lazy(() => import('./pages/customer/OrdersPage'));
 const OrderDetailPage  = lazy(() => import('./pages/customer/OrderDetailPage'));
 const OrderSuccessPage = lazy(() => import('./pages/customer/OrderSuccessPage'));
+const AccountPage      = lazy(() => import('./pages/customer/AccountPage'));
+const WishlistPage     = lazy(() => import('./pages/customer/WishlistPage'));
 
 // Auth (outside CustomerLayout — own centered layout)
 const LoginPage           = lazy(() => import('./pages/auth/LoginPage'));
@@ -191,7 +193,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoader />}>
-                <PlaceholderPage title="My Account" emoji="👤" />
+                <AccountPage />
               </Suspense>
             </ProtectedRoute>
           }
@@ -237,8 +239,15 @@ export default function App() {
           }
         />
 
-        {/* Public placeholder routes */}
-        <Route path="/wishlist" element={<PlaceholderPage title="Wishlist" emoji="❤️" />} />
+        {/* Public routes */}
+        <Route
+          path="/wishlist"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <WishlistPage />
+            </Suspense>
+          }
+        />
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />

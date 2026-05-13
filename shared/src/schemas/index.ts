@@ -8,3 +8,5 @@ export * from './inventory.schema';
 export * from './address.schema';
 export * from './coupon.schema';
 export * from './campaign.schema';
+export * from './review.schema';
+export * from './notification.schema';

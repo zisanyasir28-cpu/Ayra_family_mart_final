@@ -1,4 +1,4 @@
-import type { ApiOrder, ApiDashboardStats, ApiCustomer, ApiCustomerDetail, ApiCoupon, ApiCampaign } from '@/types/api';
+import type { ApiOrder, ApiDashboardStats, ApiCustomer, ApiCustomerDetail, ApiCoupon, ApiCampaign, ApiNotification } from '@/types/api';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -381,5 +381,37 @@ export const demoCampaigns: ApiCampaign[] = [
     productCount:  18,
     timeStatus:    'ended',
     totalDiscountGivenInPaisa: 412800,
+  },
+];
+
+// ─── Demo Notifications ───────────────────────────────────────────────────────
+
+export const demoNotifications: ApiNotification[] = [
+  {
+    id:        'notif-1',
+    type:      'ORDER_STATUS',
+    title:     'Order Shipped! 🚚',
+    message:   'Your order ORD-20260513-DEMO01 has been shipped and is on its way.',
+    isRead:    false,
+    orderId:   'demo-order-1',
+    createdAt: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
+  },
+  {
+    id:        'notif-2',
+    type:      'ORDER_CREATED',
+    title:     'Order Placed!',
+    message:   'Your order ORD-20260513-DEMO02 has been confirmed. Thank you for shopping!',
+    isRead:    false,
+    orderId:   'demo-order-2',
+    createdAt: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+  },
+  {
+    id:        'notif-3',
+    type:      'GENERAL',
+    title:     'Welcome to Ayra Family Mart! 🛒',
+    message:   'Thanks for joining us. Enjoy exclusive deals and fast delivery across Bangladesh.',
+    isRead:    true,
+    orderId:   null,
+    createdAt: new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString(),
   },
 ];
