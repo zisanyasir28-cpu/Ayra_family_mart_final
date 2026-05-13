@@ -21,8 +21,12 @@ const ForgotPasswordPage  = lazy(() => import('./pages/auth/ForgotPasswordPage')
 const ResetPasswordPage   = lazy(() => import('./pages/auth/ResetPasswordPage'));
 
 // Admin
-const AdminProductsPage   = lazy(() => import('./pages/admin/products/ProductsListPage'));
-const AdminCategoriesPage = lazy(() => import('./pages/admin/categories/CategoriesPage'));
+const AdminDashboardPage   = lazy(() => import('./pages/admin/DashboardPage'));
+const AdminProductsPage    = lazy(() => import('./pages/admin/products/ProductsListPage'));
+const AdminCategoriesPage  = lazy(() => import('./pages/admin/categories/CategoriesPage'));
+const AdminOrdersListPage  = lazy(() => import('./pages/admin/orders/OrdersListPage'));
+const AdminOrderDetailPage = lazy(() => import('./pages/admin/orders/OrderDetailPage'));
+const AdminCustomersPage   = lazy(() => import('./pages/admin/customers/CustomersPage'));
 
 // ─── Loaders ─────────────────────────────────────────────────────────────────
 
@@ -91,7 +95,15 @@ export default function App() {
 
       {/* ── Admin panel — under AdminLayout (auth check inside layout) ──── */}
       <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Navigate to="/admin/products" replace />} />
+        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+        <Route
+          path="dashboard"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminDashboardPage />
+            </Suspense>
+          }
+        />
         <Route
           path="products"
           element={
@@ -108,9 +120,31 @@ export default function App() {
             </Suspense>
           }
         />
+        <Route
+          path="orders"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminOrdersListPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="orders/:id"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminOrderDetailPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="customers"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminCustomersPage />
+            </Suspense>
+          }
+        />
         {/* Placeholder admin pages */}
-        <Route path="orders"    element={<AdminPlaceholder title="Orders"    emoji="📦" />} />
-        <Route path="customers" element={<AdminPlaceholder title="Customers" emoji="👥" />} />
         <Route path="coupons"   element={<AdminPlaceholder title="Coupons"   emoji="🎫" />} />
         <Route path="campaigns" element={<AdminPlaceholder title="Campaigns" emoji="📣" />} />
         <Route path="settings"  element={<AdminPlaceholder title="Settings"  emoji="⚙️" />} />

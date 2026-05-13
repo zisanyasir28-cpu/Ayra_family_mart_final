@@ -12,4 +12,5 @@ export const REDIS_KEYS = {
   productCache: (id: string) => `product:${id}`,
   cartKey: (userId: string) => `cart:${userId}`,
   rateLimitAuth: (ip: string) => `ratelimit:auth:${ip}`,
+  dashboardStats: () => 'admin:dashboard:stats',
 } as const;

@@ -124,3 +124,50 @@ export interface ApiOrder {
   statusHistory?:    ApiOrderStatusHistoryEntry[];
   payment?:          { method: ApiPaymentMethod; status: ApiPaymentStatus; amountInPaisa: number } | null;
 }
+
+// ─── Admin: Customers ────────────────────────────────────────────────────────
+
+export interface ApiCustomer {
+  id:                string;
+  name:              string;
+  email:             string;
+  phone:             string | null;
+  isActive:          boolean;
+  role:              string;
+  createdAt:         string;
+  _count:            { orders: number };
+  totalSpentInPaisa: number;
+}
+
+export interface ApiCustomerDetail extends ApiCustomer {
+  orders: ApiOrder[];
+}
+
+// ─── Admin: Dashboard stats ──────────────────────────────────────────────────
+
+export interface ApiRevenueDay {
+  date:           string; // 'YYYY-MM-DD'
+  revenueInPaisa: number;
+  orders:         number;
+}
+
+export interface ApiDashboardMetrics {
+  orders:          number;
+  revenueInPaisa:  number;
+  newCustomers:    number;
+  avgOrderInPaisa: number;
+}
+
+export interface ApiDashboardStats {
+  metrics: {
+    today:     ApiDashboardMetrics;
+    thisWeek:  ApiDashboardMetrics;
+    thisMonth: ApiDashboardMetrics;
+    allTime:   ApiDashboardMetrics;
+  };
+  orderStatusBreakdown: { status: ApiOrderStatus; count: number }[];
+  recentOrders:         ApiOrder[];
+  lowStockProducts:     { id: string; name: string; sku: string; stockQuantity: number }[];
+  topSellingProducts:   { productId: string; productName: string; qtySold: number; revenueInPaisa: number }[];
+  revenueByDay:         ApiRevenueDay[];
+}
