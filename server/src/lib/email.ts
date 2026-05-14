@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import nodemailer, { type Transporter } from 'nodemailer';
+import { logger } from './logger';
 
 // ─── Lazy transporter ─────────────────────────────────────────────────────────
 
@@ -56,7 +57,7 @@ async function send(subject: string, to: string, text: string, html: string): Pr
 
   if (!transporter) {
     // eslint-disable-next-line no-console
-    console.info('[email:dev]', subject, '→', to);
+    logger.debug({ subject, to }, 'email.dev.skipped');
     return;
   }
 
@@ -64,7 +65,7 @@ async function send(subject: string, to: string, text: string, html: string): Pr
     await transporter.sendMail({ from, to, subject, text, html });
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.error('[email] failed to send', subject, 'to', to, err);
+    logger.error({ err, subject, to }, 'email.send_failed');
   }
 }
 

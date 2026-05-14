@@ -15,6 +15,27 @@
     />
 
     <title>Ayra Family Mart — মাটি ও ফুল</title>
+    <meta name="theme-color" content="#0E0D0B" />
+
+    <!-- ── Theme: apply persisted theme synchronously to prevent FOUT ────── -->
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('ayra:theme');
+          var theme = raw ? (JSON.parse(raw).state || {}).theme : 'system';
+          if (!theme) theme = 'system';
+          var resolved =
+            theme === 'system'
+              ? matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+              : theme;
+          document.documentElement.classList.add(resolved);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', resolved === 'dark' ? '#0E0D0B' : '#FBF7EC');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
 
     <!-- GitHub Pages SPA redirect handler -->
     <script>

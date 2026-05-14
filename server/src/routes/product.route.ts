@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { rateLimit } from 'express-rate-limit';
 import { validate } from '../utils/validate';
 import { requireAdmin } from '../middleware/requireAuth';
 import { setCache } from '../middleware/cache';
+import { searchLimiter } from '../middleware/rateLimiters';
 import { uploadMultiple } from '../lib/multer';
 import {
   getProducts,
@@ -25,18 +25,6 @@ import {
 } from '@superstore/shared';
 
 const router = Router();
-
-// Search rate limiter (as per CLAUDE.md)
-const searchLimiter = rateLimit({
-  windowMs: 60_000,
-  max: 60,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: { code: 'TOO_MANY_REQUESTS', message: 'Search rate limit exceeded' },
-  },
-});
 
 // ─── Public ───────────────────────────────────────────────────────────────────
 

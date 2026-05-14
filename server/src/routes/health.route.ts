@@ -5,32 +5,52 @@ import { redis } from '../lib/redis';
 
 const router = Router();
 
+interface HealthChecks {
+  server:   'ok';
+  database: 'ok' | 'error';
+  redis:    'ok' | 'error';
+}
+
+// Avoid hammering DB on aggressive health-checkers — cache last result for 5s
+let cached: { ts: number; body: unknown; status: number } | null = null;
+
 router.get('/', async (_req: Request, res: Response) => {
-  const checks: Record<string, 'ok' | 'error'> = {
-    server: 'ok',
-    database: 'error',
-    redis: 'error',
-  };
+  if (cached && Date.now() - cached.ts < 5_000) {
+    return res.status(cached.status).json(cached.body);
+  }
+
+  const checks: HealthChecks = { server: 'ok', database: 'error', redis: 'error' };
 
   try {
     await prisma.$queryRaw`SELECT 1`;
-    checks['database'] = 'ok';
+    checks.database = 'ok';
   } catch {
     // database unreachable — already marked error
   }
 
   try {
-    await redis.ping();
-    checks['redis'] = 'ok';
+    const pingResult = await redis.ping();
+    checks.redis = pingResult === 'PONG' ? 'ok' : 'error';
   } catch {
     // redis unreachable — already marked error
   }
 
-  const isHealthy = Object.values(checks).every((v) => v === 'ok');
-  res.status(isHealthy ? 200 : 503).json({
-    success: isHealthy,
-    data: { status: isHealthy ? 'healthy' : 'degraded', checks },
-  });
+  const allOk  = checks.database === 'ok' && checks.redis === 'ok';
+  const status = allOk ? 200 : 503;
+
+  const body = {
+    success: allOk,
+    data: {
+      status:    allOk ? 'healthy' : 'degraded',
+      timestamp: new Date().toISOString(),
+      version:   process.env['npm_package_version'] ?? '0.0.0',
+      uptime:    Math.round(process.uptime()),
+      checks,
+    },
+  };
+
+  cached = { ts: Date.now(), body, status };
+  return res.status(status).json(body);
 });
 
 export default router;

@@ -8,16 +8,21 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
+    "@sentry/react": "^8.55.2",
     "@superstore/shared": "*",
     "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-query-devtools": "^5.100.9",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "dompurify": "^3.4.3",
     "framer-motion": "^11.2.12",
     "lucide-react": "^0.400.0",
     "react": "^19.2.5",
@@ -38,14 +43,20 @@
     "npm": ">=10.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20.14.9",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "^4.1.6",
     "autoprefixer": "^10.4.19",
+    "jsdom": "^29.1.1",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.4",
     "typescript": "^6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.10",
+    "vitest": "^4.1.6"
   }
 }

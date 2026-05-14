@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { ApiError } from '../utils/ApiError';
+import { logger } from '../lib/logger';
 import type { ApiErrorResponse } from '@superstore/shared';
 
 export function errorHandler(
@@ -37,8 +38,8 @@ export function errorHandler(
     return;
   }
 
-  // Unknown / programmer errors — log and return generic 500
-  console.error('[Unhandled Error]', err);
+  // Unknown / programmer errors — log structured + return generic 500
+  logger.error({ err }, 'unhandled.error');
 
   const body: ApiErrorResponse = {
     success: false,

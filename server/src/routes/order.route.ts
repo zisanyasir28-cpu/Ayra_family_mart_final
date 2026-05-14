@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { validate } from '../utils/validate';
 import { requireAuth, requireAdmin } from '../middleware/requireAuth';
+import { orderLimiter } from '../middleware/rateLimiters';
 import {
   createOrder,
   getMyOrders,
@@ -22,13 +23,14 @@ import {
 export const customerOrderRouter = Router();
 customerOrderRouter.use(requireAuth);
 
-customerOrderRouter.post('/',    validate(createOrderSchema),               createOrder);
-customerOrderRouter.get('/me',   validate(orderQuerySchema, 'query'),       getMyOrders);
+customerOrderRouter.post('/',    orderLimiter, validate(createOrderSchema),  createOrder);
+customerOrderRouter.get('/me',   validate(orderQuerySchema, 'query'),        getMyOrders);
 customerOrderRouter.get('/me/:id',
   validate(orderIdParamSchema, 'params'),
   getMyOrderById,
 );
 customerOrderRouter.patch('/me/:id/cancel',
+  orderLimiter,
   validate(orderIdParamSchema, 'params'),
   validate(cancelOrderSchema),
   cancelOrder,

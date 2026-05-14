@@ -7,13 +7,16 @@
    ──────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  :root {
+  /* ── Default (dark) palette — applied when no class set OR when .dark ── */
+  :root,
+  :root.dark {
     /* ── Brand palette ─────────────────────────────────────────────────────── */
     --bg:           33 20% 6%;     /* warm near-black #0E0D0B */
     --surface:      30 15% 9%;     /* surface          #1A1815 */
     --surface-2:    30 14% 11%;    /* raised surface   #211E1A */
     --line:         30 12% 16%;    /* border           #2A2622 */
     --foreground:   40 50% 92%;    /* cream            #F5EFE0 */
+    --cream:        40 50% 92%;
     --muted:        30 14% 11%;
     --muted-fg:     35 12% 60%;    /*                  #A39786 */
 
@@ -23,7 +26,32 @@
     --blush:        15 70% 85%;    /*                  #F5C9BE */
     --plum:         320 25% 35%;   /* deep accent       #6E4C5F */
 
-    /* ── Semantic mapping (Tailwind reads these) ───────────────────────────── */
+    color-scheme: dark;
+  }
+
+  /* ── Light palette — warm cream surfaces with darker brand accents ─────── */
+  :root.light {
+    --bg:           40 50% 97%;    /* warm cream      #FBF7EC */
+    --surface:      40 40% 94%;    /* paper           #F4ECDA */
+    --surface-2:    40 30% 90%;    /* raised paper    #EAE0CB */
+    --line:         30 20% 82%;    /* border          #D6CABA */
+    --foreground:   30 30% 14%;    /* dark warm brown #2F261D */
+    --cream:        30 30% 14%;    /* (alias of fg in light) */
+    --muted:        40 30% 90%;
+    --muted-fg:     30 15% 38%;    /*                 #6D5F50 */
+
+    /* Darken brand accents for AA contrast on cream background */
+    --saffron:      30 95% 42%;    /* darker saffron  #D17307 */
+    --coral:        12 80% 48%;    /* darker coral    #DC4421 */
+    --sage:         108 35% 32%;   /* darker sage     #426F3D */
+    --blush:        15 65% 60%;    /* warm rose       #D08066 */
+    --plum:         320 30% 38%;   /*                 #7A4F66 */
+
+    color-scheme: light;
+  }
+
+  /* ── Semantic mapping (Tailwind reads these) — same for both themes ───── */
+  :root {
     --background:           var(--bg);
     --card:                 var(--surface);
     --card-foreground:      var(--foreground);
@@ -60,7 +88,6 @@
   html {
     scroll-behavior: smooth;
     background: hsl(var(--bg));
-    color-scheme: dark;
   }
   body {
     @apply bg-background text-foreground antialiased;

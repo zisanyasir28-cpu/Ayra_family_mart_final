@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { UserRole } from '@superstore/shared';
 
 // ─── Navigation items ─────────────────────────────────────────────────────────
@@ -226,6 +227,12 @@ function SidebarContent({
         {collapsed && (
           <div className="mb-2 flex justify-center">
             <UserAvatar name={user?.name ?? 'A'} />
+          </div>
+        )}
+
+        {!collapsed && (
+          <div className="mb-2">
+            <ThemeToggle compact />
           </div>
         )}
 

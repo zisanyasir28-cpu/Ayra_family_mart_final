@@ -16,6 +16,10 @@
   "devDependencies": {
     "concurrently": "^8.2.2"
   },
+  "overrides": {
+    "react":     "19.2.5",
+    "react-dom": "19.2.5"
+  },
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.0.0"

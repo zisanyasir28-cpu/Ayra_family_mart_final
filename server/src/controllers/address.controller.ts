@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { asyncHandler } from '../utils/asyncHandler';
-import { ApiError } from '../utils/ApiError';
 import { sendSuccess, sendCreated, sendNoContent } from '../utils/ApiResponse';
+import { checkOwnership } from '../utils/checkOwnership';
 import type { AddressInput, UpdateAddressInput } from '@superstore/shared';
 
 // ─── List ─────────────────────────────────────────────────────────────────────
@@ -62,9 +62,7 @@ export const updateAddress = asyncHandler(async (req: Request, res: Response) =>
   const data = req.body as UpdateAddressInput;
 
   const existing = await prisma.address.findUnique({ where: { id } });
-  if (!existing || existing.userId !== userId) {
-    throw ApiError.notFound('Address', 'ADDRESS_NOT_FOUND');
-  }
+  checkOwnership(existing, userId, 'Address');
 
   const updated = await prisma.$transaction(async (tx) => {
     if (data.isDefault === true) {
@@ -100,9 +98,7 @@ export const deleteAddress = asyncHandler(async (req: Request, res: Response) =>
   const { id } = req.params as { id: string };
 
   const existing = await prisma.address.findUnique({ where: { id } });
-  if (!existing || existing.userId !== userId) {
-    throw ApiError.notFound('Address', 'ADDRESS_NOT_FOUND');
-  }
+  checkOwnership(existing, userId, 'Address');
 
   await prisma.address.delete({ where: { id } });
   return sendNoContent(res);
@@ -115,9 +111,7 @@ export const setDefaultAddress = asyncHandler(async (req: Request, res: Response
   const { id } = req.params as { id: string };
 
   const existing = await prisma.address.findUnique({ where: { id } });
-  if (!existing || existing.userId !== userId) {
-    throw ApiError.notFound('Address', 'ADDRESS_NOT_FOUND');
-  }
+  checkOwnership(existing, userId, 'Address');
 
   const updated = await prisma.$transaction(async (tx) => {
     await tx.address.updateMany({

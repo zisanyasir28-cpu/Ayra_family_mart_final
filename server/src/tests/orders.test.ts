@@ -390,7 +390,7 @@ describe('POST /api/v1/orders — SSLCOMMERZ', () => {
 // ─── 6. Ownership ─────────────────────────────────────────────────────────────
 
 describe('GET /api/v1/orders/me/:id — ownership', () => {
-  it('returns 404 (not 403) for an order owned by another user', async () => {
+  it('returns 403 FORBIDDEN for an order owned by another user (checkOwnership)', async () => {
     vi.mocked(prisma.order.findUnique).mockResolvedValue({
       id: ORDER_ID, userId: OTHER_ID, status: 'PENDING',
     } as any);
@@ -399,8 +399,8 @@ describe('GET /api/v1/orders/me/:id — ownership', () => {
       .get(`/api/v1/orders/me/${ORDER_ID}`)
       .set('Authorization', `Bearer ${CUSTOMER_TOKEN}`);
 
-    expect(res.status).toBe(404);
-    expect(res.body.error.code).toBe('NOT_FOUND');
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe('FORBIDDEN');
   });
 
   it('returns the order when the requester is the owner', async () => {

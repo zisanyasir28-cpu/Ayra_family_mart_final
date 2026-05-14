@@ -9,6 +9,8 @@ import { generateOrderNumber } from '../utils/generateOrderNumber';
 import { validateCouponForUser } from '../services/coupon.service';
 import { sendOrderConfirmation, sendOrderStatusChange } from '../lib/email';
 import { createNotification } from './notification.controller';
+import { logger } from '../lib/logger';
+import { checkOwnership } from '../utils/checkOwnership';
 import { initiatePayment } from '../lib/sslcommerz';
 import type {
   CreateOrderInput,
@@ -202,6 +204,17 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // 3. Post-transaction side effects
+  logger.info(
+    {
+      orderId:      order.id,
+      orderNumber:  order.orderNumber,
+      userId,
+      totalInPaisa: order.totalInPaisa,
+      paymentMethod: body.paymentMethod,
+    },
+    'order.created',
+  );
+
   void createNotification(
     userId,
     'ORDER_CREATED',
@@ -226,7 +239,7 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
         })),
       },
       { email: user.email, name: user.name },
-    ).catch((e) => console.error('[email] order confirmation failed', e));
+    ).catch((err) => logger.warn({ err }, 'email.order_confirmation_failed'));
 
     return sendCreated(res, { order });
   }
@@ -238,6 +251,11 @@ export const createOrder = asyncHandler(async (req: Request, res: Response) => {
     amountInPaisa: order.totalInPaisa,
     customer:      { name: user.name, email: user.email, phone: user.phone ?? '' },
   });
+
+  logger.info(
+    { orderId: order.id, gatewayRef: sessionKey, amountInPaisa: order.totalInPaisa },
+    'payment.initiated',
+  );
 
   await prisma.payment.update({
     where: { orderId: order.id },
@@ -314,9 +332,7 @@ export const getMyOrderById = asyncHandler(async (req: Request, res: Response) =
     },
   });
 
-  if (!order || order.userId !== userId) {
-    throw ApiError.notFound('Order');
-  }
+  checkOwnership(order, userId, 'Order');
 
   return sendSuccess(res, order);
 });
@@ -336,9 +352,7 @@ export const cancelOrder = asyncHandler(async (req: Request, res: Response) => {
       where:   { id },
       include: { items: true, couponUsage: true },
     });
-    if (!existing || existing.userId !== userId) {
-      throw ApiError.notFound('Order');
-    }
+    checkOwnership(existing, userId, 'Order');
     if (existing.status !== 'PENDING' && existing.status !== 'CONFIRMED') {
       throw ApiError.badRequest(
         `Order in status ${existing.status} cannot be cancelled`,
@@ -387,7 +401,7 @@ export const cancelOrder = asyncHandler(async (req: Request, res: Response) => {
     { email: user.email, name: user.name },
     order.status,
     reason,
-  ).catch((e) => console.error('[email] cancel notice failed', e));
+  ).catch((err) => logger.warn({ err }, 'email.cancel_notice_failed'));
 
   return sendSuccess(res, order);
 });
@@ -455,7 +469,7 @@ export const adminUpdateOrderStatus = asyncHandler(async (req: Request, res: Res
     { email: order.user.email, name: order.user.name },
     status,
     note,
-  ).catch((e) => console.error('[email] status change failed', e));
+  ).catch((err) => logger.warn({ err }, 'email.status_change_failed'));
 
   void createNotification(
     order.userId,

@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -68,10 +69,10 @@ export default defineConfig(({ command }) => ({
     }),
   ],
   resolve: {
-    // Force a single copy of React in the monorepo — without this, npm workspace
-    // hoisting can leave a React 18 stub in the root node_modules while client
-    // has React 19, causing the "Invalid hook call" / duplicate-React crash.
-    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
+    // Force a single copy of React in the monorepo — root package.json
+    // declares an `overrides` block pinning react/react-dom to 19.x, so this
+    // dedupe is sufficient.
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@superstore/shared': path.resolve(__dirname, '../shared/src/index.ts'),
@@ -89,5 +90,16 @@ export default defineConfig(({ command }) => ({
   build: {
     target: 'es2022',
     sourcemap: true,
+  },
+  test: {
+    environment: 'jsdom',
+    globals:     true,
+    setupFiles:  ['./src/tests/setup.ts'],
+    css:         false,
+    // Force a single React instance — otherwise hoisted React 18 in the
+    // monorepo root conflicts with client's React 19 in tests.
+    server: {
+      deps: { inline: [/^react/, /^@testing-library/] },
+    },
   },
 }));

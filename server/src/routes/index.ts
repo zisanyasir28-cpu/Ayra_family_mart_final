@@ -13,6 +13,7 @@ import wishlistRouter       from './wishlist.route';
 import notificationRouter   from './notification.route';
 import adminStatsRouter     from './admin.stats.route';
 import adminCustomersRouter from './admin.customers.route';
+import adminMetricsRouter   from './admin.metrics.route';
 import { customerOrderRouter, adminOrderRouter } from './order.route';
 
 const router = Router();
@@ -33,5 +34,6 @@ router.use('/orders',           customerOrderRouter);
 router.use('/admin/orders',     adminOrderRouter);
 router.use('/admin/stats',      adminStatsRouter);
 router.use('/admin/customers',  adminCustomersRouter);
+router.use('/admin/metrics',    adminMetricsRouter);
 
 export default router;

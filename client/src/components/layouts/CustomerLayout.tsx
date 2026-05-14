@@ -13,6 +13,8 @@ import { CursorFollower }  from '../common/CursorFollower';
 import { SearchIcon, BasketIcon, ArrowRightIcon } from '../common/HandIcon';
 import { cn, formatPaisa } from '../../lib/utils';
 import { thumb }           from '../../lib/cloudinary';
+import { sanitizeText }    from '../../lib/sanitize';
+import { ThemeToggle }     from '../common/ThemeToggle';
 import { useCartStore }    from '../../store/cartStore';
 import { useAuthStore }    from '../../store/authStore';
 import { fetchCategories } from '../../services/categories';
@@ -402,12 +404,12 @@ function NotificationBell() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-display text-xs font-semibold text-cream">
-                          {n.title}
+                          {sanitizeText(n.title)}
                           {!n.isRead && (
                             <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-coral align-middle" />
                           )}
                         </p>
-                        <p className="line-clamp-2 text-[11px] text-cream/55">{n.message}</p>
+                        <p className="line-clamp-2 text-[11px] text-cream/55">{sanitizeText(n.message)}</p>
                         <p className="mt-0.5 text-[10px] text-cream/35">{relativeTime(n.createdAt)}</p>
                       </div>
                     </button>
@@ -493,6 +495,11 @@ function UserMenu() {
                   {label}
                 </Link>
               ))}
+              <div className="my-1.5 h-px bg-line" />
+              <div className="px-3.5 py-2">
+                <p className="mb-1.5 text-[10px] uppercase tracking-[0.18em] text-cream/45">Theme</p>
+                <ThemeToggle compact />
+              </div>
               <div className="my-1.5 h-px bg-line" />
               <button
                 onClick={() => { clearAuth(); setOpen(false); }}
