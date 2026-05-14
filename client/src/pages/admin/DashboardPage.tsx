@@ -68,7 +68,7 @@ function RevenueTooltip({ active, payload, label }: {
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-md">
+    <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-lg">
       <p className="font-medium text-foreground">{label}</p>
       <p className="mt-0.5 text-muted-foreground">
         Revenue: <span className="font-semibold text-foreground">
@@ -198,20 +198,20 @@ export default function DashboardPage() {
               <AreaChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
                 <defs>
                   <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="var(--color-primary)" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0.02} />
+                    <stop offset="5%"  stopColor="var(--color-primary)" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0.78} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: 'var(--color-muted-foreground)' }}
+                  tick={{ fontSize: 10, fill: 'var(--color-primary)' }}
                   tickLine={false}
                   axisLine={false}
                   interval={4}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: 'var(--color-muted-foreground)' }}
+                  tick={{ fontSize: 10, fill: 'var(--color-primary)' }}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v: number) => `৳${(v / 100).toFixed(0)}`}
