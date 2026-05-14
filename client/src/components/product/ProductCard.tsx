@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { cn, formatPaisa } from '../../lib/utils';
+import { card as cardImg } from '../../lib/cloudinary';
 import { useCart } from '../../hooks/useCart';
 import { HeartLineIcon, PlusIcon, MinusIcon } from '../common/HandIcon';
 import { useWishlistStore } from '../../store/wishlistStore';
@@ -17,7 +18,7 @@ interface ProductCardProps {
   emphasis?:  boolean;
 }
 
-export function ProductCard({ product, className, emphasis = false }: ProductCardProps) {
+function ProductCardImpl({ product, className, emphasis = false }: ProductCardProps) {
   const { getItemQuantity, addToCart, increment, decrement } = useCart();
   const qty          = getItemQuantity(product.id);
   const isOutOfStock = product.stockQuantity === 0;
@@ -83,9 +84,10 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
         {firstImage && !imgError ? (
           <>
             <img
-              src={firstImage.url}
+              src={cardImg(firstImage.url)}
               alt={firstImage.altText ?? product.name}
               loading="lazy"
+              decoding="async"
               onError={() => setImgError(true)}
               className={cn(
                 'absolute inset-0 h-full w-full object-cover transition-[transform,opacity] duration-500 ease-editorial',
@@ -94,9 +96,10 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
             />
             {secondImage && (
               <img
-                src={secondImage.url}
+                src={cardImg(secondImage.url)}
                 alt={secondImage.altText ?? product.name}
                 loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full scale-[1.04] object-cover opacity-0 transition-[transform,opacity] duration-500 ease-editorial group-hover:scale-100 group-hover:opacity-100"
               />
             )}
@@ -236,6 +239,20 @@ export function ProductCard({ product, className, emphasis = false }: ProductCar
     </div>
   );
 }
+
+// ─── Memoized export ──────────────────────────────────────────────────────────
+//
+// Custom equality: re-render only when the props that visually matter change.
+// Wishlist state is read internally via Zustand selector so it doesn't need
+// to be in the equality check.
+export const ProductCard = memo(ProductCardImpl, (prev, next) =>
+  prev.product.id                    === next.product.id &&
+  prev.product.effectivePriceInPaisa === next.product.effectivePriceInPaisa &&
+  prev.product.stockQuantity         === next.product.stockQuantity &&
+  prev.product.name                  === next.product.name &&
+  prev.className                     === next.className &&
+  prev.emphasis                      === next.emphasis,
+);
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 

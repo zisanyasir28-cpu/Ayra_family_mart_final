@@ -136,7 +136,7 @@ export default function CheckoutPage() {
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-6xl px-4 py-10 pb-32 md:pb-10">
       <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Checkout</h1>
 
       <div className="mt-6">
@@ -357,7 +357,7 @@ export default function CheckoutPage() {
           </AnimatePresence>
         </div>
 
-        <div className="md:col-span-1 lg:col-span-2">
+        <div className="hidden md:col-span-1 md:block lg:col-span-2">
           <OrderSummary paymentMethod={paymentMethod} />
         </div>
       </div>
@@ -365,6 +365,31 @@ export default function CheckoutPage() {
       <p className="mt-8 text-center text-sm text-muted-foreground">
         Need help? <Link to="/" className="text-saffron hover:underline">Contact support</Link>
       </p>
+
+      {/* Mobile sticky total bar */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-bg/95 backdrop-blur md:hidden"
+        style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom, 0px))' }}
+      >
+        <div className="container flex items-center justify-between py-3">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+              {items.length} item{items.length !== 1 ? 's' : ''} · Total
+            </p>
+            <p className="font-display text-lg font-bold text-foreground">
+              {formatPaisa(
+                subtotalInPaisa
+                  - (coupon?.discountInPaisa ?? 0)
+                  + (subtotalInPaisa - (coupon?.discountInPaisa ?? 0) >= 99_900 ? 0 : 6_000)
+                  + (paymentMethod === PaymentMethod.COD ? 2_000 : 0),
+              )}
+            </p>
+          </div>
+          <div className="flex items-center gap-1 text-xs text-saffron">
+            <span>Step {step}/3</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

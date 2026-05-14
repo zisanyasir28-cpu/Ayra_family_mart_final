@@ -2,12 +2,14 @@ import { Router } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { validate } from '../utils/validate';
 import { requireAdmin } from '../middleware/requireAuth';
+import { setCache } from '../middleware/cache';
 import { uploadMultiple } from '../lib/multer';
 import {
   getProducts,
   getFeaturedProducts,
   getProductBySlug,
   getRelatedProducts,
+  autocomplete,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -39,12 +41,13 @@ const searchLimiter = rateLimit({
 // ─── Public ───────────────────────────────────────────────────────────────────
 
 // IMPORTANT: static paths BEFORE /:slug to avoid Express treating them as slug params
-router.get('/featured', getFeaturedProducts);
+router.get('/featured',      setCache(60),  getFeaturedProducts);
+router.get('/autocomplete',  searchLimiter, autocomplete);
 
-router.get('/', searchLimiter, validate(productQuerySchema, 'query'), getProducts);
+router.get('/', setCache(60), searchLimiter, validate(productQuerySchema, 'query'), getProducts);
 
-router.get('/:slug', getProductBySlug);
-router.get('/:id/related', getRelatedProducts);
+router.get('/:slug',       setCache(300), getProductBySlug);
+router.get('/:id/related', setCache(300), getRelatedProducts);
 
 // ─── Admin ────────────────────────────────────────────────────────────────────
 

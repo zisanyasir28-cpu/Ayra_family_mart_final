@@ -5,8 +5,8 @@ import type { ApiErrorResponse } from '@superstore/shared';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 2,       // 2 minutes
-      gcTime: 1000 * 60 * 10,          // 10 minutes
+      staleTime: 60_000,               // 1 minute
+      gcTime:    300_000,              // 5 minutes
       retry: (failureCount, error) => {
         const axiosError = error as AxiosError<ApiErrorResponse>;
         const status = axiosError?.response?.status;

@@ -3,6 +3,8 @@ import { Suspense, lazy } from 'react';
 import CustomerLayout from './components/layouts/CustomerLayout';
 import AdminLayout    from './components/layouts/AdminLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { InstallPrompt }  from './components/pwa/InstallPrompt';
+import { UpdateToast }    from './components/pwa/UpdateToast';
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
@@ -15,6 +17,7 @@ const OrderDetailPage  = lazy(() => import('./pages/customer/OrderDetailPage'));
 const OrderSuccessPage = lazy(() => import('./pages/customer/OrderSuccessPage'));
 const AccountPage      = lazy(() => import('./pages/customer/AccountPage'));
 const WishlistPage     = lazy(() => import('./pages/customer/WishlistPage'));
+const ProductDetailPage = lazy(() => import('./pages/customer/ProductDetailPage'));
 
 // Auth (outside CustomerLayout — own centered layout)
 const LoginPage           = lazy(() => import('./pages/auth/LoginPage'));
@@ -62,7 +65,10 @@ function AdminLoader() {
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <InstallPrompt />
+      <UpdateToast />
+      <Routes>
       {/* ── Auth pages — standalone (no navbar/footer) ──────────────────── */}
       <Route
         path="/login"
@@ -186,6 +192,14 @@ export default function App() {
             </Suspense>
           }
         />
+        <Route
+          path="/products/:slug"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ProductDetailPage />
+            </Suspense>
+          }
+        />
 
         {/* Protected routes — redirect to /login if unauthenticated */}
         <Route
@@ -252,7 +266,8 @@ export default function App() {
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
-    </Routes>
+      </Routes>
+    </>
   );
 }
 

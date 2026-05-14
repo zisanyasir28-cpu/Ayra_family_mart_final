@@ -7,6 +7,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import responseTime from 'response-time';
 import { rateLimit } from 'express-rate-limit';
 
 import { errorHandler } from './middleware/errorHandler';
@@ -16,6 +18,11 @@ const app = express();
 // If the process harness injects PORT=5173 (Vite's port), fall back to 5000
 const _ENV_PORT = parseInt(process.env['PORT'] ?? '5000', 10);
 const PORT = _ENV_PORT === 5173 ? 5000 : _ENV_PORT;
+
+// ─── Performance ─────────────────────────────────────────────────────────────
+app.set('etag', 'strong');                       // Strong ETags for JSON responses
+app.use(responseTime());                          // X-Response-Time header
+app.use(compression({ threshold: 1024 }));        // gzip/br compression
 
 // ─── Security ────────────────────────────────────────────────────────────────
 app.use(helmet());

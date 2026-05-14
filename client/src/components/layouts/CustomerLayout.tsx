@@ -5,16 +5,18 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Heart, User, Menu, X, ChevronDown,
   Home, LayoutGrid, Package, LogOut, Settings, Zap,
-  MapPin, Phone, Mail as MailIcon, Bell, ShoppingBag, Info,
+  MapPin, Phone, Mail as MailIcon, Bell, ShoppingBag, Info, Search as SearchLucide,
 } from 'lucide-react';
 import { Logo }            from '../common/Logo';
 import { CartDrawer }      from '../CartDrawer';
 import { CursorFollower }  from '../common/CursorFollower';
 import { SearchIcon, BasketIcon, ArrowRightIcon } from '../common/HandIcon';
-import { cn }              from '../../lib/utils';
+import { cn, formatPaisa } from '../../lib/utils';
+import { thumb }           from '../../lib/cloudinary';
 import { useCartStore }    from '../../store/cartStore';
 import { useAuthStore }    from '../../store/authStore';
 import { fetchCategories } from '../../services/categories';
+import { fetchAutocomplete, type AutocompleteHit } from '../../services/products';
 import {
   fetchUnreadCount,
   fetchNotifications,
@@ -77,18 +79,49 @@ function AnnouncementBar() {
 // ─── Search bar ───────────────────────────────────────────────────────────────
 
 function SearchBar() {
-  const [query,   setQuery]   = useState('');
-  const [focused, setFocused] = useState(false);
+  const [query,    setQuery]    = useState('');
+  const [debounced, setDebounced] = useState('');
+  const [focused,  setFocused]  = useState(false);
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLFormElement>(null);
+
+  // Debounce the search query for autocomplete
+  useEffect(() => {
+    const id = setTimeout(() => setDebounced(query.trim()), 250);
+    return () => clearTimeout(id);
+  }, [query]);
+
+  const { data: hits = [] } = useQuery<AutocompleteHit[]>({
+    queryKey: ['autocomplete', debounced],
+    queryFn:  () => fetchAutocomplete(debounced),
+    enabled:  debounced.length >= 2,
+    staleTime: 30_000,
+  });
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setFocused(false);
+      }
+    }
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const q = query.trim();
-    if (q) navigate(`/products?search=${encodeURIComponent(q)}`);
+    if (q) {
+      setFocused(false);
+      navigate(`/products?search=${encodeURIComponent(q)}`);
+    }
   }
 
+  const showDropdown = focused && debounced.length >= 2 && hits.length > 0;
+
   return (
-    <form onSubmit={handleSubmit} className="flex-1 max-w-md">
+    <form ref={containerRef} onSubmit={handleSubmit} className="relative flex-1 max-w-md">
       <div
         className={cn(
           'relative flex items-center rounded-full border bg-surface px-4 transition-all duration-300',
@@ -106,7 +139,6 @@ function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           placeholder="Search the market…"
           className="w-full bg-transparent py-2.5 pl-3 pr-2 text-sm text-cream placeholder:text-cream/35 focus:outline-none"
         />
@@ -124,7 +156,92 @@ function SearchBar() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Autocomplete dropdown */}
+      <AnimatePresence>
+        {showDropdown && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{    opacity: 0, y: -4 }}
+            transition={{ duration: 0.12 }}
+            className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-line bg-surface shadow-lift"
+          >
+            <ul className="max-h-80 overflow-y-auto">
+              {hits.map((hit) => (
+                <li key={hit.id}>
+                  <Link
+                    to={`/products/${hit.slug}`}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => { setFocused(false); setQuery(''); }}
+                    className="flex items-center gap-3 px-3 py-2.5 transition hover:bg-surface-2"
+                  >
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface-2">
+                      {hit.imageUrl ? (
+                        <img src={thumb(hit.imageUrl)} alt="" className="h-full w-full object-cover" loading="lazy" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xl opacity-30">🛒</div>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm text-cream">{hit.name}</p>
+                      <p className="text-[11px] text-cream/55">{formatPaisa(hit.priceInPaisa)}</p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="submit"
+              onMouseDown={(e) => e.preventDefault()}
+              className="block w-full border-t border-line bg-surface-2 py-2 text-center text-[11px] uppercase tracking-[0.15em] text-saffron hover:bg-bg/30"
+            >
+              See all results for "{debounced}"
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </form>
+  );
+}
+
+// ─── Mobile search (icon + full-screen modal) ─────────────────────────────────
+
+function MobileSearch() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream md:hidden"
+        aria-label="Search"
+      >
+        <SearchLucide className="h-5 w-5" />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{    opacity: 0 }}
+            className="fixed inset-0 z-[55] flex flex-col bg-bg p-4"
+          >
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setOpen(false)}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition hover:bg-cream/5 active:scale-90"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5 text-cream" />
+              </button>
+              <div className="flex-1" onClick={() => setOpen(false)}>
+                <SearchBar />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -798,6 +915,7 @@ export default function CustomerLayout() {
           </div>
 
           <div className="ml-auto flex items-center gap-1.5">
+            <MobileSearch />
             <Link
               to="/wishlist"
               className="hidden h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream sm:flex"
@@ -809,11 +927,6 @@ export default function CustomerLayout() {
             <CartButton onClick={() => setCartOpen(true)} />
             <UserMenu />
           </div>
-        </div>
-
-        {/* Mobile search */}
-        <div className="container pb-3 md:hidden">
-          <SearchBar />
         </div>
 
         <CategoryNav categories={categories} />

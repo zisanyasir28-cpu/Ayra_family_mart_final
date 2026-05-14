@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { validate } from '../utils/validate';
 import { requireAdmin } from '../middleware/requireAuth';
+import { setCache } from '../middleware/cache';
 import { uploadSingle } from '../lib/multer';
 import {
   getCategories,
@@ -19,8 +20,8 @@ import {
 const router = Router();
 
 // ─── Public ───────────────────────────────────────────────────────────────────
-router.get('/', getCategories);
-router.get('/:slug', getCategoryBySlug);
+router.get('/',      setCache(600), getCategories);
+router.get('/:slug', setCache(600), getCategoryBySlug);
 
 // ─── Admin ────────────────────────────────────────────────────────────────────
 router.post(

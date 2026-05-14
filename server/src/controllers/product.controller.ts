@@ -132,6 +132,30 @@ function toOrderBy(
   }
 }
 
+// ─── Trigram search helper ────────────────────────────────────────────────────
+
+/**
+ * Runs a similarity() query against the products table. Returns product IDs
+ * ordered by relevance (best match first). Falls back to an empty array if
+ * the pg_trgm extension isn't installed — caller should then use ILIKE.
+ */
+async function searchWithTrgm(term: string): Promise<string[]> {
+  try {
+    const rows = await prisma.$queryRaw<{ id: string }[]>`
+      SELECT id FROM products
+      WHERE status = 'ACTIVE'
+        AND (similarity(name, ${term}) > 0.2
+             OR name ILIKE ${'%' + term + '%'}
+             OR description ILIKE ${'%' + term + '%'})
+      ORDER BY similarity(name, ${term}) DESC, name ASC
+      LIMIT 200
+    `;
+    return rows.map((r) => r.id);
+  } catch {
+    return [];
+  }
+}
+
 // ─── Public Controllers ───────────────────────────────────────────────────────
 
 /**
@@ -166,14 +190,32 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
         ...(maxPricePaisa != null && { lte: maxPricePaisa }),
       },
     }),
-    ...(q.search && {
-      OR: [
-        { name:        { contains: q.search, mode: 'insensitive' } },
-        { description: { contains: q.search, mode: 'insensitive' } },
-        { sku:         { contains: q.search, mode: 'insensitive' } },
-      ],
-    }),
   };
+
+  // ── Search: pg_trgm for >2 chars (fuzzy + relevance), ILIKE for 1-2 chars ──
+  if (q.search) {
+    const term = q.search.trim();
+    if (term.length > 2) {
+      // Try trigram first (requires pg_trgm extension + GIN index).
+      const trgmIds = await searchWithTrgm(term).catch(() => [] as string[]);
+      if (trgmIds.length > 0) {
+        where.id = { in: trgmIds };
+      } else {
+        // Fallback: substring ILIKE (works without pg_trgm)
+        where.OR = [
+          { name:        { contains: term, mode: 'insensitive' } },
+          { description: { contains: term, mode: 'insensitive' } },
+          { sku:         { contains: term, mode: 'insensitive' } },
+        ];
+      }
+    } else {
+      // Too short for similarity to be useful — plain prefix-style match
+      where.OR = [
+        { name: { contains: term, mode: 'insensitive' } },
+        { sku:  { contains: term, mode: 'insensitive' } },
+      ];
+    }
+  }
 
   const [total, rawProducts] = await Promise.all([
     prisma.product.count({ where }),
@@ -241,6 +283,62 @@ export const getFeaturedProducts = asyncHandler(
     return sendSuccess(res, enriched);
   },
 );
+
+/**
+ * GET /api/v1/products/autocomplete?q=
+ * Lightweight search suggestion endpoint. Returns up to 8 results sorted by
+ * trigram similarity. Cached in Redis for 60 seconds per query.
+ */
+export const autocomplete = asyncHandler(async (req: Request, res: Response) => {
+  const q = String(req.query['q'] ?? '').trim();
+  if (q.length < 2) {
+    return sendSuccess(res, []);
+  }
+
+  const cacheKey = `products:autocomplete:${q.toLowerCase()}`;
+  const cached = await redis.get<unknown>(cacheKey).catch(() => null);
+  if (cached) return sendSuccess(res, cached);
+
+  let rows: Array<{
+    id: string; name: string; slug: string; priceInPaisa: number; imageUrl: string | null;
+  }> = [];
+
+  try {
+    rows = await prisma.$queryRaw`
+      SELECT p.id, p.name, p.slug, p."priceInPaisa",
+             (SELECT url FROM product_images WHERE "productId" = p.id ORDER BY "sortOrder" ASC LIMIT 1) AS "imageUrl"
+      FROM products p
+      WHERE p.status = 'ACTIVE'
+        AND (similarity(p.name, ${q}) > 0.15 OR p.name ILIKE ${'%' + q + '%'})
+      ORDER BY similarity(p.name, ${q}) DESC, p.name ASC
+      LIMIT 8
+    `;
+  } catch {
+    // pg_trgm missing → fallback to plain ILIKE via Prisma
+    const products = await prisma.product.findMany({
+      where: {
+        status: 'ACTIVE',
+        name:   { contains: q, mode: 'insensitive' },
+      },
+      orderBy: { name: 'asc' },
+      take: 8,
+      select: {
+        id: true, name: true, slug: true, priceInPaisa: true,
+        images: { take: 1, orderBy: { sortOrder: 'asc' }, select: { url: true } },
+      },
+    });
+    rows = products.map((p) => ({
+      id:           p.id,
+      name:         p.name,
+      slug:         p.slug,
+      priceInPaisa: p.priceInPaisa,
+      imageUrl:     p.images[0]?.url ?? null,
+    }));
+  }
+
+  await redis.set(cacheKey, rows, { ex: 60 }).catch(() => {});
+  return sendSuccess(res, rows);
+});
 
 /**
  * GET /api/v1/products/:slug

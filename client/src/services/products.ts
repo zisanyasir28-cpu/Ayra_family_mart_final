@@ -73,8 +73,48 @@ export async function fetchFeaturedProducts(): Promise<ApiProduct[]> {
 }
 
 export async function fetchProductBySlug(slug: string): Promise<ApiProduct> {
-  const res = await api.get<ApiSuccessResponse<ApiProduct>>(`/products/${slug}`);
-  return res.data.data;
+  try {
+    const res = await api.get<ApiSuccessResponse<ApiProduct>>(`/products/${slug}`);
+    return res.data.data;
+  } catch {
+    const found = demoProducts.find((p) => p.slug === slug);
+    if (!found) throw new Error('Product not found');
+    return found;
+  }
+}
+
+// ─── Autocomplete ─────────────────────────────────────────────────────────────
+
+export interface AutocompleteHit {
+  id:           string;
+  name:         string;
+  slug:         string;
+  priceInPaisa: number;
+  imageUrl:     string | null;
+}
+
+export async function fetchAutocomplete(q: string): Promise<AutocompleteHit[]> {
+  if (q.trim().length < 2) return [];
+  try {
+    const res = await api.get<ApiSuccessResponse<AutocompleteHit[]>>(
+      '/products/autocomplete',
+      { params: { q } },
+    );
+    return res.data.data;
+  } catch {
+    // Demo fallback — local fuzzy match against demoProducts
+    const needle = q.trim().toLowerCase();
+    return demoProducts
+      .filter((p) => p.name.toLowerCase().includes(needle))
+      .slice(0, 8)
+      .map((p) => ({
+        id:           p.id,
+        name:         p.name,
+        slug:         p.slug,
+        priceInPaisa: p.effectivePriceInPaisa,
+        imageUrl:     p.images[0]?.url ?? null,
+      }));
+  }
 }
 
 // ─── Admin operations ─────────────────────────────────────────────────────────

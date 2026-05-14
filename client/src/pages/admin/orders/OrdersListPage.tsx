@@ -158,8 +158,56 @@ export default function AdminOrdersListPage() {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+      {/* Mobile card list */}
+      <div className="space-y-2 md:hidden">
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-20 animate-pulse rounded-xl bg-card border border-border" />
+          ))
+        ) : orders.length === 0 ? (
+          <div className="rounded-xl border border-border bg-card py-10 text-center text-sm text-muted-foreground">
+            No orders found.
+          </div>
+        ) : (
+          orders.map((order) => (
+            <Link
+              key={order.id}
+              to={`/admin/orders/${order.id}`}
+              className="block rounded-xl border border-border bg-card p-3 transition active:scale-[0.99]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="font-mono text-xs font-semibold text-foreground">{order.orderNumber}</p>
+                  <p className="mt-0.5 truncate text-sm text-foreground">
+                    {(order as { user?: { name: string } }).user?.name ?? order.snapFullName}
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                    {format(new Date(order.createdAt), 'dd MMM yyyy')}
+                  </p>
+                </div>
+                <div className="flex flex-col items-end gap-1.5 shrink-0">
+                  <span className={cn(
+                    'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                    STATUS_TONE[order.status],
+                  )}>
+                    {order.status.replace('_', ' ')}
+                  </span>
+                  <span className="font-semibold text-foreground">{formatPaisa(order.totalInPaisa)}</span>
+                  <span className={cn(
+                    'rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide',
+                    PAYMENT_TONE[order.paymentStatus],
+                  )}>
+                    {order.paymentStatus}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-x-auto rounded-2xl border border-border bg-card md:block">
         <table className="w-full text-sm">
           <thead className="border-b border-border">
             <tr className="text-left text-xs text-muted-foreground">
