@@ -15,6 +15,7 @@ import adminStatsRouter     from './admin.stats.route';
 import adminCustomersRouter from './admin.customers.route';
 import adminMetricsRouter   from './admin.metrics.route';
 import { customerOrderRouter, adminOrderRouter } from './order.route';
+import paymentRouter from './payment.route';
 
 const router = Router();
 
@@ -32,6 +33,7 @@ router.use('/wishlist',         wishlistRouter);
 router.use('/notifications',    notificationRouter);
 router.use('/orders',           customerOrderRouter);
 router.use('/admin/orders',     adminOrderRouter);
+router.use('/payment',          paymentRouter);
 router.use('/admin/stats',      adminStatsRouter);
 router.use('/admin/customers',  adminCustomersRouter);
 router.use('/admin/metrics',    adminMetricsRouter);
