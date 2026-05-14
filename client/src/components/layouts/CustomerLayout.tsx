@@ -734,15 +734,15 @@ function Footer() {
             <ul className="space-y-3 text-sm text-cream/70">
               <li className="flex items-start gap-2.5">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-saffron" />
-                <span>Gulshan 2,<br />Dhaka 1212</span>
+                <span>Vasani Road,<br />Sirajganj 6700</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="h-4 w-4 shrink-0 text-saffron" />
-                +880 1700-000000
+                01710641516
               </li>
               <li className="flex items-center gap-2.5">
                 <MailIcon className="h-4 w-4 shrink-0 text-saffron" />
-                hello@ayra.bd
+                help@ayra-family.bd
               </li>
             </ul>
           </div>
@@ -783,8 +783,11 @@ function Footer() {
           <span>
             © {new Date().getFullYear()} Ayra Family Mart · All rights reserved.
           </span>
-          <span className="flex items-center gap-1.5">
-            Made with <span className="text-coral">♥</span> in <span className="font-bangla normal-case text-cream/65">বাংলাদেশ</span>
+          <span className="flex flex-col items-center gap-1 sm:items-end">
+            <span className="flex items-center gap-1.5">
+              Made with <span className="text-coral">♥</span> in <span className="font-bangla normal-case text-cream/65">বাংলাদেশ</span>
+            </span>
+            <span className="text-cream/30">Developed by — Zisan Yasir</span>
           </span>
         </div>
       </div>
