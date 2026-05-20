@@ -1,16 +1,104 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ════════════════════════════════════════════════════════════════════════════
+   Ayra · Tailwind v4 entry — palette + theme tokens
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@import "tailwindcss";
+
+/* Class-based dark variant (kept for forward compatibility; the storefront
+   currently swaps palettes via :root.light / :root.dark CSS variables rather
+   than `dark:` utilities). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Restore the v3 .container utility (v4 dropped the default container plugin). */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  width: 100%;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   @theme — Tailwind v4 design tokens. Color tokens reference the runtime
+   CSS variables defined in @layer base below so that swapping `:root.dark`
+   for `:root.light` instantly re-themes every utility. */
+@theme {
+  /* Brand palette (direct) */
+  --color-bg:         hsl(var(--bg));
+  --color-surface:    hsl(var(--surface));
+  --color-surface-2:  hsl(var(--surface-2));
+  --color-line:       hsl(var(--line));
+  --color-cream:      hsl(var(--foreground));
+  --color-saffron:    hsl(var(--saffron));
+  --color-coral:      hsl(var(--coral));
+  --color-sage:       hsl(var(--sage));
+  --color-blush:      hsl(var(--blush));
+  --color-plum:       hsl(var(--plum));
+
+  /* Semantic palette (Tailwind reads these for `bg-primary`, etc.) */
+  --color-background:             hsl(var(--background));
+  --color-foreground:             hsl(var(--foreground));
+  --color-border:                 hsl(var(--border));
+  --color-input:                  hsl(var(--input));
+  --color-ring:                   hsl(var(--ring));
+  --color-primary:                hsl(var(--primary));
+  --color-primary-foreground:     hsl(var(--primary-foreground));
+  --color-secondary:              hsl(var(--secondary));
+  --color-secondary-foreground:   hsl(var(--secondary-foreground));
+  --color-muted:                  hsl(var(--muted));
+  --color-muted-foreground:       hsl(var(--muted-foreground));
+  --color-accent:                 hsl(var(--accent));
+  --color-accent-foreground:      hsl(var(--accent-foreground));
+  --color-destructive:            hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-card:                   hsl(var(--card));
+  --color-card-foreground:        hsl(var(--card-foreground));
+  --color-popover:                hsl(var(--popover));
+  --color-popover-foreground:     hsl(var(--popover-foreground));
+
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-bangla:  'Hind Siliguri', system-ui, sans-serif;
+
+  /* Radii */
+  --radius-sm:  calc(var(--radius) - 6px);
+  --radius-md:  calc(var(--radius) - 4px);
+  --radius-lg:  var(--radius);
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+  --radius-4xl: 2rem;
+
+  /* Shadows */
+  --shadow-soft:    0 4px 24px -8px hsl(33 20% 4% / 0.5);
+  --shadow-lift:    0 18px 40px -16px hsl(33 20% 2% / 0.6);
+  --shadow-saffron: 0 0 32px -8px hsl(35 100% 66% / 0.45);
+  --shadow-coral:   0 0 32px -8px hsl(12 100% 64% / 0.45);
+
+  /* Easing */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Container max-width (used implicitly via the @utility above) */
+  --breakpoint-2xl: 1400px;
+}
+
+/* Match v3's default border behavior (Tailwind v4 changed default border to
+   currentColor). Apply our theme `--border` token everywhere. */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: hsl(var(--border));
+  }
+}
 
 /* ════════════════════════════════════════════════════════════════════════════
-   Ayra · Warm-dark interactive theme
+   Theme palette — flipped per `:root.light` / `:root.dark`
    ──────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  /* ── Default (dark) palette — applied when no class set OR when .dark ── */
+  /* Default (dark) palette — applied when no class set OR when .dark */
   :root,
   :root.dark {
-    /* ── Brand palette ─────────────────────────────────────────────────────── */
     --bg:           33 20% 6%;     /* warm near-black #0E0D0B */
     --surface:      30 15% 9%;     /* surface          #1A1815 */
     --surface-2:    30 14% 11%;    /* raised surface   #211E1A */
@@ -29,18 +117,17 @@
     color-scheme: dark;
   }
 
-  /* ── Light palette — warm cream surfaces with darker brand accents ─────── */
+  /* Light palette — warm cream surfaces with darker brand accents */
   :root.light {
     --bg:           40 50% 97%;    /* warm cream      #FBF7EC */
     --surface:      40 40% 94%;    /* paper           #F4ECDA */
     --surface-2:    40 30% 90%;    /* raised paper    #EAE0CB */
     --line:         30 20% 82%;    /* border          #D6CABA */
     --foreground:   30 30% 14%;    /* dark warm brown #2F261D */
-    --cream:        30 30% 14%;    /* (alias of fg in light) */
+    --cream:        30 30% 14%;
     --muted:        40 30% 90%;
     --muted-fg:     30 15% 38%;    /*                 #6D5F50 */
 
-    /* Darken brand accents for AA contrast on cream background */
     --saffron:      30 95% 42%;    /* darker saffron  #D17307 */
     --coral:        12 80% 48%;    /* darker coral    #DC4421 */
     --sage:         108 35% 32%;   /* darker sage     #426F3D */
@@ -50,49 +137,51 @@
     color-scheme: light;
   }
 
-  /* ── Semantic mapping (Tailwind reads these) — same for both themes ───── */
+  /* Semantic mapping — identical across both themes */
   :root {
-    --background:           var(--bg);
-    --card:                 var(--surface);
-    --card-foreground:      var(--foreground);
-    --popover:              var(--surface);
-    --popover-foreground:   var(--foreground);
+    --background:             var(--bg);
+    --card:                   var(--surface);
+    --card-foreground:        var(--foreground);
+    --popover:                var(--surface);
+    --popover-foreground:     var(--foreground);
 
-    --primary:              var(--saffron);
-    --primary-foreground:   var(--bg);
+    --primary:                var(--saffron);
+    --primary-foreground:     var(--bg);
 
-    --secondary:            var(--surface-2);
-    --secondary-foreground: var(--foreground);
+    --secondary:              var(--surface-2);
+    --secondary-foreground:   var(--foreground);
 
-    --muted-foreground:     var(--muted-fg);
+    --muted-foreground:       var(--muted-fg);
 
-    --accent:               var(--coral);
-    --accent-foreground:    var(--bg);
+    --accent:                 var(--coral);
+    --accent-foreground:      var(--bg);
 
-    --destructive:          var(--coral);
+    --destructive:            var(--coral);
     --destructive-foreground: var(--bg);
 
-    --border:               var(--line);
-    --input:                var(--line);
-    --ring:                 var(--saffron);
+    --border:                 var(--line);
+    --input:                  var(--line);
+    --ring:                   var(--saffron);
 
     --radius: 0.875rem;
   }
 }
 
-/* ── Base styles ──────────────────────────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════════════
+   Base styles
+   ──────────────────────────────────────────────────────────────────────────── */
+
 @layer base {
-  * {
-    @apply border-border;
-  }
   html {
     scroll-behavior: smooth;
     background: hsl(var(--bg));
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: hsl(var(--background));
+    color:            hsl(var(--foreground));
     font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
   ::selection {
@@ -107,32 +196,34 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Font utility classes
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
-@layer utilities {
-  .font-display { font-family: 'Fraunces', Georgia, serif;       }
-  .font-body    { font-family: 'Inter', system-ui, sans-serif;   }
-  .font-bangla  { font-family: 'Hind Siliguri', system-ui, sans-serif; }
-  .font-mono-num { font-variant-numeric: tabular-nums; font-family: 'Inter', monospace; }
+@utility font-display { font-family: 'Fraunces', Georgia, serif; }
+@utility font-body    { font-family: 'Inter', system-ui, sans-serif; }
+@utility font-bangla  { font-family: 'Hind Siliguri', system-ui, sans-serif; }
+@utility font-mono-num {
+  font-variant-numeric: tabular-nums;
+  font-family: 'Inter', monospace;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
    Scrollbar — slim, themed
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 ::-webkit-scrollbar              { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track        { background: hsl(var(--bg)); }
 ::-webkit-scrollbar-thumb        { background: hsl(var(--line)); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover  { background: hsl(var(--muted-fg) / 0.5); }
 
-@layer utilities {
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
+@utility scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
    Cursor follower hooks
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
   body[data-cursor="on"] {
@@ -150,7 +241,7 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Letter-by-letter reveal
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @keyframes letter-rise {
   from { transform: translateY(110%) rotate(4deg); opacity: 0; }
@@ -172,19 +263,20 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Marquee band
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @keyframes marquee-x {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.animate-marquee-x { animation: marquee-x 32s linear infinite; }
+.animate-marquee-x      { animation: marquee-x 32s linear infinite; }
 .animate-marquee-x-slow { animation: marquee-x 60s linear infinite; }
-.animate-marquee-x:hover, .animate-marquee-x-slow:hover { animation-play-state: paused; }
+.animate-marquee-x:hover,
+.animate-marquee-x-slow:hover { animation-play-state: paused; }
 
 /* ════════════════════════════════════════════════════════════════════════════
    Soft float / breathe / orbit
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @keyframes float-soft {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -206,7 +298,7 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Glow pulse (CTAs, live dots)
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @keyframes glow-saffron {
   0%, 100% { box-shadow: 0 0 0 0 hsl(var(--saffron) / 0.4); }
@@ -222,7 +314,7 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Shimmer skeleton
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @keyframes shimmer {
   from { background-position: -200% center; }
@@ -241,88 +333,85 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Underline-grow link
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
-@layer utilities {
-  .link-underline {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 0 1.5px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .link-underline:hover,
-  .group:hover .link-underline,
-  .link-underline.is-active {
-    background-size: 100% 1.5px;
-  }
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0 1.5px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover,
+.group:hover .link-underline,
+.link-underline.is-active {
+  background-size: 100% 1.5px;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   Eyebrow (small label above headings)
-   ══════════════════════════════════════════════════════════════════════════ */
+   Eyebrow + Display helpers
+   ──────────────────────────────────────────────────────────────────────────── */
 
-@layer components {
-  .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-foreground/55;
-  }
-  .eyebrow-dot {
-    @apply h-1.5 w-1.5 rounded-full bg-saffron;
-  }
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: hsl(var(--foreground) / 0.55);
+}
+.eyebrow-dot {
+  height: 0.375rem;
+  width: 0.375rem;
+  border-radius: 9999px;
+  background: hsl(var(--saffron));
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
-   Display headline helpers
-   ══════════════════════════════════════════════════════════════════════════ */
-
-@layer components {
-  .display-xl {
-    font-family: 'Fraunces', Georgia, serif;
-    font-weight: 900;
-    font-size: clamp(3rem, 9vw, 7.5rem);
-    line-height: 0.96;
-    letter-spacing: -0.035em;
-    font-variation-settings: "opsz" 144;
-  }
-  .display-lg {
-    font-family: 'Fraunces', Georgia, serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 5vw, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    font-variation-settings: "opsz" 144;
-  }
-  .display-md {
-    font-family: 'Fraunces', Georgia, serif;
-    font-weight: 700;
-    font-size: clamp(1.5rem, 2.6vw, 2.5rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-  }
+.display-xl {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 144;
+}
+.display-lg {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+}
+.display-md {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
    Glass surface
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
-@layer utilities {
-  .glass {
-    background: hsl(var(--surface) / 0.65);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid hsl(var(--foreground) / 0.06);
-  }
-  .glass-strong {
-    background: hsl(var(--bg) / 0.85);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid hsl(var(--foreground) / 0.08);
-  }
+.glass {
+  background: hsl(var(--surface) / 0.65);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid hsl(var(--foreground) / 0.06);
+}
+.glass-strong {
+  background: hsl(var(--bg) / 0.85);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid hsl(var(--foreground) / 0.08);
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   Noise texture (overlays — keeps dark surfaces from looking flat)
-   ══════════════════════════════════════════════════════════════════════════ */
+   Noise texture overlay
+   ──────────────────────────────────────────────────────────────────────────── */
 
 .bg-noise {
   position: relative;
@@ -338,8 +427,8 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   Aurora gradient (used on hero tile & hover states)
-   ══════════════════════════════════════════════════════════════════════════ */
+   Aurora gradient
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @keyframes aurora-pan {
   0%, 100% { background-position:   0% 50%; }
@@ -360,7 +449,7 @@
 
 /* ════════════════════════════════════════════════════════════════════════════
    Reduce-motion respect
-   ══════════════════════════════════════════════════════════════════════════ */
+   ──────────────────────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -372,11 +461,11 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   Line clamp utility
-   ══════════════════════════════════════════════════════════════════════════ */
+   Line clamp utilities (kept for backward compatibility; Tailwind v4 ships
+   `line-clamp-*` out of the box, but custom rules keep selector specificity
+   stable for older usage).
+   ──────────────────────────────────────────────────────────────────────────── */
 
-@layer utilities {
-  .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-  .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-}
+.line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
