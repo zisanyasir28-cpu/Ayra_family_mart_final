@@ -55,8 +55,9 @@
   --color-popover-foreground:     hsl(var(--popover-foreground));
 
   /* Typography */
-  --font-display: 'Fraunces', Georgia, serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body:    'Inter', system-ui, sans-serif;
+  --font-script:  'Caveat', 'Plus Jakarta Sans', cursive;
   --font-bangla:  'Hind Siliguri', system-ui, sans-serif;
 
   /* Radii */
@@ -67,11 +68,13 @@
   --radius-3xl: 1.75rem;
   --radius-4xl: 2rem;
 
-  /* Shadows */
-  --shadow-soft:    0 4px 24px -8px hsl(33 20% 4% / 0.5);
-  --shadow-lift:    0 18px 40px -16px hsl(33 20% 2% / 0.6);
-  --shadow-saffron: 0 0 32px -8px hsl(35 100% 66% / 0.45);
-  --shadow-coral:   0 0 32px -8px hsl(12 100% 64% / 0.45);
+  /* Shadows — tuned for the deep-purple dark surface */
+  --shadow-soft:    0 4px 24px -8px hsl(260 70% 4% / 0.55);
+  --shadow-lift:    0 18px 40px -16px hsl(260 70% 2% / 0.65);
+  --shadow-saffron: 0 0 32px -6px hsl(330 81% 60% / 0.5);  /* hot-pink glow */
+  --shadow-coral:   0 0 32px -8px hsl(38 92% 50% / 0.45);  /* gold glow */
+  --shadow-sage:    0 0 32px -8px hsl(158 64% 52% / 0.4);  /* emerald glow */
+  --shadow-plum:    0 0 32px -8px hsl(262 84% 58% / 0.45); /* violet glow */
 
   /* Easing */
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
@@ -96,43 +99,48 @@
    ──────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-  /* Default (dark) palette — applied when no class set OR when .dark */
+  /* ────────────────────────────────────────────────────────────────────────
+     Dark palette (DEFAULT) — deep purple-navy with hot-pink primary,
+     gold offer highlights, emerald organic accent, orange bazar accent.
+     Token NAMES kept for compatibility with existing utilities
+     (`bg-saffron`, `text-coral`, etc.); only HSL values changed.
+     ──────────────────────────────────────────────────────────────────── */
   :root,
   :root.dark {
-    --bg:           33 20% 6%;     /* warm near-black #0E0D0B */
-    --surface:      30 15% 9%;     /* surface          #1A1815 */
-    --surface-2:    30 14% 11%;    /* raised surface   #211E1A */
-    --line:         30 12% 16%;    /* border           #2A2622 */
-    --foreground:   40 50% 92%;    /* cream            #F5EFE0 */
-    --cream:        40 50% 92%;
-    --muted:        30 14% 11%;
-    --muted-fg:     35 12% 60%;    /*                  #A39786 */
+    --bg:           260 70% 8%;    /* deep purple-navy   #0F0823 */
+    --surface:      261 56% 14%;   /* purple panel       #1A0F36 */
+    --surface-2:    261 53% 18%;   /* raised purple      #241546 */
+    --line:         262 47% 26%;   /* purple border      #3A2360 */
+    --foreground:   280 60% 96%;   /* cream-lavender     #F7EEFF */
+    --cream:        280 60% 96%;
+    --muted:        261 53% 18%;
+    --muted-fg:     264 32% 67%;   /* muted lavender     #A48FC9 */
 
-    --saffron:      35 100% 66%;   /*                  #FFB454 */
-    --coral:        12 100% 64%;   /*                  #FF6B47 */
-    --sage:         108 24% 65%;   /*                  #9DBE94 */
-    --blush:        15 70% 85%;    /*                  #F5C9BE */
-    --plum:         320 25% 35%;   /* deep accent       #6E4C5F */
+    --saffron:      330 81% 60%;   /* HOT PINK / MAGENTA #EC4899 — primary CTA */
+    --coral:        38  92% 50%;   /* GOLD / AMBER       #F59E0B — offers, discounts */
+    --sage:         158 64% 52%;   /* EMERALD            #34D399 — Ayra Fresh+, organic */
+    --blush:        25  95% 53%;   /* ORANGE             #F97316 — Bazar Deal */
+    --plum:         262 84% 58%;   /* VIOLET             #7C3AED — secondary accent */
 
     color-scheme: dark;
   }
 
-  /* Light palette — warm cream surfaces with darker brand accents */
+  /* Light palette — lavender-cream surfaces with darker AA-safe accents */
   :root.light {
-    --bg:           40 50% 97%;    /* warm cream      #FBF7EC */
-    --surface:      40 40% 94%;    /* paper           #F4ECDA */
-    --surface-2:    40 30% 90%;    /* raised paper    #EAE0CB */
-    --line:         30 20% 82%;    /* border          #D6CABA */
-    --foreground:   30 30% 14%;    /* dark warm brown #2F261D */
-    --cream:        30 30% 14%;
-    --muted:        40 30% 90%;
-    --muted-fg:     30 15% 38%;    /*                 #6D5F50 */
+    --bg:           270 60% 98%;   /* lavender cream     #FBF7FF */
+    --surface:      265 50% 95%;   /* lavender paper     #F0E9FB */
+    --surface-2:    262 40% 91%;   /* raised lavender    #E2D6F4 */
+    --line:         262 30% 82%;   /* lavender border    #C6B3DC */
+    --foreground:   262 30% 14%;   /* deep purple-brown  #231632 */
+    --cream:        262 30% 14%;
+    --muted:        262 40% 91%;
+    --muted-fg:     262 15% 42%;   /*                    #5E556E */
 
-    --saffron:      30 95% 42%;    /* darker saffron  #D17307 */
-    --coral:        12 80% 48%;    /* darker coral    #DC4421 */
-    --sage:         108 35% 32%;   /* darker sage     #426F3D */
-    --blush:        15 65% 60%;    /* warm rose       #D08066 */
-    --plum:         320 30% 38%;   /*                 #7A4F66 */
+    --saffron:      330 81% 50%;   /* pink, darker       #D11D7E */
+    --coral:        30  95% 42%;   /* gold, darker       #D17307 */
+    --sage:         158 75% 32%;   /* emerald, darker    #0F8F60 */
+    --blush:        22  90% 45%;   /* orange, darker     #DA6311 */
+    --plum:         262 70% 48%;   /* purple, darker     #6028C7 */
 
     color-scheme: light;
   }
@@ -189,8 +197,9 @@
     color: hsl(var(--saffron));
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Fraunces', Georgia, serif;
-    font-feature-settings: "ss01";
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    letter-spacing: -0.015em;
   }
 }
 
@@ -198,8 +207,9 @@
    Font utility classes
    ──────────────────────────────────────────────────────────────────────────── */
 
-@utility font-display { font-family: 'Fraunces', Georgia, serif; }
+@utility font-display { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; letter-spacing: -0.015em; }
 @utility font-body    { font-family: 'Inter', system-ui, sans-serif; }
+@utility font-script  { font-family: 'Caveat', 'Plus Jakarta Sans', cursive; letter-spacing: 0; }
 @utility font-bangla  { font-family: 'Hind Siliguri', system-ui, sans-serif; }
 @utility font-mono-num {
   font-variant-numeric: tabular-nums;
@@ -369,27 +379,35 @@
 }
 
 .display-xl {
-  font-family: 'Fraunces', Georgia, serif;
-  font-weight: 900;
-  font-size: clamp(3rem, 9vw, 7.5rem);
-  line-height: 0.96;
-  letter-spacing: -0.035em;
-  font-variation-settings: "opsz" 144;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
 }
 .display-lg {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-weight: 800;
-  font-size: clamp(2rem, 5vw, 4rem);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  font-variation-settings: "opsz" 144;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
 }
 .display-md {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-weight: 700;
   font-size: clamp(1.5rem, 2.6vw, 2.5rem);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+/* Script accent — used for highlight words inside display headlines
+   (e.g. "Everyday!" in the hero), inherits color from parent. */
+.display-script {
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 0.9;
+  font-size: 1.15em;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -435,13 +453,14 @@
   50%       { background-position: 100% 50%; }
 }
 .bg-aurora {
+  /* Purple → violet → hot-pink → magenta → gold accent, looping back. */
   background-image: linear-gradient(
     115deg,
-    hsl(35 100% 66%) 0%,
-    hsl(20  90% 60%) 25%,
-    hsl(12 100% 64%) 50%,
-    hsl(0  85% 60%) 75%,
-    hsl(35 100% 66%) 100%
+    hsl(262 84% 58%) 0%,    /* plum / violet */
+    hsl(295 75% 55%) 25%,   /* fuchsia */
+    hsl(330 81% 60%) 50%,   /* hot pink */
+    hsl(38  92% 50%) 75%,   /* gold accent */
+    hsl(262 84% 58%) 100%   /* back to plum */
   );
   background-size: 250% 250%;
   animation: aurora-pan 14s ease infinite;
