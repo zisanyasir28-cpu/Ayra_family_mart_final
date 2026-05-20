@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { format } from 'date-fns';
 import { Search, X, ChevronLeft, ChevronRight, ShieldOff, ShieldCheck, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';

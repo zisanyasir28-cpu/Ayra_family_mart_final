@@ -11,7 +11,7 @@ beforeEach(() => {
 describe('CartDrawer', () => {
   it('renders empty state when there are no items', () => {
     renderWithProviders(<CartDrawer open={true} onClose={() => {}} />);
-    // CartDrawer uses framer-motion AnimatePresence — content is in the DOM
+    // CartDrawer uses motion AnimatePresence — content is in the DOM
     // but may have opacity:0 until the animation frame fires. We assert on the
     // presence of empty-state copy which mounts immediately.
     const allText = document.body.textContent ?? '';

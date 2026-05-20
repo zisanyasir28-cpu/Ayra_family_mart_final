@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Check, Package, ShoppingBag } from 'lucide-react';
 import { useMyOrderById } from '@/hooks/useMyOrders';
 import { formatPaisa } from '@/lib/utils';

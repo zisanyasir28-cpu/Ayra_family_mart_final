@@ -17,7 +17,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// ─── IntersectionObserver mock — used by framer-motion + lazy loading ────────
+// ─── IntersectionObserver mock — used by motion + lazy loading ──────────────
 class MockIntersectionObserver {
   observe   = vi.fn();
   unobserve = vi.fn();

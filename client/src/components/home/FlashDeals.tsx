@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { fetchProducts } from '../../services/products';
 import { ProductCard, ProductCardSkeleton } from '../product/ProductCard';
 import { useCountdown } from '../../hooks/useCountdown';

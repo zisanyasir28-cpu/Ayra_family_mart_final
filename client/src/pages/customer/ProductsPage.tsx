@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { SlidersHorizontal, ChevronLeft, ChevronRight, PackageSearch } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
 import { fetchCategories } from '../../services/categories';

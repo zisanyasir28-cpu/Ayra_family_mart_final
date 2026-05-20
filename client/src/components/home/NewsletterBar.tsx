@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import toast from 'react-hot-toast';
 import { ArrowRightIcon } from '../common/HandIcon';
 import { MagneticButton } from '../common/MagneticButton';

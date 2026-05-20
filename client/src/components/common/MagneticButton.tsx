@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { motion, useMotionValue, useSpring, type HTMLMotionProps } from 'framer-motion';
+import { motion, useMotionValue, useSpring, type HTMLMotionProps } from 'motion/react';
 import { cn } from '../../lib/utils';
 
 type MagneticBaseProps = {

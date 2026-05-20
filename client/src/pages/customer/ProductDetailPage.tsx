@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import toast from 'react-hot-toast';
 import {
   Heart, ChevronLeft, ShoppingBag, Minus, Plus, Star, Truck, Package, ShieldCheck,
