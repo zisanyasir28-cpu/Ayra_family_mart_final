@@ -101,7 +101,7 @@ export default function ProductDetailPage() {
         {/* ── Image Gallery ───────────────────────────────────────────── */}
         <div className="md:sticky md:top-24 md:self-start">
           {/* Main image */}
-          <div className="relative aspect-square overflow-hidden rounded-2xl bg-surface-2 ring-1 ring-line">
+          <div className="relative aspect-square overflow-hidden rounded-3xl bg-surface-2 ring-1 ring-line/50 shadow-[0_0_48px_-16px_hsl(var(--saffron)/0.2)]">
             {images[activeImg]?.url ? (
               <img
                 src={detailImg(images[activeImg].url)}
@@ -201,14 +201,15 @@ export default function ProductDetailPage() {
 
           {/* Desktop actions — mobile uses sticky bar */}
           <div className="hidden flex-wrap items-center gap-3 pt-2 md:flex">
-            <div className="flex items-center gap-1 rounded-full border border-line bg-surface p-1.5">
+            {/* Qty pill */}
+            <div className="flex items-center gap-0.5 rounded-full border border-line bg-bg p-1">
               <button
                 onClick={() => setQty((q) => Math.max(1, q - 1))}
                 disabled={qty <= 1}
-                className="flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-cream/10 disabled:opacity-40"
+                className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/15 hover:text-cream active:scale-90 disabled:opacity-40"
                 aria-label="Decrease"
               >
-                <Minus className="h-4 w-4 text-cream" />
+                <Minus className="h-4 w-4" />
               </button>
               <span className="min-w-[2.5rem] text-center font-display text-base font-bold tabular-nums text-cream">
                 {qty}
@@ -216,17 +217,17 @@ export default function ProductDetailPage() {
               <button
                 onClick={() => setQty((q) => Math.min(product!.stockQuantity, q + 1))}
                 disabled={qty >= product.stockQuantity}
-                className="flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-cream/10 disabled:opacity-40"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.6)] hover:scale-105 active:scale-90 disabled:opacity-40"
                 aria-label="Increase"
               >
-                <Plus className="h-4 w-4 text-cream" />
+                <Plus className="h-4 w-4" />
               </button>
             </div>
 
             <button
               onClick={handleAdd}
               disabled={isOutOfStock}
-              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-saffron px-6 py-3 font-bold text-bg transition hover:bg-saffron/90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-saffron px-6 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_28px_-6px_hsl(var(--saffron)/0.65)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ShoppingBag className="h-4 w-4" />
               {isOutOfStock ? 'Sold out' : 'Add to Cart'}
@@ -236,7 +237,9 @@ export default function ProductDetailPage() {
               onClick={handleWishlist}
               className={cn(
                 'flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition',
-                wishlisted ? 'bg-coral text-bg' : 'border border-line bg-surface text-cream hover:bg-surface-2',
+                wishlisted
+                  ? 'bg-saffron text-bg shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)]'
+                  : 'border border-line bg-surface text-cream/70 hover:border-saffron/40 hover:bg-surface-2 hover:text-saffron',
               )}
               aria-label="Toggle wishlist"
             >
@@ -245,7 +248,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Trust badges */}
-          <div className="grid grid-cols-3 gap-2 rounded-2xl bg-surface ring-1 ring-line p-3 text-center text-[11px] text-cream/55">
+          <div className="grid grid-cols-3 gap-2 rounded-2xl border border-line/50 bg-surface/60 p-3 text-center text-[11px] text-cream/55 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-1">
               <Truck className="h-4 w-4 text-saffron" />
               <span>Fast delivery</span>
@@ -270,14 +273,14 @@ export default function ProductDetailPage() {
         style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}
       >
         <div className="container flex items-center gap-3 py-3">
-          <div className="flex items-center gap-1 rounded-full border border-line bg-surface p-1">
+          <div className="flex items-center gap-0.5 rounded-full border border-line bg-bg p-1">
             <button
               onClick={() => setQty((q) => Math.max(1, q - 1))}
               disabled={qty <= 1}
-              className="flex h-9 w-9 items-center justify-center rounded-full transition active:scale-90 disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/15 active:scale-90 disabled:opacity-40"
               aria-label="Decrease"
             >
-              <Minus className="h-4 w-4 text-cream" />
+              <Minus className="h-4 w-4" />
             </button>
             <span className="min-w-[2rem] text-center font-display text-sm font-bold tabular-nums text-cream">
               {qty}
@@ -285,10 +288,10 @@ export default function ProductDetailPage() {
             <button
               onClick={() => setQty((q) => Math.min(product!.stockQuantity, q + 1))}
               disabled={qty >= product.stockQuantity}
-              className="flex h-9 w-9 items-center justify-center rounded-full transition active:scale-90 disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-saffron/90 active:scale-90 disabled:opacity-40"
               aria-label="Increase"
             >
-              <Plus className="h-4 w-4 text-cream" />
+              <Plus className="h-4 w-4" />
             </button>
           </div>
 
