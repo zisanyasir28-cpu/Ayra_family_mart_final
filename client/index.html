@@ -30,7 +30,7 @@
               : theme;
           document.documentElement.classList.add(resolved);
           var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute('content', resolved === 'dark' ? '#0F0823' : '#FBF7FF');
+          if (meta) meta.setAttribute('content', resolved === 'dark' ? '#0F0823' : '#FFFAF0');
         } catch (e) {
           document.documentElement.classList.add('dark');
         }

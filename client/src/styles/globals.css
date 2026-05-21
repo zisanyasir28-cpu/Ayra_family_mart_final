@@ -27,11 +27,13 @@
   --color-surface-2:  hsl(var(--surface-2));
   --color-line:       hsl(var(--line));
   --color-cream:      hsl(var(--foreground));
-  --color-saffron:    hsl(var(--saffron));
-  --color-coral:      hsl(var(--coral));
-  --color-sage:       hsl(var(--sage));
-  --color-blush:      hsl(var(--blush));
-  --color-plum:       hsl(var(--plum));
+  --color-saffron:      hsl(var(--saffron));
+  --color-coral:        hsl(var(--coral));
+  --color-sage:         hsl(var(--sage));
+  --color-blush:        hsl(var(--blush));
+  --color-plum:         hsl(var(--plum));
+  --color-surface-dark: hsl(var(--surface-dark));
+  --color-dark-fg:      hsl(var(--dark-fg));
 
   /* Semantic palette (Tailwind reads these for `bg-primary`, etc.) */
   --color-background:             hsl(var(--background));
@@ -122,25 +124,35 @@
     --blush:        25  95% 53%;   /* ORANGE             #F97316 — Bazar Deal */
     --plum:         262 84% 58%;   /* VIOLET             #7C3AED — secondary accent */
 
+    /* Inverted-surface tokens — dark panels that stay dark in BOTH themes */
+    --surface-dark: 261 56% 14%;   /* same as --surface in dark */
+    --dark-fg:      280 60% 96%;   /* same as --cream in dark */
+
     color-scheme: dark;
   }
 
-  /* Light palette — lavender-cream surfaces with darker AA-safe accents */
+  /* Light palette — warm cream sky + natural sage earth (farm-fresh aesthetic).
+     NOTE: --saffron in light = GREEN (#16A34A) so every bg-saffron CTA
+     (Shop Now, +, search btn) cascades to green automatically. */
   :root.light {
-    --bg:           270 60% 98%;   /* lavender cream     #FBF7FF */
-    --surface:      265 50% 95%;   /* lavender paper     #F0E9FB */
-    --surface-2:    262 40% 91%;   /* raised lavender    #E2D6F4 */
-    --line:         262 30% 82%;   /* lavender border    #C6B3DC */
-    --foreground:   262 30% 14%;   /* deep purple-brown  #231632 */
-    --cream:        262 30% 14%;
-    --muted:        262 40% 91%;
-    --muted-fg:     262 15% 42%;   /*                    #5E556E */
+    --bg:           45  60% 97%;   /* warm cream         #FFFAF0 */
+    --surface:      0   0% 100%;   /* pure white         #FFFFFF */
+    --surface-2:    40  50% 96%;   /* warm paper         #FAF6EE */
+    --line:         40  25% 86%;   /* warm beige border  #DDD3C2 */
+    --foreground:   145 50% 10%;   /* dark forest green  #0C2418 */
+    --cream:        145 50% 10%;
+    --muted:        40  50% 96%;
+    --muted-fg:     145 12% 38%;   /* muted forest gray  #55665A */
 
-    --saffron:      330 81% 50%;   /* pink, darker       #D11D7E */
-    --coral:        30  95% 42%;   /* gold, darker       #D17307 */
-    --sage:         158 75% 32%;   /* emerald, darker    #0F8F60 */
-    --blush:        22  90% 45%;   /* orange, darker     #DA6311 */
-    --plum:         262 70% 48%;   /* purple, darker     #6028C7 */
+    --saffron:      142 72% 35%;   /* PRIMARY = GREEN    #16A34A — Shop Now, +, search */
+    --coral:        38  92% 45%;   /* gold/amber         #DC8E0A — prices, discounts */
+    --sage:         158 65% 32%;   /* deep emerald       #16855E — Ayra Fresh+, organic */
+    --blush:        25  90% 50%;   /* orange             #F37316 — Bazar Deal */
+    --plum:         262 60% 38%;   /* deep purple        #422892 — secondary accent */
+
+    /* Inverted-surface tokens — dark forest green panels in light mode */
+    --surface-dark: 145 50% 12%;   /* dark forest        #0F2E1F */
+    --dark-fg:      50  60% 96%;   /* warm cream text    #FFFAEF */
 
     color-scheme: light;
   }
@@ -191,6 +203,17 @@
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+  }
+
+  /* Light mode — warm cream sky fading to soft sage earth (farm-fresh vibe) */
+  :root.light body {
+    background: linear-gradient(
+      180deg,
+      hsl(45 60% 97%) 0%,
+      hsl(45 50% 96%) 30%,
+      hsl(140 40% 92%) 100%
+    );
+    background-attachment: fixed;
   }
   ::selection {
     background: hsl(var(--saffron) / 0.25);
