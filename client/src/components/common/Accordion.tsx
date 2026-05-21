@@ -12,17 +12,17 @@ interface AccordionProps {
 
 export function Accordion({ title, open, onToggle, children, className }: AccordionProps) {
   return (
-    <div className={cn('rounded-xl border border-line bg-surface', className)}>
+    <div className={cn('rounded-2xl border border-line/50 bg-surface/60 backdrop-blur-sm', className)}>
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left font-medium text-foreground transition-colors hover:bg-bg/40"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left font-medium text-cream transition-colors hover:bg-saffron/5 rounded-2xl"
       >
         <span>{title}</span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="text-muted-foreground"
+          className="text-cream/40"
         >
           <ChevronDown className="h-4 w-4" />
         </motion.span>
@@ -37,7 +37,7 @@ export function Accordion({ title, open, onToggle, children, className }: Accord
             transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="overflow-hidden"
           >
-            <div className="border-t border-line px-4 py-4">{children}</div>
+            <div className="border-t border-line/50 px-4 py-4">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -31,30 +31,30 @@ export function AddressCard({
         if (e.key === 'Enter' || e.key === ' ') onSelect?.();
       } : undefined}
       className={cn(
-        'relative rounded-xl border bg-surface p-4 transition-all',
+        'relative rounded-2xl border bg-surface/60 backdrop-blur-sm p-4 transition-all',
         selectable && 'cursor-pointer',
         selected
-          ? 'border-saffron bg-saffron/[0.06] shadow-sm'
-          : 'border-line hover:border-saffron/40',
+          ? 'border-saffron bg-saffron/[0.06] shadow-[0_0_20px_-6px_hsl(var(--saffron)/0.35)]'
+          : 'border-line/50 hover:border-saffron/40',
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-saffron/10 text-saffron">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-saffron/10 text-saffron">
             <Icon className="h-4 w-4" />
           </span>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-foreground">{address.label}</span>
+              <span className="font-medium text-cream">{address.label}</span>
               {address.isDefault && (
                 <span className="rounded-full bg-saffron/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-saffron">
                   Default
                 </span>
               )}
             </div>
-            <p className="mt-1 text-sm text-foreground">{address.fullName}</p>
-            <p className="text-sm text-muted-foreground">{address.phone}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-cream">{address.fullName}</p>
+            <p className="text-sm text-cream/55">{address.phone}</p>
+            <p className="mt-1 text-sm text-cream/55">
               {address.addressLine1}
               {address.addressLine2 ? `, ${address.addressLine2}` : ''}, {address.thana}, {address.district}
               {address.postalCode ? ` ${address.postalCode}` : ''}
@@ -68,7 +68,7 @@ export function AddressCard({
                 type="button"
                 aria-label="Edit address"
                 onClick={(e) => { e.stopPropagation(); onEdit(); }}
-                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-bg/40 hover:text-foreground"
+                className="rounded-lg p-1.5 text-cream/40 transition-colors hover:bg-saffron/10 hover:text-saffron"
               >
                 <Pencil className="h-3.5 w-3.5" />
               </button>
@@ -78,7 +78,7 @@ export function AddressCard({
                 type="button"
                 aria-label="Delete address"
                 onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-rose-500/10 hover:text-rose-500"
+                className="rounded-lg p-1.5 text-cream/40 transition-colors hover:bg-rose-500/10 hover:text-rose-400"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
