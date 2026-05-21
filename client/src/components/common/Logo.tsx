@@ -10,17 +10,16 @@ interface LogoProps {
 }
 
 /**
- * Brand identity — vertical stack:
- *   ┌──────────┐
- *   │  🌿 leaf  │   ← stylized green sprout mark
- *   │   Ayra®  │   ← display wordmark (white in dark, forest in light)
- *   │FAMILY MART│  ← letter-spaced micro-caps subtitle
- *   └──────────┘
+ * Brand identity — horizontal row:
+ *   ┌──────┬───────────┐
+ *   │ 🌿   │  Ayra®    │  ← leaf icon LEFT + text column RIGHT
+ *   │ leaf │ FAMILY MART│  ← "Ayra" large bold + "FAMILY MART" micro-caps below
+ *   └──────┴───────────┘
  */
 const SIZE = {
-  sm: { leaf: 18, word: 'text-[1.25rem]',   sub: 'text-[7px]  tracking-[0.32em]' },
-  md: { leaf: 24, word: 'text-[1.6rem]',    sub: 'text-[9px]  tracking-[0.32em]' },
-  lg: { leaf: 32, word: 'text-[2rem]',      sub: 'text-[10px] tracking-[0.32em]' },
+  sm: { leaf: 20, word: 'text-[1.1rem]',   sub: 'text-[7px]   tracking-[0.28em]' },
+  md: { leaf: 26, word: 'text-[1.45rem]',  sub: 'text-[8.5px] tracking-[0.28em]' },
+  lg: { leaf: 34, word: 'text-[1.9rem]',   sub: 'text-[10px]  tracking-[0.28em]' },
 };
 
 /** Stylized sprout — two leaves angled outward from a central stem. */
@@ -86,27 +85,29 @@ function LogoMark({
     <motion.span
       whileHover={{ y: -1 }}
       transition={{ duration: 0.18 }}
-      className="inline-flex flex-col items-center select-none leading-none"
+      className="inline-flex flex-row items-center gap-2.5 select-none"
     >
       <LeafMark size={s.leaf} />
-      <span
-        className={cn(
-          'font-display font-black tracking-tight mt-0.5 inline-flex items-start gap-0.5',
-          s.word,
-          main,
-        )}
-      >
-        Ayra
-        <span className="mt-[0.15em] text-[0.42em] font-bold text-cream/55">®</span>
-      </span>
-      <span
-        className={cn(
-          'font-display font-semibold uppercase mt-1',
-          s.sub,
-          subColor,
-        )}
-      >
-        Family Mart
+      <span className="flex flex-col leading-none">
+        <span
+          className={cn(
+            'font-display font-black tracking-tight inline-flex items-start gap-[0.2em]',
+            s.word,
+            main,
+          )}
+        >
+          Ayra
+          <span className="mt-[0.1em] text-[0.38em] font-bold opacity-50">®</span>
+        </span>
+        <span
+          className={cn(
+            'font-display font-semibold uppercase mt-[0.25em]',
+            s.sub,
+            subColor,
+          )}
+        >
+          Family Mart
+        </span>
       </span>
     </motion.span>
   );
