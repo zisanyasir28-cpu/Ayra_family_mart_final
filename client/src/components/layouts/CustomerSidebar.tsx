@@ -92,14 +92,28 @@ export function CustomerSidebar() {
         ))}
       </nav>
 
-      {/* Ayra Fresh+ promo card — glass-gradient ring border */}
+      {/* Ayra Fresh+ promo card — glass-gradient ring + background art */}
       <div className="relative mx-1 mt-6 rounded-2xl bg-gradient-to-br from-saffron/35 via-sage/25 to-saffron/25 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--sage)/0.4)]">
         <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-sage/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
-          {/* Glass shine — diagonal white highlight, top-left */}
-          <div
+
+          {/* ── Background art layer ── */}
+          {/* Glass shine — diagonal white highlight */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
+          {/* Sage glow orb — top-right ambient light source */}
+          <div aria-hidden className="pointer-events-none absolute -right-8 -top-6 h-28 w-28 rounded-full bg-sage/30 blur-3xl" />
+          {/* Saffron warm accent orb */}
+          <div aria-hidden className="pointer-events-none absolute right-4 bottom-10 h-16 w-16 rounded-full bg-saffron/15 blur-2xl" />
+          {/* Leaf SVG watermark — large faint botanical shape */}
+          <svg
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]"
-          />
+            className="pointer-events-none absolute -right-1 bottom-8 h-24 w-24 select-none text-sage opacity-[0.08]"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 5.5-11 8" />
+          </svg>
+
+          {/* ── Content (z-10) ── */}
           <div className="relative z-10 max-w-[60%]">
             <div className="mb-2 flex items-center gap-1.5">
               <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25 text-sage">
@@ -115,31 +129,49 @@ export function CustomerSidebar() {
             <p className="mt-0.5 text-[10px] text-cream/55">On Fresh Produce</p>
             <NavLink
               to="/products?collection=fresh-plus"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-plum px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-cream shadow-[0_4px_14px_-2px_hsl(var(--plum)/0.5)] transition hover:bg-plum/90 hover:shadow-[0_6px_18px_-2px_hsl(var(--plum)/0.7)]"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-sage px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-bg shadow-[0_4px_14px_-2px_hsl(var(--sage)/0.5)] transition hover:bg-sage/90 hover:shadow-[0_6px_18px_-2px_hsl(var(--sage)/0.7)]"
             >
-              Shop Now <ArrowRight className="h-3 w-3" />
+              <span className="[text-shadow:0_1px_4px_rgba(0,0,0,0.4)]">Shop Now</span>
+              <ArrowRight className="h-3 w-3" />
             </NavLink>
           </div>
-          {/* Produce basket illustration — bottom-right */}
+
+          {/* Produce basket — above art layer */}
           <img
             src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=200&h=200&fit=crop&crop=center&q=85"
             alt=""
             aria-hidden
             loading="lazy"
             decoding="async"
-            className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 select-none rounded-2xl object-cover opacity-90"
+            className="pointer-events-none absolute -bottom-3 -right-3 z-10 h-24 w-24 select-none rounded-2xl object-cover opacity-90"
           />
         </div>
       </div>
 
-      {/* Need Help? — 24/7 Live chat CTA, glass-gradient ring border */}
+      {/* Need Help? — 24/7 Live chat CTA, glass-gradient ring + background art */}
       <div className="mx-1 mt-3 rounded-2xl bg-gradient-to-br from-saffron/40 via-plum/30 to-saffron/35 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--plum)/0.4)]">
         <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-plum/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
+
+          {/* ── Background art layer ── */}
           {/* Glass shine */}
-          <div
+          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
+          {/* Plum glow orb — top-left ambient */}
+          <div aria-hidden className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 rounded-full bg-plum/35 blur-3xl" />
+          {/* Saffron warm accent orb — bottom-right */}
+          <div aria-hidden className="pointer-events-none absolute -right-4 -bottom-4 h-20 w-20 rounded-full bg-saffron/20 blur-2xl" />
+          {/* Abstract concentric ring SVG — decorative arc pattern, top-right */}
+          <svg
             aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]"
-          />
+            className="pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.10]"
+            viewBox="0 0 200 160"
+            fill="none"
+          >
+            <circle cx="185" cy="15" r="55" stroke="hsl(var(--plum))"   strokeWidth="1.5" />
+            <circle cx="185" cy="15" r="75" stroke="hsl(var(--saffron))" strokeWidth="0.8" />
+            <circle cx="10"  cy="145" r="35" stroke="hsl(var(--saffron))" strokeWidth="0.8" />
+          </svg>
+
+          {/* ── Content (z-10) ── */}
           <div className="relative z-10">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cream/65">
               Need Help?
@@ -156,12 +188,12 @@ export function CustomerSidebar() {
               </span>
             </div>
 
-            {/* Live Chat — glass-gradient border pill (matches Hero "Explore Deals" technique) */}
+            {/* Live Chat — glass-gradient border pill */}
             <button
               type="button"
               className="group relative mt-3 flex w-full rounded-full bg-gradient-to-r from-saffron/60 via-plum/40 to-saffron/60 p-[1px] transition hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.55)]"
             >
-              <span className="flex w-full items-center justify-between gap-1.5 rounded-full bg-bg/60 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-cream backdrop-blur-md transition group-hover:bg-bg/40">
+              <span className="flex w-full items-center justify-between gap-1.5 rounded-full bg-bg/60 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-cream [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] backdrop-blur-md transition group-hover:bg-bg/40">
                 Live Chat
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-saffron text-bg transition group-hover:translate-x-0.5">
                   <ArrowRight className="h-3 w-3" strokeWidth={2.4} />
