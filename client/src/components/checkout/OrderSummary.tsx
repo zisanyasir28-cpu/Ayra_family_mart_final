@@ -22,51 +22,55 @@ export function OrderSummary({ paymentMethod }: OrderSummaryProps) {
   const total         = afterDiscount + shipping;
 
   return (
-    <aside className="sticky top-24 rounded-2xl border border-line bg-surface p-5">
-      <h2 className="text-base font-semibold text-foreground">Order Summary</h2>
+    <aside className="sticky top-[8.5rem] rounded-3xl border border-line/50 bg-surface/70 p-5 backdrop-blur-xl shadow-[0_0_40px_-16px_hsl(var(--saffron)/0.15)]">
+      <h2 className="font-display text-base font-bold text-cream">Order Summary</h2>
 
-      <ul className="mt-4 space-y-3 max-h-72 overflow-y-auto pr-1">
+      <ul className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1 scrollbar-hide">
         {items.map((item) => (
           <li key={item.productId} className="flex gap-3">
-            <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md border border-line bg-bg">
+            <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-line/50 bg-bg">
               {item.image && (
                 <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm text-foreground">{item.name}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="truncate text-sm text-cream">{item.name}</p>
+              <p className="text-xs text-cream/50">
                 {item.quantity} × {formatPaisa(item.priceInPaisa)}
               </p>
             </div>
-            <p className="shrink-0 text-sm font-medium text-foreground">
+            <p className="shrink-0 text-sm font-semibold text-cream">
               {formatPaisa(item.priceInPaisa * item.quantity)}
             </p>
           </li>
         ))}
       </ul>
 
-      <div className="mt-4 space-y-2 border-t border-line pt-4 text-sm">
+      <div className="mt-4 space-y-2 border-t border-line/50 pt-4 text-sm">
         <Row label="Subtotal" value={formatPaisa(subtotal)} />
         {discount > 0 && coupon && (
           <Row
             label={<>Discount <span className="text-saffron">({coupon.code})</span></>}
-            value={`- ${formatPaisa(discount)}`}
-            valueClassName="text-saffron"
+            value={`− ${formatPaisa(discount)}`}
+            valueClassName="font-semibold text-saffron"
           />
         )}
         <Row
           label="Shipping"
           value={baseShipping === 0 ? 'Free' : formatPaisa(baseShipping)}
+          valueClassName={baseShipping === 0 ? 'font-bold text-sage' : undefined}
         />
         {codSurcharge > 0 && (
           <Row label="COD surcharge" value={formatPaisa(codSurcharge)} />
         )}
       </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
-        <span className="font-semibold text-foreground">Total</span>
-        <span className="text-lg font-bold text-foreground">{formatPaisa(total)}</span>
+      {/* Total */}
+      <div className="mt-4 flex items-center justify-between rounded-2xl bg-surface-2/60 px-4 py-3">
+        <span className="font-display font-bold text-cream">Total</span>
+        <span className="font-display text-xl font-black text-coral">
+          {formatPaisa(total)}
+        </span>
       </div>
     </aside>
   );
@@ -75,14 +79,14 @@ export function OrderSummary({ paymentMethod }: OrderSummaryProps) {
 function Row({
   label, value, valueClassName,
 }: {
-  label: React.ReactNode;
-  value: React.ReactNode;
+  label:          React.ReactNode;
+  value:          React.ReactNode;
   valueClassName?: string;
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={valueClassName ?? 'text-foreground'}>{value}</span>
+      <span className="text-cream/55">{label}</span>
+      <span className={valueClassName ?? 'text-cream'}>{value}</span>
     </div>
   );
 }

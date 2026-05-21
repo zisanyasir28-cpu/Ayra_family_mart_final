@@ -137,7 +137,7 @@ export default function CheckoutPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 pb-32 md:pb-10">
-      <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Checkout</h1>
+      <h1 className="font-display text-2xl font-black text-cream sm:text-3xl">Checkout</h1>
 
       <div className="mt-6">
         <Stepper current={step} steps={STEPS} />
@@ -154,13 +154,13 @@ export default function CheckoutPage() {
                 transition={{ duration: 0.25 }}
                 className="space-y-4"
               >
-                <header className="flex items-center gap-2 text-foreground">
+                <header className="flex items-center gap-2 text-cream">
                   <Truck className="h-5 w-5 text-saffron" />
                   <h2 className="text-lg font-semibold">Delivery address</h2>
                 </header>
 
                 {loadingAddresses ? (
-                  <div className="rounded-xl border border-line bg-surface p-6 text-center text-muted-foreground">
+                  <div className="rounded-2xl border border-line/50 bg-surface/60 backdrop-blur-sm p-6 text-center text-cream/55">
                     Loading addresses…
                   </div>
                 ) : (
@@ -199,7 +199,7 @@ export default function CheckoutPage() {
                     type="button"
                     disabled={!selectedAddressId}
                     onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-saffron px-5 py-2.5 text-sm font-semibold text-bg transition-colors hover:bg-saffron/90 disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)] active:scale-95 disabled:opacity-50"
                   >
                     Continue to review <ArrowRight className="h-4 w-4" />
                   </button>
@@ -215,34 +215,34 @@ export default function CheckoutPage() {
                 transition={{ duration: 0.25 }}
                 className="space-y-4"
               >
-                <header className="flex items-center gap-2 text-foreground">
+                <header className="flex items-center gap-2 text-cream">
                   <ShoppingBag className="h-5 w-5 text-saffron" />
                   <h2 className="text-lg font-semibold">Review items</h2>
                 </header>
 
-                <ul className="space-y-3 rounded-xl border border-line bg-surface p-4">
+                <ul className="space-y-3 rounded-2xl border border-line/50 bg-surface/60 backdrop-blur-sm p-4">
                   {items.map((item) => (
                     <li key={item.productId} className="flex items-center gap-3">
-                      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md border border-line bg-bg">
+                      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-line/50 bg-bg">
                         {item.image && (
                           <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm text-foreground">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="truncate text-sm text-cream">{item.name}</p>
+                        <p className="text-xs text-cream/55">
                           {item.quantity} × {formatPaisa(item.priceInPaisa)}
                         </p>
                       </div>
-                      <p className="text-sm font-medium text-foreground">
+                      <p className="text-sm font-medium text-cream">
                         {formatPaisa(item.priceInPaisa * item.quantity)}
                       </p>
                     </li>
                   ))}
                 </ul>
 
-                <div className="rounded-xl border border-line bg-surface p-4">
-                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <div className="rounded-2xl border border-line/50 bg-surface/60 backdrop-blur-sm p-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-cream">
                     <Tag className="h-4 w-4 text-saffron" />
                     Promo code
                   </div>
@@ -251,14 +251,14 @@ export default function CheckoutPage() {
                     <div className="mt-3 flex items-center justify-between rounded-lg border border-saffron/40 bg-saffron/[0.06] px-3 py-2">
                       <span className="text-sm">
                         <span className="font-semibold text-saffron">{coupon.code}</span>
-                        <span className="ml-2 text-muted-foreground">
+                        <span className="ml-2 text-cream/55">
                           -{formatPaisa(coupon.discountInPaisa)}
                         </span>
                       </span>
                       <button
                         type="button"
                         onClick={removeCoupon}
-                        className="text-muted-foreground hover:text-foreground"
+                        className="text-cream/55 hover:text-cream"
                         aria-label="Remove coupon"
                       >
                         <X className="h-4 w-4" />
@@ -270,13 +270,13 @@ export default function CheckoutPage() {
                         value={couponInput}
                         onChange={(e) => setCouponInput(e.target.value)}
                         placeholder="Enter code"
-                        className="flex-1 rounded-lg border border-line bg-bg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-saffron/40"
+                        className="flex-1 rounded-full border border-line/50 bg-bg px-4 py-2 text-sm text-cream focus:outline-none focus:ring-2 focus:ring-saffron/40"
                       />
                       <button
                         type="button"
                         onClick={handleApplyCoupon}
                         disabled={!couponInput.trim() || couponLoading}
-                        className="rounded-lg bg-saffron px-4 py-2 text-sm font-semibold text-bg disabled:opacity-50"
+                        className="rounded-full bg-saffron px-4 py-2 text-sm font-semibold text-bg hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.5)] disabled:opacity-50 transition-all"
                       >
                         {couponLoading ? 'Checking…' : 'Apply'}
                       </button>
@@ -288,14 +288,14 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-bg/40"
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-cream active:scale-95"
                   >
                     <ArrowLeft className="h-4 w-4" /> Back
                   </button>
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-saffron px-5 py-2.5 text-sm font-semibold text-bg transition-colors hover:bg-saffron/90"
+                    className="inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)] active:scale-95"
                   >
                     Continue to payment <ArrowRight className="h-4 w-4" />
                   </button>
@@ -311,7 +311,7 @@ export default function CheckoutPage() {
                 transition={{ duration: 0.25 }}
                 className="space-y-4"
               >
-                <header className="flex items-center gap-2 text-foreground">
+                <header className="flex items-center gap-2 text-cream">
                   <CreditCard className="h-5 w-5 text-saffron" />
                   <h2 className="text-lg font-semibold">Payment method</h2>
                 </header>
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-bg/40"
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-cream active:scale-95"
                   >
                     <ArrowLeft className="h-4 w-4" /> Back
                   </button>
@@ -345,11 +345,16 @@ export default function CheckoutPage() {
                     onClick={handlePlaceOrder}
                     disabled={placing}
                     className={cn(
-                      'inline-flex items-center gap-2 rounded-lg bg-saffron px-6 py-2.5 text-sm font-semibold text-bg transition-colors',
-                      'hover:bg-saffron/90 disabled:opacity-60',
+                      'inline-flex items-center gap-2 rounded-full bg-saffron px-7 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition-all active:scale-95',
+                      'hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.65)] disabled:opacity-60',
                     )}
                   >
-                    {placing ? 'Placing order…' : 'Place order'}
+                    {placing ? (
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-bg/40 border-t-bg" />
+                        Placing order…
+                      </>
+                    ) : 'Place order'}
                   </button>
                 </div>
               </motion.section>
@@ -362,7 +367,7 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <p className="mt-8 text-center text-sm text-muted-foreground">
+      <p className="mt-8 text-center text-sm text-cream/55">
         Need help? <Link to="/" className="text-saffron hover:underline">Contact support</Link>
       </p>
 
@@ -373,10 +378,10 @@ export default function CheckoutPage() {
       >
         <div className="container flex items-center justify-between py-3">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+            <p className="text-[10px] uppercase tracking-[0.15em] text-cream/55">
               {items.length} item{items.length !== 1 ? 's' : ''} · Total
             </p>
-            <p className="font-display text-lg font-bold text-foreground">
+            <p className="font-display text-lg font-bold text-cream">
               {formatPaisa(
                 subtotalInPaisa
                   - (coupon?.discountInPaisa ?? 0)
