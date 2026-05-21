@@ -167,10 +167,10 @@ export function HeroBanner() {
           </div>
 
           {/* ── Right: Illustration + floating cards ─────────────────────── */}
-          <div className="relative mx-auto flex w-full max-w-[420px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
+          <div className="relative mx-auto flex w-full max-w-[460px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
 
             {/* Neon ring wrapper — circular container */}
-            <div className="relative flex h-[300px] w-[300px] items-center justify-center sm:h-[360px] sm:w-[360px]">
+            <div className="relative flex h-[320px] w-[320px] items-center justify-center sm:h-[420px] sm:w-[420px]">
 
               {/* Outer ambient glow */}
               <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-saffron/10 blur-[80px]" />
@@ -201,7 +201,7 @@ export function HeroBanner() {
                 <circle cx="200" cy="200" r="158" stroke="hsl(var(--coral) / 0.4)" strokeWidth="1.2" />
               </svg>
 
-              {/* Illustration inside ring — circular */}
+              {/* Illustration inside ring — circular photo */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.88 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -212,19 +212,20 @@ export function HeroBanner() {
                   stiffness: 120,
                   damping: 18,
                 }}
-                className="relative z-10 flex h-[230px] w-[230px] flex-col items-center justify-center rounded-full border border-line/40 bg-gradient-to-br from-surface via-surface-2/60 to-surface shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.4)] sm:h-[280px] sm:w-[280px]"
+                className="relative z-10 h-[252px] w-[252px] overflow-hidden rounded-full border border-saffron/20 bg-surface shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.5)] sm:h-[336px] sm:w-[336px]"
               >
-                <div className="text-center select-none">
-                  <div className="text-[70px] leading-none sm:text-[88px]">🛍️</div>
-                  <div className="mt-2 flex items-center justify-center gap-2 text-[1.8rem] sm:text-[2.2rem]">
-                    <span>🥑</span>
-                    <span>🍎</span>
-                    <span>🥦</span>
-                  </div>
-                  <p className="mt-2 font-display text-[9px] font-bold uppercase tracking-[0.18em] text-cream/35">
-                    Farm Fresh · Daily Essentials
-                  </p>
-                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1543168256-418811576931?w=672&h=672&fit=crop&crop=center&q=85"
+                  alt="Fresh groceries & daily essentials"
+                  className="h-full w-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                />
+                {/* Vignette — blends edge with dark bg */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent"
+                />
               </motion.div>
             </div>
 
