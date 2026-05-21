@@ -6,6 +6,7 @@ import {
   Heart, User, Menu, X, ChevronDown,
   Home, LayoutGrid, Package, LogOut, Settings, Zap,
   MapPin, Phone, Mail as MailIcon, Bell, ShoppingBag, Info, Search as SearchLucide,
+  Leaf,
 } from 'lucide-react';
 import { Logo }            from '../common/Logo';
 import { CartDrawer }      from '../CartDrawer';
@@ -41,6 +42,23 @@ function getCategoryEmoji(slug: string): string {
     if (slug.includes(key)) return emoji;
   }
   return '📦';
+}
+
+// ─── Floating leaf background decorations ────────────────────────────────────
+
+function FloatingLeaves() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
+    >
+      <Leaf className="absolute -left-12 top-16 h-[200px] w-[200px] -rotate-[20deg] text-sage opacity-[0.07]" strokeWidth={1} />
+      <Leaf className="absolute -right-8 top-40 h-[140px] w-[140px] rotate-[30deg] text-sage opacity-[0.06]" strokeWidth={1} />
+      <Leaf className="absolute -left-4 top-[52%] h-[100px] w-[100px] rotate-[12deg] text-sage opacity-[0.05]" strokeWidth={1} />
+      <Leaf className="absolute right-8 top-[65%] h-20 w-20 -rotate-[10deg] text-sage opacity-[0.04]" strokeWidth={1} />
+      <Leaf className="absolute -right-16 bottom-24 h-[160px] w-[160px] -rotate-[15deg] text-sage opacity-[0.06]" strokeWidth={1} />
+    </div>
+  );
 }
 
 // ─── Announcement bar — tiny, saffron, single line ───────────────────────────
@@ -981,6 +999,7 @@ export default function CustomerLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-bg">
       <CursorFollower />
+      <FloatingLeaves />
 
       <AnnouncementBar />
 

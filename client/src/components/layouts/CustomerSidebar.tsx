@@ -58,22 +58,16 @@ export function CustomerSidebar() {
             end={end}
             className={({ isActive }) =>
               cn(
-                'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors',
+                'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
                 isActive
-                  ? 'bg-saffron/15 text-saffron font-semibold'
+                  ? 'bg-gradient-to-r from-saffron to-blush text-bg font-bold shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
                   : 'text-cream/75 hover:bg-saffron/10 hover:text-saffron',
               )
             }
           >
             {({ isActive }) => (
               <>
-                {isActive && (
-                  <span
-                    aria-hidden
-                    className="absolute -left-4 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-saffron shadow-[0_0_8px_hsl(var(--saffron)/0.6)]"
-                  />
-                )}
-                <Icon className={cn('h-[18px] w-[18px] shrink-0', iconClass)} strokeWidth={1.8} />
+                <Icon className={cn('h-[18px] w-[18px] shrink-0', !isActive && iconClass)} strokeWidth={1.8} />
                 <span className="flex-1 truncate">{label}</span>
                 {badge && (
                   <span className="rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider text-bg">

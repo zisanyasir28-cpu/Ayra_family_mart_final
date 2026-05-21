@@ -169,41 +169,62 @@ export function HeroBanner() {
           {/* ── Right: Illustration + floating cards ─────────────────────── */}
           <div className="relative mx-auto flex w-full max-w-[420px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
 
-            {/* Radial glow behind illustration */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(ellipse at center, hsl(330 81% 60% / 0.22) 0%, hsl(262 84% 58% / 0.12) 45%, transparent 72%)',
-              }}
-            />
+            {/* Neon ring wrapper — circular container */}
+            <div className="relative flex h-[300px] w-[300px] items-center justify-center sm:h-[360px] sm:w-[360px]">
 
-            {/* Main illustration card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.88 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.18,
-                type: 'spring',
-                stiffness: 120,
-                damping: 18,
-              }}
-              className="relative z-10 flex h-[300px] w-[300px] flex-col items-center justify-center rounded-[2rem] border border-line/40 bg-gradient-to-br from-surface via-surface-2/60 to-surface shadow-[0_0_80px_-20px_hsl(var(--saffron)/0.3)] sm:h-[360px] sm:w-[360px]"
-            >
-              <div className="text-center select-none">
-                <div className="text-[90px] leading-none sm:text-[110px]">🛍️</div>
-                <div className="mt-2 flex items-center justify-center gap-2 text-[2.2rem] sm:text-[2.8rem]">
-                  <span>🥑</span>
-                  <span>🍎</span>
-                  <span>🥦</span>
+              {/* Outer ambient glow */}
+              <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-saffron/10 blur-[80px]" />
+
+              {/* SVG neon ring — stroke colors via CSS vars so they flip per theme */}
+              <svg
+                aria-hidden
+                className="pointer-events-none absolute inset-0 h-full w-full"
+                viewBox="0 0 400 400"
+                fill="none"
+              >
+                <defs>
+                  <filter id="neon-glow-ring">
+                    <feGaussianBlur stdDeviation="6" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                {/* Outer faint ring */}
+                <circle cx="200" cy="200" r="188" stroke="hsl(var(--saffron) / 0.2)" strokeWidth="2" filter="url(#neon-glow-ring)" />
+                {/* Main bright ring */}
+                <circle cx="200" cy="200" r="176" stroke="hsl(var(--saffron) / 0.9)" strokeWidth="2.5" filter="url(#neon-glow-ring)" />
+                {/* Inner purple accent ring */}
+                <circle cx="200" cy="200" r="164" stroke="hsl(var(--plum) / 0.3)" strokeWidth="1.5" />
+              </svg>
+
+              {/* Illustration inside ring — circular */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.88 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.18,
+                  type: 'spring',
+                  stiffness: 120,
+                  damping: 18,
+                }}
+                className="relative z-10 flex h-[230px] w-[230px] flex-col items-center justify-center rounded-full border border-line/40 bg-gradient-to-br from-surface via-surface-2/60 to-surface shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.4)] sm:h-[280px] sm:w-[280px]"
+              >
+                <div className="text-center select-none">
+                  <div className="text-[70px] leading-none sm:text-[88px]">🛍️</div>
+                  <div className="mt-2 flex items-center justify-center gap-2 text-[1.8rem] sm:text-[2.2rem]">
+                    <span>🥑</span>
+                    <span>🍎</span>
+                    <span>🥦</span>
+                  </div>
+                  <p className="mt-2 font-display text-[9px] font-bold uppercase tracking-[0.18em] text-cream/35">
+                    Farm Fresh · Daily Essentials
+                  </p>
                 </div>
-                <p className="mt-3 font-display text-[10px] font-bold uppercase tracking-[0.18em] text-cream/35">
-                  Farm Fresh · Daily Essentials
-                </p>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
 
             {/* Floating offer card — top-right */}
             <motion.div
