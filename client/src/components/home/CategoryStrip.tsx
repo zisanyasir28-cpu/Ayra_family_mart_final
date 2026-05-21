@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Leaf } from 'lucide-react';
 import { fetchCategories } from '../../services/categories';
 
 // ─── Bilingual + emoji metadata (slug-keyed) ─────────────────────────────────
@@ -125,7 +125,8 @@ export function CategoryStrip() {
               transition={{ duration: 0.5 }}
               className="font-display text-2xl font-black text-cream sm:text-3xl"
             >
-              Shop By Category 🌿
+              Shop By Category{' '}
+              <Leaf className="mb-1 inline h-6 w-6 text-sage sm:h-7 sm:w-7" aria-hidden />
             </motion.h2>
             <p className="mt-1 text-sm text-cream/50">
               Explore fresh picks across every aisle

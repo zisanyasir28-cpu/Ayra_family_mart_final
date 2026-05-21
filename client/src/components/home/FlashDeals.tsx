@@ -115,7 +115,7 @@ export function FlashDeals() {
             </span>
             <div>
               <h2 className="font-display text-2xl font-black text-cream sm:text-3xl">
-                ⚡ Flash Deals
+                Flash Deals
               </h2>
               <p className="text-xs text-cream/50">Limited-time offers — grab before they&apos;re gone!</p>
             </div>
