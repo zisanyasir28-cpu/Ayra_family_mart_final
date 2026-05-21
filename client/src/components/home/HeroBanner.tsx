@@ -1,384 +1,255 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowRightIcon } from '../common/HandIcon';
-import { CountUp }       from '../common/CountUp';
-import { fetchFeaturedProducts } from '../../services/products';
-import { formatPaisa } from '../../lib/utils';
+import { motion } from 'motion/react';
+import { Play, ShieldCheck, Zap, RotateCcw, Leaf } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-// ─── Use a single hover-capable check ───────────────────────────────────────
-function useCanHover() {
-  const [can, setCan] = useState(false);
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    setCan(
-      window.matchMedia('(any-hover: hover)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    );
-  }, []);
-  return can;
-}
+// ─── Trust strip items ────────────────────────────────────────────────────────
+const trustItems: Array<{ icon: LucideIcon; label: string; sublabel: string }> = [
+  { icon: Leaf,        label: '100% Fresh',     sublabel: 'তাজা পণ্য'      },
+  { icon: Zap,         label: 'Fast Delivery',  sublabel: 'দ্রুত ডেলিভারি' },
+  { icon: ShieldCheck, label: 'Secure Payment', sublabel: 'নিরাপদ পেমেন্ট' },
+  { icon: RotateCcw,   label: 'Easy Returns',   sublabel: 'সহজ রিটার্ন'    },
+];
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  TILE 1 — Big headline tile (col-span 2, row-span 2)
-// ─────────────────────────────────────────────────────────────────────────────
+const AVATARS = ['🙂', '😊', '🥰', '😄'];
 
-function HeadlineTile() {
-  const canHover = useCanHover();
-  const blobX = useMotionValue(0.5);
-  const blobY = useMotionValue(0.5);
-  const sx = useSpring(blobX, { stiffness: 60, damping: 18 });
-  const sy = useSpring(blobY, { stiffness: 60, damping: 18 });
-  const tx  = useTransform(sx, [0, 1], [-30, 30]);
-  const ty  = useTransform(sy, [0, 1], [-22, 22]);
-  const tx2 = useTransform(sx, [0, 1], [30, -30]);
-  const ty2 = useTransform(sy, [0, 1], [22, -22]);
-
-  function onMove(e: React.PointerEvent<HTMLDivElement>) {
-    if (!canHover) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    blobX.set((e.clientX - r.left) / r.width);
-    blobY.set((e.clientY - r.top)  / r.height);
-  }
-
+// ─── Small arrow SVG ──────────────────────────────────────────────────────────
+function ArrowIcon({ size = 14, className = '' }: { size?: number; className?: string }) {
   return (
-    <div
-      onPointerMove={onMove}
-      className="bg-noise group relative flex flex-col overflow-hidden rounded-2xl bg-surface p-5 sm:p-7 sm:rounded-3xl md:p-10"
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
     >
-      {/* Aurora blobs */}
-      <motion.div
-        style={canHover ? { x: tx, y: ty } : undefined}
-        className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-aurora opacity-50 blur-3xl transition-opacity duration-700 group-hover:opacity-80 sm:-right-32 sm:-top-24 sm:h-[420px] sm:w-[420px]"
-      />
-      <motion.div
-        style={canHover ? { x: tx2, y: ty2 } : undefined}
-        className="pointer-events-none absolute -bottom-24 -left-20 h-64 w-64 rounded-full bg-coral/30 opacity-50 blur-3xl sm:-bottom-32 sm:-left-24 sm:h-[360px] sm:w-[360px]"
-      />
-
-      <div className="relative z-10 flex h-full flex-col">
-        {/* Top label */}
-        <div className="flex items-center gap-2.5">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-saffron opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-saffron" />
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.22em] text-cream/60 sm:text-[11px]">
-            Live · <span className="font-bangla normal-case tracking-normal text-cream">তাজা পণ্য</span>
-          </span>
-        </div>
-
-        {/* Headline */}
-        <h1 className="mt-6 font-display font-black leading-[0.95] tracking-tight text-cream sm:mt-auto sm:pt-10"
-            style={{ fontSize: 'clamp(2.25rem, 8vw, 5.5rem)' }}>
-          The market,<br />
-          <span className="text-saffron">rewritten.</span>
-        </h1>
-
-        {/* Subline */}
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-cream/70 sm:mt-6 sm:text-base md:text-lg">
-          Fresh produce, daily essentials, and a few quiet luxuries — delivered across Bangladesh in under sixty minutes.
-        </p>
-
-        {/* CTAs */}
-        <div className="mt-5 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4">
-          <Link
-            to="/products"
-            className="group/btn inline-flex items-center gap-2 rounded-full bg-saffron px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-bg transition-colors hover:bg-cream sm:gap-3 sm:px-7 sm:py-3.5 sm:text-sm"
-          >
-            Start shopping
-            <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
-          </Link>
-          <Link
-            to="/products?deals=true"
-            className="font-display text-sm italic text-cream/80 transition-colors hover:text-saffron sm:text-base"
-          >
-            today's deals →
-          </Link>
-        </div>
-      </div>
-    </div>
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </svg>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  TILE 2 — Live order ticker
-// ─────────────────────────────────────────────────────────────────────────────
-
-function LiveStatsTile() {
-  const [orders, setOrders] = useState(2847);
-  useEffect(() => {
-    const id = setInterval(() => setOrders((n) => n + 1), 4000 + Math.random() * 3000);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-saffron/40 sm:rounded-3xl sm:p-6">
-      <div className="flex items-center gap-2">
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-coral" />
-        <span className="text-[10px] uppercase tracking-[0.22em] text-cream/60">Live</span>
-      </div>
-
-      <div className="mt-4 sm:mt-7">
-        <div className="font-display font-black leading-none text-cream tabular-nums" style={{ fontSize: 'clamp(2rem, 6vw, 3.5rem)' }}>
-          <AnimatePresence mode="popLayout">
-            <motion.span
-              key={orders}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0,   opacity: 1 }}
-              exit={{    y: -20, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="inline-block"
-            >
-              {orders.toLocaleString()}
-            </motion.span>
-          </AnimatePresence>
-        </div>
-        <p className="mt-2 font-display text-[11px] italic text-cream/55 sm:text-sm">
-          orders today
-        </p>
-      </div>
-
-      {/* Sparkline */}
-      <svg className="mt-3 w-full sm:mt-5" height="28" viewBox="0 0 200 36" preserveAspectRatio="none">
-        <motion.path
-          d="M 0 28 L 25 22 L 50 26 L 75 14 L 100 18 L 125 8 L 150 12 L 175 6 L 200 10"
-          fill="none"
-          stroke="hsl(var(--saffron))"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </svg>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  TILE 3 — Featured product preview
-// ─────────────────────────────────────────────────────────────────────────────
-
-function FeaturedTile({ image, name, price }: { image: string; name: string; price: number }) {
-  return (
-    <Link to="/products" className="group relative block h-full overflow-hidden rounded-2xl bg-surface sm:rounded-3xl">
-      <img
-        src={image}
-        alt={name}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-editorial group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-transparent" />
-
-      <div className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-2 sm:inset-x-5 sm:bottom-5">
-        <div className="min-w-0">
-          <p className="text-[9px] uppercase tracking-[0.22em] text-cream/65 sm:text-[10px]">Pick</p>
-          <h3 className="mt-0.5 line-clamp-2 font-display font-bold leading-tight text-cream sm:mt-1" style={{ fontSize: 'clamp(0.95rem, 2vw, 1.5rem)' }}>
-            {name}
-          </h3>
-          <p className="mt-0.5 font-display font-black text-saffron sm:mt-1" style={{ fontSize: 'clamp(1rem, 2.4vw, 1.5rem)' }}>
-            {formatPaisa(price)}
-          </p>
-        </div>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cream text-bg transition-transform duration-300 group-hover:rotate-[-45deg] sm:h-10 sm:w-10">
-          <ArrowRightIcon size={14} strokeWidth={2} />
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  TILE 4 — Bloom (animated marigold cluster)
-// ─────────────────────────────────────────────────────────────────────────────
-
-function BloomTile() {
-  return (
-    <div className="relative overflow-hidden rounded-2xl bg-aurora p-4 sm:rounded-3xl sm:p-6">
-      <div className="relative z-10 flex h-full flex-col justify-between text-bg">
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.22em] opacity-80">Today's harvest</p>
-          <h3 className="mt-2 font-display font-extrabold leading-[0.95]" style={{ fontSize: 'clamp(1.25rem, 3vw, 2rem)' }}>
-            From farm,<br /><em>not factory.</em>
-          </h3>
-        </div>
-
-        <div className="relative mt-4 flex h-16 items-center justify-center sm:mt-6 sm:h-24">
-          {[0, 1, 2].map((i) => (
-            <motion.svg
-              key={i}
-              viewBox="0 0 60 60"
-              className="absolute h-12 w-12 sm:h-16 sm:w-16"
-              style={{ left: `${30 + i * 15}%`, transform: 'translateX(-50%)' }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 14 + i * 4, repeat: Infinity, ease: 'linear' }}
-            >
-              {[0, 30, 60, 90, 120, 150].map((deg) => (
-                <ellipse
-                  key={deg}
-                  cx="30" cy="30" rx="12" ry="4"
-                  fill="hsl(33 20% 6%)"
-                  opacity={0.65 - i * 0.15}
-                  transform={`rotate(${deg} 30 30)`}
-                />
-              ))}
-              <circle cx="30" cy="30" r="4" fill="hsl(33 20% 6%)" />
-            </motion.svg>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  TILE 5 — Delivery 60-min counter
-// ─────────────────────────────────────────────────────────────────────────────
-
-function DeliveryTile() {
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-coral/40 sm:rounded-3xl sm:p-6">
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-[0.22em] text-cream/60">Express</span>
-      </div>
-
-      <div className="mt-3 flex items-baseline gap-2 sm:mt-6">
-        <span className="font-display font-black leading-none text-cream tabular-nums" style={{ fontSize: 'clamp(2.5rem, 9vw, 5.5rem)' }}>
-          <CountUp to={60} />
-        </span>
-        <span className="font-display text-lg text-cream/55 sm:text-2xl">min</span>
-      </div>
-
-      <p className="mt-2 max-w-[18ch] font-display text-sm leading-snug text-cream/60 sm:mt-4 sm:text-base">
-        Same-day delivery across Dhaka. <em className="text-coral">Track from kitchen to door.</em>
-      </p>
-
-      <svg className="mt-3 w-full sm:mt-4" height="36" viewBox="0 0 200 44" preserveAspectRatio="none">
-        <line x1="0" y1="22" x2="200" y2="22" stroke="hsl(var(--line))" strokeWidth="1" strokeDasharray="4 4" />
-        <motion.g
-          animate={{ x: [0, 180, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <text x="-2" y="18" fontSize="22">🛵</text>
-        </motion.g>
-      </svg>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  TILE 6 — Open the market CTA
-// ─────────────────────────────────────────────────────────────────────────────
-
-function ScanTile() {
-  return (
-    <Link
-      to="/products"
-      className="group relative flex h-full min-h-[150px] flex-col justify-between overflow-hidden rounded-2xl bg-cream p-4 text-bg transition-colors hover:bg-saffron sm:min-h-[180px] sm:rounded-3xl sm:p-6"
-    >
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] uppercase tracking-[0.22em] text-bg/60">Browse</span>
-      </div>
-
-      <div>
-        <h3 className="font-display font-extrabold leading-tight text-bg" style={{ fontSize: 'clamp(1.25rem, 3vw, 2rem)' }}>
-          50,000+ products
-        </h3>
-        <p className="mt-1.5 font-display text-xs italic text-bg/65 sm:mt-2 sm:text-base">
-          Search anything — we probably stock it.
-        </p>
-
-        <span className="mt-3 inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-[0.16em] sm:mt-5 sm:text-sm">
-          Open the market
-          <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-1.5" />
-        </span>
-      </div>
-    </Link>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-//  Main HeroBanner
-// ─────────────────────────────────────────────────────────────────────────────
-
-const containerVar = {
-  hidden: {},
-  show:   { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
-};
-const tileVar = {
-  hidden: { opacity: 0, y: 20 },
-  show:   { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 200, damping: 24 } },
-};
+// ─── HeroBanner ──────────────────────────────────────────────────────────────
 
 export function HeroBanner() {
-  const { data: featured } = useQuery({
-    queryKey: ['products', 'featured'],
-    queryFn:  fetchFeaturedProducts,
-    staleTime: 1000 * 60 * 5,
-  });
-
-  const featuredOne = featured?.[0];
-
   return (
-    <section className="relative bg-bg pt-6 pb-12 sm:pt-8 sm:pb-16 md:pt-12 md:pb-20">
+    <section className="relative overflow-hidden bg-bg pt-8 pb-12 sm:pt-10 sm:pb-16 md:pb-20">
+
+      {/* Ambient background glow */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-40 -top-20 h-[500px] w-[500px] rounded-full bg-saffron/10 blur-[120px]" />
+        <div className="absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-plum/20 blur-[100px]" />
+      </div>
+
       <div className="container relative">
-        {/* Bento grid:
-            mobile  (2-col) → Headline(2) / LiveStats|Bloom / Featured(2) / Delivery|Scan
-            desktop (4-col) → Headline(2x2)|LiveStats|Featured(1x2) / -|Bloom|- / Delivery(2)|Scan(2)
-        */}
-        <motion.div
-          variants={containerVar}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-4 md:gap-4"
-        >
-          {/* Tile 1: Headline */}
-          <motion.div variants={tileVar} className="col-span-2 md:col-span-2 md:row-span-2 min-h-[300px] sm:min-h-[380px]">
-            <HeadlineTile />
-          </motion.div>
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
 
-          {/* Tile 2: Live stats */}
-          <motion.div variants={tileVar} className="col-span-1 md:col-span-1 min-h-[170px]">
-            <LiveStatsTile />
-          </motion.div>
+          {/* ── Left: Content ────────────────────────────────────────────── */}
+          <div className="flex-1 lg:max-w-[54%]">
 
-          {/* Tile 3: Bloom — mobile shows here (right of LiveStats) */}
-          <motion.div variants={tileVar} className="col-span-1 md:hidden min-h-[170px]">
-            <BloomTile />
-          </motion.div>
+            {/* Social-proof badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45 }}
+              className="mb-6 inline-flex items-center gap-3 rounded-full border border-saffron/25 bg-saffron/10 px-4 py-2"
+            >
+              <div className="flex -space-x-2">
+                {AVATARS.map((emoji, i) => (
+                  <span
+                    key={i}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-bg bg-surface text-sm"
+                  >
+                    {emoji}
+                  </span>
+                ))}
+              </div>
+              <span className="text-xs font-semibold text-cream/80">
+                Trusted by{' '}
+                <span className="font-bold text-saffron">50K+</span>{' '}
+                Happy Families ❤️
+              </span>
+            </motion.div>
 
-          {/* Tile 4: Featured — mobile full width, desktop col-1 row-2 */}
-          <motion.div variants={tileVar} className="col-span-2 md:col-span-1 md:row-span-2 min-h-[260px] sm:min-h-[380px]">
-            {featuredOne && featuredOne.images[0] ? (
-              <FeaturedTile
-                image={featuredOne.images[0].url}
-                name={featuredOne.name}
-                price={featuredOne.effectivePriceInPaisa}
-              />
-            ) : (
-              <div className="h-full skeleton rounded-2xl sm:rounded-3xl" />
-            )}
-          </motion.div>
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="font-display font-black leading-[1.05] tracking-tight text-cream"
+              style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4.5rem)' }}
+            >
+              Fresh Choices,
+              <br />
+              Better Life{' '}
+              <span
+                className="font-script text-saffron"
+                style={{ fontSize: 'clamp(2.7rem, 6.2vw, 5rem)' }}
+              >
+                Everyday!
+              </span>
+            </motion.h1>
 
-          {/* Tile 5: Bloom — desktop only (under LiveStats) */}
-          <motion.div variants={tileVar} className="hidden md:block md:col-span-1 min-h-[170px]">
-            <BloomTile />
-          </motion.div>
+            {/* Bangla accent */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="mt-3 font-bangla text-sm text-cream/50"
+            >
+              তাজা পণ্য, সুস্থ পরিবার, সুন্দর জীবন ❤️
+            </motion.p>
 
-          {/* Tile 6: Delivery — full width mobile, 2 cols desktop */}
-          <motion.div variants={tileVar} className="col-span-1 md:col-span-2 min-h-[170px]">
-            <DeliveryTile />
-          </motion.div>
+            {/* Sub-heading */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.28 }}
+              className="mt-4 max-w-lg text-base leading-relaxed text-cream/65 sm:text-lg"
+            >
+              Farm fresh produce, authentic groceries &amp; daily essentials —
+              delivered to your door.
+            </motion.p>
 
-          {/* Tile 7: Scan — col-1 mobile, 2 cols desktop */}
-          <motion.div variants={tileVar} className="col-span-1 md:col-span-2 min-h-[170px]">
-            <ScanTile />
-          </motion.div>
-        </motion.div>
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.38 }}
+              className="mt-8 flex flex-wrap items-center gap-4"
+            >
+              <Link
+                to="/products"
+                className="group inline-flex items-center gap-2.5 rounded-full bg-saffron px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_32px_-6px_hsl(var(--saffron)/0.7)] active:scale-95"
+              >
+                Shop Now
+                <ArrowIcon
+                  size={14}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+              <Link
+                to="/products?onSale=true"
+                className="group inline-flex items-center gap-2.5 rounded-full border border-line px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-cream/80 transition-all hover:border-saffron/50 hover:text-cream active:scale-95"
+              >
+                <Play className="h-3.5 w-3.5 fill-current" />
+                Explore Deals
+              </Link>
+            </motion.div>
+
+            {/* Inline trust strip */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.52 }}
+              className="mt-10 grid grid-cols-2 gap-2.5 sm:grid-cols-4"
+            >
+              {trustItems.map(({ icon: Icon, label, sublabel }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2.5 rounded-xl border border-line/50 bg-surface/40 px-3 py-2.5 backdrop-blur-sm"
+                >
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-saffron/15 text-saffron">
+                    <Icon className="h-4 w-4" strokeWidth={1.8} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-[11px] font-bold leading-tight text-cream">
+                      {label}
+                    </p>
+                    <p className="font-bangla text-[10px] text-cream/45">{sublabel}</p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* ── Right: Illustration + floating cards ─────────────────────── */}
+          <div className="relative mx-auto flex w-full max-w-[420px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
+
+            {/* Radial glow behind illustration */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(ellipse at center, hsl(330 81% 60% / 0.22) 0%, hsl(262 84% 58% / 0.12) 45%, transparent 72%)',
+              }}
+            />
+
+            {/* Main illustration card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.6,
+                delay: 0.18,
+                type: 'spring',
+                stiffness: 120,
+                damping: 18,
+              }}
+              className="relative z-10 flex h-[300px] w-[300px] flex-col items-center justify-center rounded-[2rem] border border-line/40 bg-gradient-to-br from-surface via-surface-2/60 to-surface shadow-[0_0_80px_-20px_hsl(var(--saffron)/0.3)] sm:h-[360px] sm:w-[360px]"
+            >
+              <div className="text-center select-none">
+                <div className="text-[90px] leading-none sm:text-[110px]">🛍️</div>
+                <div className="mt-2 flex items-center justify-center gap-2 text-[2.2rem] sm:text-[2.8rem]">
+                  <span>🥑</span>
+                  <span>🍎</span>
+                  <span>🥦</span>
+                </div>
+                <p className="mt-3 font-display text-[10px] font-bold uppercase tracking-[0.18em] text-cream/35">
+                  Farm Fresh · Daily Essentials
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Floating offer card — top-right */}
+            <motion.div
+              initial={{ opacity: 0, x: 16, y: -12 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="absolute -right-3 top-2 z-20 min-w-[130px] rounded-2xl border border-coral/30 bg-surface/90 p-3.5 shadow-[0_8px_32px_-8px_hsl(var(--coral)/0.3)] backdrop-blur-xl sm:-right-2 sm:top-6"
+            >
+              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-coral/70">
+                Special Offer
+              </p>
+              <p className="font-display text-xl font-black text-coral sm:text-2xl">
+                40% OFF
+              </p>
+              <p className="text-[10px] text-cream/50">This Week Only</p>
+              <Link
+                to="/products?onSale=true"
+                className="mt-2 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-saffron transition hover:text-cream"
+              >
+                Shop Now{' '}
+                <ArrowIcon size={9} />
+              </Link>
+            </motion.div>
+
+            {/* Floating saver pill — bottom-left */}
+            <motion.div
+              initial={{ opacity: 0, x: -16, y: 12 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.65 }}
+              className="absolute -left-3 bottom-6 z-20 flex items-center gap-2.5 rounded-full border border-sage/30 bg-surface/90 px-4 py-2 shadow-[0_8px_24px_-6px_hsl(var(--sage)/0.25)] backdrop-blur-xl sm:left-0"
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sage/20 text-base select-none">
+                🎉
+              </span>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-sage">
+                  Super Saver Pack
+                </p>
+                <p className="text-xs font-black text-cream">
+                  Save <span className="text-coral">৳350</span>
+                </p>
+              </div>
+            </motion.div>
+          </div>
+
+        </div>
       </div>
     </section>
   );
