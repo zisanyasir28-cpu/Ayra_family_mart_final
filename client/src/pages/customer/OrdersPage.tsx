@@ -19,15 +19,15 @@ const FILTERS: Array<{ label: string; value: FilterValue }> = [
 ];
 
 const STATUS_TONE: Record<ApiOrderStatus, string> = {
-  PENDING:          'bg-amber-500/15 text-amber-500',
-  CONFIRMED:        'bg-sky-500/15 text-sky-500',
-  PROCESSING:       'bg-indigo-500/15 text-indigo-500',
-  SHIPPED:          'bg-violet-500/15 text-violet-500',
-  OUT_FOR_DELIVERY: 'bg-blue-500/15 text-blue-500',
-  DELIVERED:        'bg-emerald-500/15 text-emerald-500',
-  CANCELLED:        'bg-rose-500/15 text-rose-500',
-  REFUND_REQUESTED: 'bg-orange-500/15 text-orange-500',
-  REFUNDED:         'bg-zinc-500/15 text-zinc-500',
+  PENDING:          'bg-coral/15 text-coral',
+  CONFIRMED:        'bg-saffron/15 text-saffron',
+  PROCESSING:       'bg-plum/15 text-plum',
+  SHIPPED:          'bg-blush/15 text-blush',
+  OUT_FOR_DELIVERY: 'bg-blush/20 text-blush',
+  DELIVERED:        'bg-sage/15 text-sage',
+  CANCELLED:        'bg-rose-500/15 text-rose-400',
+  REFUND_REQUESTED: 'bg-coral/10 text-coral',
+  REFUNDED:         'bg-line/30 text-cream/55',
 };
 
 export default function OrdersPage() {
@@ -44,7 +44,7 @@ export default function OrdersPage() {
     <div className="mx-auto max-w-5xl px-4 py-10">
       <header className="flex items-center gap-3">
         <Package className="h-6 w-6 text-saffron" />
-        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">My Orders</h1>
+        <h1 className="font-display text-2xl font-black text-cream sm:text-3xl">My Orders</h1>
       </header>
 
       <nav className="mt-6 flex flex-wrap gap-2">
@@ -54,10 +54,10 @@ export default function OrdersPage() {
             type="button"
             onClick={() => { setFilter(f.value); setPage(1); }}
             className={cn(
-              'rounded-full border px-3 py-1.5 text-sm font-medium transition-colors',
+              'rounded-full border px-3 py-1.5 text-sm font-medium transition-all',
               filter === f.value
-                ? 'border-saffron bg-saffron text-bg'
-                : 'border-line bg-surface text-muted-foreground hover:border-saffron/40 hover:text-foreground',
+                ? 'border-saffron bg-saffron text-bg shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.5)]'
+                : 'border-line/50 bg-surface/60 text-cream/55 hover:border-saffron/40 hover:text-cream',
             )}
           >
             {f.label}
@@ -69,15 +69,15 @@ export default function OrdersPage() {
         {isLoading ? (
           <div className="space-y-3">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-surface" />
+              <div key={i} className="h-24 animate-pulse rounded-2xl bg-surface/60" />
             ))}
           </div>
         ) : orders.length === 0 ? (
-          <div className="rounded-2xl border border-line bg-surface p-10 text-center">
-            <p className="text-muted-foreground">No orders to show yet.</p>
+          <div className="rounded-2xl border border-line/50 bg-surface/60 backdrop-blur-sm p-10 text-center">
+            <p className="text-cream/55">No orders to show yet.</p>
             <Link
               to="/products"
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-saffron px-5 py-2 text-sm font-semibold text-bg"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-saffron px-5 py-2 text-sm font-semibold text-bg hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.5)] transition-all"
             >
               Start shopping
             </Link>
@@ -87,9 +87,9 @@ export default function OrdersPage() {
             <Link
               key={order.id}
               to={`/orders/${order.id}`}
-              className="flex items-center gap-4 rounded-xl border border-line bg-surface p-4 transition-colors hover:border-saffron/40"
+              className="flex items-center gap-4 rounded-2xl border border-line/50 bg-surface/60 backdrop-blur-sm p-4 transition-all hover:border-saffron/40 hover:shadow-[0_0_24px_-8px_hsl(var(--saffron)/0.25)]"
             >
-              <div className="hidden h-14 w-14 shrink-0 overflow-hidden rounded-md border border-line bg-bg sm:block">
+              <div className="hidden h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-line/50 bg-bg sm:block">
                 {order.items[0]?.product?.images[0]?.url && (
                   <img
                     src={order.items[0].product.images[0].url}
@@ -100,20 +100,20 @@ export default function OrdersPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-sm font-semibold text-foreground">{order.orderNumber}</span>
+                  <span className="font-mono text-sm font-semibold text-cream">{order.orderNumber}</span>
                   <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide', STATUS_TONE[order.status])}>
                     {order.status.replace('_', ' ')}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm text-cream/55">
                   {order.items.length} item{order.items.length === 1 ? '' : 's'} • {format(new Date(order.createdAt), 'dd MMM yyyy')}
                 </p>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-foreground">{formatPaisa(order.totalInPaisa)}</p>
-                <p className="text-xs text-muted-foreground">{order.paymentMethod}</p>
+                <p className="font-semibold text-cream">{formatPaisa(order.totalInPaisa)}</p>
+                <p className="text-xs text-cream/55">{order.paymentMethod}</p>
               </div>
-              <ChevronRight className="hidden h-4 w-4 shrink-0 text-muted-foreground sm:block" />
+              <ChevronRight className="hidden h-4 w-4 shrink-0 text-cream/40 sm:block" />
             </Link>
           ))
         )}
@@ -125,18 +125,18 @@ export default function OrdersPage() {
             type="button"
             disabled={!pagination.hasPrevPage}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-foreground disabled:opacity-50"
+            className="rounded-full border border-line/50 bg-surface/60 px-4 py-2 text-sm font-medium text-cream disabled:opacity-50 hover:border-saffron/40 transition-all"
           >
             Previous
           </button>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-cream/55">
             Page {pagination.page} of {pagination.totalPages}
           </span>
           <button
             type="button"
             disabled={!pagination.hasNextPage}
             onClick={() => setPage((p) => p + 1)}
-            className="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-foreground disabled:opacity-50"
+            className="rounded-full border border-line/50 bg-surface/60 px-4 py-2 text-sm font-medium text-cream disabled:opacity-50 hover:border-saffron/40 transition-all"
           >
             Next
           </button>
