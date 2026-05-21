@@ -114,6 +114,11 @@ All Zustand stores, TanStack Query hooks, and API service modules are stable con
 | I7 | `FeatureBanners.tsx` | Real Unsplash product photos (veggie crate / cooking oil / produce bag) replacing all emojis |
 | I8 | `CustomerSidebar.tsx` | Glass-gradient ring borders on both bottom cards (`p-[1.5px]` wrapper), plum→sage for Shop Now |
 | I9 | `CustomerSidebar.tsx` | Decorative background art (CSS blur orbs + inline SVG watermarks), sage "Shop Now", text-shadow on buttons |
+| I10 | `PromoStrip.tsx` | SVG delivery-truck watermark on Free Delivery card; SVG coin-stack watermark on Ayra Points card |
+| I11 | `CategoryStrip.tsx` | Inline sage `<Leaf>` icon replaces 🌿 emoji in section heading |
+| I12 | `FlashDeals.tsx` | Removed redundant ⚡ emoji from h2 (Zap icon circle already handles it) |
+| I13 | `WhyShopWithUs.tsx` | Ambient sage/saffron/plum glow orbs added to section background |
+| I14 | `NewsletterBar.tsx` | Colorful Google Play SVG + Apple SVG replace ▶ and 🍎 emoji in app-download buttons |
 
 ### Key design patterns established (reuse these)
 
@@ -126,10 +131,5 @@ All Zustand stores, TanStack Query hooks, and API service modules are stable con
 - **Inactive icon circles**: `ring-1 ring-line/40 h-7 w-7 rounded-full flex items-center justify-center`
 
 ### Up next (user will share reference crops)
-- PromoStrip cards (countdown / free delivery / member / points) — illustration polish
-- CategoryStrip tile design check
-- FlashDeals — countdown header + carousel
-- WhyShopWithUs — 5-icon trust strip
-- NewsletterBar — app download + subscribe + social
-- Footer — 4-column layout check
+- Footer — 4-column layout check (I15)
 - Then: remaining customer pages (Products, ProductDetail, Checkout, Orders, Account, Wishlist)
