@@ -673,13 +673,52 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
-function Footer() {
+// Inline SVG brand icons — lucide v1 dropped brand marks for trademark reasons.
+function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <footer className="relative border-t border-line bg-bg">
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.99 3.657 9.128 8.438 9.879V14.89H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.776-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.563V12h2.773l-.443 2.89h-2.33v6.99C18.343 21.128 22 16.991 22 12z" />
+    </svg>
+  );
+}
+function InstagramIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function YoutubeIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.546 15.568V8.432L15.818 12l-6.272 3.568z" />
+    </svg>
+  );
+}
+function TiktokIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.7a8.16 8.16 0 0 0 4.77 1.52V6.78a4.85 4.85 0 0 1-1.84-.09z" />
+    </svg>
+  );
+}
+
+function Footer() {
+  const socials: { label: string; href: string; Icon: (p: React.SVGProps<SVGSVGElement>) => React.ReactElement }[] = [
+    { label: 'Facebook',  href: '#', Icon: FacebookIcon  },
+    { label: 'Instagram', href: '#', Icon: InstagramIcon },
+    { label: 'YouTube',   href: '#', Icon: YoutubeIcon   },
+    { label: 'TikTok',    href: '#', Icon: TiktokIcon    },
+  ];
+
+  return (
+    <footer className="relative border-t border-line/50 bg-gradient-to-b from-surface/30 via-bg to-bg">
       <div className="container py-16">
-        {/* Massive brand line */}
-        <div className="border-b border-line pb-12">
-          <h2 className="display-xl select-none text-cream/90">
+        {/* Brand line */}
+        <div className="border-b border-line/60 pb-10">
+          <h2 className="display-xl select-none text-cream/95">
             Ayra<span className="text-saffron">.</span>
           </h2>
           <p className="mt-4 max-w-2xl font-display text-base italic text-cream/55 sm:text-lg">
@@ -687,17 +726,55 @@ function Footer() {
           </p>
         </div>
 
-        {/* Links + contact */}
-        <div className="grid grid-cols-2 gap-6 pt-12 md:grid-cols-4 md:gap-10">
+        {/* 4-col grid */}
+        <div className="grid grid-cols-2 gap-8 pt-10 md:grid-cols-4 md:gap-10">
+          {/* Col 1 — About + socials + contact */}
+          <div className="col-span-2 md:col-span-1">
+            <h4 className="mb-4 text-[10px] uppercase tracking-[0.22em] text-cream/40">Ayra Family Mart</h4>
+            <p className="mb-5 text-sm leading-relaxed text-cream/70">
+              <span className="font-bangla normal-case">তাজা পণ্য, সুন্দর জীবন</span>
+              <span className="mx-1.5 text-cream/30">·</span>
+              Fresh groceries delivered fast across Bangladesh.
+            </p>
+            <ul className="mb-6 space-y-2.5 text-xs text-cream/65">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-saffron" />
+                <span>Vasani Road, Sirajganj 6700</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="h-3.5 w-3.5 shrink-0 text-saffron" />
+                01710641516
+              </li>
+              <li className="flex items-center gap-2.5">
+                <MailIcon className="h-3.5 w-3.5 shrink-0 text-saffron" />
+                help@ayra-family.bd
+              </li>
+            </ul>
+            <div className="flex gap-2">
+              {socials.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="grid h-9 w-9 place-items-center rounded-full bg-surface-2/80 text-cream/70 transition hover:bg-saffron hover:text-bg hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.6)]"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Col 2 — Shop */}
           <div>
-            <h4 className="mb-5 text-[10px] uppercase tracking-[0.22em] text-cream/40">Wander</h4>
+            <h4 className="mb-4 text-[10px] uppercase tracking-[0.22em] text-cream/40">Shop</h4>
             <ul className="space-y-3">
               {[
-                { label: 'Home',          to: '/'                         },
-                { label: 'All Products',  to: '/products'                 },
-                { label: 'Flash Deals',   to: '/products?deals=true'      },
-                { label: 'New Arrivals',  to: '/products?sortBy=newest'   },
-                { label: 'Best Sellers',  to: '/products?sortBy=popular'  },
+                { label: 'Home',          to: '/'                          },
+                { label: 'All Products',  to: '/products'                  },
+                { label: 'Flash Deals',   to: '/products?deals=true'       },
+                { label: 'New Arrivals',  to: '/products?sort=newest'      },
+                { label: 'Best Sellers',  to: '/products?sort=popular'     },
+                { label: 'Wishlist',      to: '/wishlist'                  },
               ].map((l) => (
                 <li key={l.label}>
                   <Link
@@ -712,10 +789,11 @@ function Footer() {
             </ul>
           </div>
 
+          {/* Col 3 — Help */}
           <div>
-            <h4 className="mb-5 text-[10px] uppercase tracking-[0.22em] text-cream/40">Help</h4>
+            <h4 className="mb-4 text-[10px] uppercase tracking-[0.22em] text-cream/40">Help</h4>
             <ul className="space-y-3">
-              {['Help Center', 'Track Order', 'Returns', 'Privacy', 'Terms'].map((l) => (
+              {['Help Center', 'Track Order', 'Returns', 'Privacy', 'Terms', 'Contact Us'].map((l) => (
                 <li key={l}>
                   <a
                     href="#"
@@ -729,63 +807,66 @@ function Footer() {
             </ul>
           </div>
 
+          {/* Col 4 — Get the App */}
           <div>
-            <h4 className="mb-5 text-[10px] uppercase tracking-[0.22em] text-cream/40">Contact</h4>
-            <ul className="space-y-3 text-sm text-cream/70">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-saffron" />
-                <span>Vasani Road,<br />Sirajganj 6700</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Phone className="h-4 w-4 shrink-0 text-saffron" />
-                01710641516
-              </li>
-              <li className="flex items-center gap-2.5">
-                <MailIcon className="h-4 w-4 shrink-0 text-saffron" />
-                help@ayra-family.bd
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="mb-5 text-[10px] uppercase tracking-[0.22em] text-cream/40">We accept</h4>
-            <div className="flex flex-wrap gap-2">
-              {['SSLCommerz', 'bKash', 'Nagad', 'COD'].map((p) => (
-                <span
-                  key={p}
-                  className="rounded-full border border-line px-3 py-1 text-[10px] font-semibold text-cream/65"
-                >
-                  {p}
-                </span>
-              ))}
-            </div>
-            <div className="mt-6">
-              <h4 className="mb-3 text-[10px] uppercase tracking-[0.22em] text-cream/40">Follow</h4>
-              <div className="flex gap-2">
-                {['F', 'I', 'X', 'Y'].map((c) => (
-                  <a
-                    key={c}
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-cream/65 transition hover:border-saffron hover:text-saffron"
-                  >
-                    {c}
-                  </a>
-                ))}
-              </div>
+            <h4 className="mb-4 text-[10px] uppercase tracking-[0.22em] text-cream/40">Get the App</h4>
+            <p className="mb-4 text-sm text-cream/65">
+              Shop faster · earn points · track orders.
+            </p>
+            <div className="flex flex-col gap-2.5">
+              <a
+                href="#"
+                aria-label="Get it on Google Play"
+                className="group flex items-center gap-3 rounded-2xl border border-line/60 bg-surface-2/60 px-3.5 py-2.5 transition hover:border-saffron/50 hover:bg-saffron/5 hover:shadow-[0_0_16px_-6px_hsl(var(--saffron)/0.4)]"
+              >
+                <svg viewBox="0 0 32 32" fill="none" className="h-6 w-6 shrink-0">
+                  <path d="M5 4.5L18 16 5 27.5V4.5z" fill="hsl(var(--saffron))" />
+                  <path d="M5 4.5L23 14 18 16 5 4.5z" fill="hsl(var(--sage))" />
+                  <path d="M5 27.5L23 18 18 16 5 27.5z" fill="hsl(var(--coral))" />
+                  <path d="M23 14L28 16 23 18 18 16z" fill="hsl(var(--plum))" />
+                </svg>
+                <div className="leading-tight">
+                  <p className="text-[9px] uppercase tracking-wider text-cream/45">Get it on</p>
+                  <p className="font-display text-sm font-bold text-cream">Google Play</p>
+                </div>
+              </a>
+              <a
+                href="#"
+                aria-label="Download on the App Store"
+                className="group flex items-center gap-3 rounded-2xl border border-line/60 bg-surface-2/60 px-3.5 py-2.5 transition hover:border-saffron/50 hover:bg-saffron/5 hover:shadow-[0_0_16px_-6px_hsl(var(--saffron)/0.4)]"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 shrink-0 text-cream">
+                  <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+                </svg>
+                <div className="leading-tight">
+                  <p className="text-[9px] uppercase tracking-wider text-cream/45">Download on the</p>
+                  <p className="font-display text-sm font-bold text-cream">App Store</p>
+                </div>
+              </a>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-line py-5">
-        <div className="container flex flex-col items-center justify-between gap-2 text-xs text-cream/40 sm:flex-row">
+      <div className="border-t border-line/50 bg-surface/20 py-5">
+        <div className="container flex flex-col items-center justify-between gap-3 text-xs text-cream/45 sm:flex-row">
           <span>
             © {new Date().getFullYear()} Ayra Family Mart · All rights reserved.
           </span>
-          <span className="flex flex-col items-center gap-1 sm:items-end">
+          <div className="flex flex-wrap items-center gap-2">
+            {['SSLCommerz', 'bKash', 'Nagad', 'Rocket', 'COD'].map((p) => (
+              <span
+                key={p}
+                className="rounded-full border border-line/60 bg-surface-2/50 px-2.5 py-0.5 text-[10px] font-semibold text-cream/65"
+              >
+                {p}
+              </span>
+            ))}
+          </div>
+          <span className="flex flex-col items-center gap-0.5 sm:items-end">
             <span className="flex items-center gap-1.5">
-              Made with <span className="text-coral">♥</span> in <span className="font-bangla normal-case text-cream/65">বাংলাদেশ</span>
+              Made with <span className="text-saffron">♥</span> in <span className="font-bangla normal-case text-cream/70">বাংলাদেশ</span>
             </span>
             <span className="text-cream/30">Developed by — Zisan Yasir</span>
           </span>

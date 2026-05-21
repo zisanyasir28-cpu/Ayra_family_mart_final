@@ -66,7 +66,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-bg/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-bg/85 backdrop-blur-md"
           />
 
           <motion.div
@@ -75,7 +75,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-            className="fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l border-line bg-surface shadow-lift sm:w-[440px]"
+            className="fixed inset-y-0 right-0 z-50 flex w-full flex-col border-l border-line/60 bg-surface shadow-[-24px_0_64px_-16px_hsl(var(--saffron)/0.18)] ring-1 ring-saffron/10 sm:w-[440px]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-line px-6 py-5">
@@ -94,7 +94,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               </div>
               <button
                 onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream active:scale-90"
+                className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/10 hover:text-saffron active:scale-90"
                 aria-label="Close cart"
               >
                 <X className="h-4 w-4" />
@@ -154,7 +154,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                 <Link
                   to="/products"
                   onClick={onClose}
-                  className="group inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-cream"
+                  className="group inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.65)]"
                 >
                   Browse products
                   <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-1" />
@@ -212,7 +212,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                                   <button
                                     onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variantId)}
                                     disabled={item.quantity >= item.stock}
-                                    className="flex h-7 w-7 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-cream active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="flex h-7 w-7 items-center justify-center rounded-full bg-saffron text-bg transition hover:shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.7)] hover:scale-105 active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
                                   >
                                     <PlusIcon size={12} />
                                   </button>
@@ -270,7 +270,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                         <button
                           onClick={() => void handleApplyCoupon()}
                           disabled={!couponInput.trim() || couponLoading}
-                          className="rounded-full bg-saffron px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-bg transition hover:bg-cream active:scale-95 disabled:opacity-50"
+                          className="rounded-full bg-saffron px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-bg transition hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.65)] hover:bg-saffron/90 active:scale-95 disabled:opacity-50"
                         >
                           {couponLoading ? '…' : 'Apply'}
                         </button>
@@ -301,14 +301,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                     <div className="my-3 h-px bg-line" />
                     <div className="flex items-end justify-between">
                       <span className="font-display text-base font-bold text-cream">Total</span>
-                      <span className="font-display text-2xl font-black text-saffron">{formatPaisa(total)}</span>
+                      <span className="font-display text-2xl font-black text-coral">{formatPaisa(total)}</span>
                     </div>
                   </div>
 
                   <Link
                     to="/checkout"
                     onClick={onClose}
-                    className="group/co mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-saffron py-4 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-cream hover:shadow-saffron active:scale-[0.98]"
+                    className="group/co mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-saffron py-4 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_28px_-4px_hsl(var(--saffron)/0.7)] active:scale-[0.98]"
                   >
                     Proceed to checkout
                     <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover/co:translate-x-1" />
