@@ -22,8 +22,8 @@ export default function WishlistPage() {
   if (!isAuthenticated) {
     return (
       <div className="container flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-coral/10">
-          <Heart className="h-10 w-10 text-coral" />
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-saffron/10">
+          <Heart className="h-10 w-10 text-saffron" />
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold text-cream">Your Wishlist</h1>
@@ -38,7 +38,7 @@ export default function WishlistPage() {
           </Link>
           <Link
             to="/register"
-            className="rounded-full border border-line px-6 py-3 text-cream/70 transition hover:border-saffron hover:text-cream"
+            className="rounded-full border border-line/50 bg-surface/60 px-6 py-3 text-cream/70 transition hover:border-saffron/40 hover:text-cream"
           >
             Register
           </Link>
@@ -69,8 +69,8 @@ export default function WishlistPage() {
   if (!hasItems) {
     return (
       <div className="container flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-coral/10">
-          <Heart className="h-10 w-10 text-coral/50" />
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-saffron/10">
+          <Heart className="h-10 w-10 text-saffron/40" />
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold text-cream">Wishlist is Empty</h1>

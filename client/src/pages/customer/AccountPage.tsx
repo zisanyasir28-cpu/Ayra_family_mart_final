@@ -89,7 +89,7 @@ function OverviewSection({ setSection }: { setSection: (s: Section) => void }) {
           { label: 'Spent',    value: formatPaisa(totalSpent),                            icon: Wallet,       color: 'text-sage',    bg: 'bg-sage/10'    },
           { label: 'Wishlist', value: wishlistIds.length,                                 icon: Heart,        color: 'text-coral',   bg: 'bg-coral/10'   },
         ].map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="rounded-2xl bg-surface ring-1 ring-line p-4 text-center">
+          <div key={label} className="rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm p-4 text-center">
             <div className={cn('mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-full', bg)}>
               <Icon className={cn('h-4 w-4', color)} />
             </div>
@@ -108,7 +108,7 @@ function OverviewSection({ setSection }: { setSection: (s: Section) => void }) {
           </button>
         </div>
         {orders.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface ring-1 ring-line py-10 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-10 text-center">
             <ShoppingBag className="h-10 w-10 text-cream/20" />
             <p className="text-sm text-cream/45">No orders yet</p>
             <Link to="/products" className="rounded-full bg-saffron px-4 py-2 text-xs font-bold text-bg hover:bg-saffron/90">
@@ -121,7 +121,7 @@ function OverviewSection({ setSection }: { setSection: (s: Section) => void }) {
               <Link
                 key={o.id}
                 to={`/orders/${o.id}`}
-                className="flex items-center justify-between rounded-xl bg-surface ring-1 ring-line px-4 py-3 transition hover:ring-saffron/30"
+                className="flex items-center justify-between rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm px-4 py-3 transition hover:ring-saffron/30"
               >
                 <div>
                   <p className="font-display text-sm font-semibold text-cream">{o.orderNumber}</p>
@@ -157,7 +157,7 @@ function OrdersSection() {
     <div className="space-y-3">
       <h3 className="font-display text-lg font-bold text-cream">My Orders</h3>
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface ring-1 ring-line py-16 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-16 text-center">
           <ShoppingBag className="h-12 w-12 text-cream/20" />
           <p className="text-sm text-cream/45">No orders yet</p>
           <Link to="/products" className="rounded-full bg-saffron px-5 py-2 text-sm font-bold text-bg hover:bg-saffron/90">
@@ -170,7 +170,7 @@ function OrdersSection() {
             <Link
               key={o.id}
               to={`/orders/${o.id}`}
-              className="flex items-center justify-between rounded-xl bg-surface ring-1 ring-line px-4 py-4 transition hover:ring-saffron/30"
+              className="flex items-center justify-between rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm px-4 py-4 transition hover:ring-saffron/30"
             >
               <div className="flex items-center gap-3">
                 {o.items[0]?.product?.images[0]?.url ? (
@@ -240,7 +240,7 @@ function WishlistSection() {
         <span className="text-sm text-cream/45">{wishlistIds.length} item{wishlistIds.length !== 1 ? 's' : ''}</span>
       </div>
       {displayItems.length === 0 && wishlistIds.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface ring-1 ring-line py-16 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-16 text-center">
           <Heart className="h-12 w-12 text-cream/20" />
           <p className="text-sm text-cream/45">Your wishlist is empty</p>
           <Link to="/products" className="rounded-full bg-saffron px-5 py-2 text-sm font-bold text-bg hover:bg-saffron/90">
@@ -284,7 +284,7 @@ function AddressesSection() {
       </div>
 
       {addresses.length === 0 && editing !== 'new' ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface ring-1 ring-line py-12 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-12 text-center">
           <MapPin className="h-10 w-10 text-cream/20" />
           <p className="text-sm text-cream/45">No saved addresses</p>
         </div>
@@ -292,7 +292,7 @@ function AddressesSection() {
         <div className="grid gap-3 sm:grid-cols-2">
           {addresses.map((addr) => (
             editing === addr.id ? (
-              <div key={addr.id} className="rounded-2xl ring-1 ring-saffron/40 bg-surface p-4 col-span-full">
+              <div key={addr.id} className="rounded-2xl ring-1 ring-saffron/40 bg-surface/60 backdrop-blur-sm p-4 sm:col-span-2">
                 <h4 className="mb-3 font-display text-sm font-bold text-cream">Edit Address</h4>
                 <AddressForm
                   defaultValues={{
@@ -324,7 +324,7 @@ function AddressesSection() {
       )}
 
       {editing === 'new' && (
-        <div className="rounded-2xl ring-1 ring-saffron/40 bg-surface p-4">
+        <div className="rounded-2xl ring-1 ring-saffron/40 bg-surface/60 backdrop-blur-sm p-4">
           <h4 className="mb-3 font-display text-sm font-bold text-cream">New Address</h4>
           <AddressForm
             submitting={createMut.isPending}
@@ -369,7 +369,7 @@ function ProfileSection() {
     <div className="max-w-md space-y-5">
       <h3 className="font-display text-lg font-bold text-cream">Profile</h3>
 
-      <div className="rounded-2xl bg-surface ring-1 ring-line p-6 space-y-4">
+      <div className="rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm p-6 space-y-4">
         {/* Avatar placeholder */}
         <div className="flex items-center gap-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-saffron font-display text-2xl font-extrabold text-bg">
@@ -454,7 +454,7 @@ function ChangePasswordSection() {
     <div className="max-w-md space-y-5">
       <h3 className="font-display text-lg font-bold text-cream">Change Password</h3>
 
-      <div className="rounded-2xl bg-surface ring-1 ring-line p-6">
+      <div className="rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {[
             { name: 'currentPassword'     as const, label: 'Current Password'  },
@@ -528,7 +528,7 @@ export default function AccountPage() {
         {/* ── Main Content ─────────────────────────────────────────────────── */}
         <main className="min-w-0 flex-1">
           {/* Mobile tab bar */}
-          <div className="mb-6 flex gap-1 overflow-x-auto scrollbar-hide rounded-2xl bg-surface ring-1 ring-line p-1 lg:hidden">
+          <div className="mb-6 flex gap-1 overflow-x-auto scrollbar-hide rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm p-1 lg:hidden">
             {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
