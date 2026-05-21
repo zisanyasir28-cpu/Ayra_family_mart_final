@@ -1,100 +1,109 @@
 import { motion } from 'motion/react';
-import { TruckIcon, LeafIcon, ReturnIcon, ShieldIcon } from '../common/HandIcon';
+import { Leaf, Zap, MessageCircle, ShieldCheck, Package } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-const PILLARS = [
+// ─── 5-pillar data ────────────────────────────────────────────────────────────
+const PILLARS: Array<{
+  icon:    LucideIcon;
+  label:   string;
+  bangla:  string;
+  accent:  string;
+  ring:    string;
+}> = [
   {
-    n:    '01',
-    title: 'Same-day, every day',
-    desc:  'Order before 6pm — get it before dinner. Track every step from kitchen to your door.',
-    Icon:  TruckIcon,
-    accent: 'saffron' as const,
+    icon:   Leaf,
+    label:  'Farm to Doorstep',
+    bangla: 'খামার থেকে দরজায়',
+    accent: 'bg-sage/15 text-sage',
+    ring:   'ring-sage/25',
   },
   {
-    n:    '02',
-    title: 'Fresh or refunded',
-    desc:  'Sourced direct from farms. If anything arrives less than perfect, we replace it instantly.',
-    Icon:  LeafIcon,
-    accent: 'sage' as const,
+    icon:   Zap,
+    label:  '60 Min Delivery',
+    bangla: '৬০ মিনিটে ডেলিভারি',
+    accent: 'bg-saffron/15 text-saffron',
+    ring:   'ring-saffron/25',
   },
   {
-    n:    '03',
-    title: 'Returns in seven',
-    desc:  'Not happy? Return within seven days for a full refund — a rider picks it up.',
-    Icon:  ReturnIcon,
-    accent: 'coral' as const,
+    icon:   MessageCircle,
+    label:  '24/7 Support',
+    bangla: 'সার্বক্ষণিক সহায়তা',
+    accent: 'bg-plum/15 text-plum',
+    ring:   'ring-plum/25',
   },
   {
-    n:    '04',
-    title: 'Encrypted checkout',
-    desc:  'bKash, Nagad, cards, COD. Your data stays in Bangladesh, locked behind SSL.',
-    Icon:  ShieldIcon,
-    accent: 'blush' as const,
+    icon:   ShieldCheck,
+    label:  'Secure Payment',
+    bangla: 'নিরাপদ পেমেন্ট',
+    accent: 'bg-coral/15 text-coral',
+    ring:   'ring-coral/25',
   },
-] as const;
+  {
+    icon:   Package,
+    label:  'Eco Packaging',
+    bangla: 'পরিবেশবান্ধব প্যাকেজিং',
+    accent: 'bg-sage/15 text-sage',
+    ring:   'ring-sage/25',
+  },
+];
 
-const ACCENT_BG: Record<typeof PILLARS[number]['accent'], string> = {
-  saffron: 'bg-saffron text-bg',
-  sage:    'bg-sage text-bg',
-  coral:   'bg-coral text-bg',
-  blush:   'bg-blush text-bg',
-};
+// ─── WhyShopWithUs ────────────────────────────────────────────────────────────
 
 export function WhyShopWithUs() {
   return (
-    <section className="bg-bg py-20 sm:py-24">
+    <section className="bg-bg py-12 sm:py-16">
       <div className="container">
-        {/* Header */}
+
+        {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 max-w-3xl"
+          transition={{ duration: 0.5 }}
+          className="mb-8 text-center"
         >
-          <div className="eyebrow">
-            <span className="eyebrow-dot" />
-            <span>Why us</span>
-          </div>
-          <h2 className="display-lg mt-4 text-cream">
-            Four small things we'll <em className="text-saffron">never</em> compromise on.
+          <h2 className="font-display text-2xl font-black text-cream sm:text-3xl">
+            Why Shop With{' '}
+            <span className="text-saffron">Ayra?</span>
           </h2>
+          <p className="mt-2 text-sm text-cream/50">
+            Five promises we keep for every order, every time.
+          </p>
         </motion.div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PILLARS.map((p, i) => (
-            <motion.article
-              key={p.n}
-              initial={{ opacity: 0, y: 28 }}
+        {/* 5-icon strip */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+          {PILLARS.map(({ icon: Icon, label, bangla, accent, ring }, i) => (
+            <motion.div
+              key={label}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ delay: i * 0.08, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={{ y: -4 }}
-              className="group relative overflow-hidden rounded-3xl border border-line bg-surface p-7 transition-colors hover:border-saffron/30"
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{
+                delay: i * 0.07,
+                type: 'spring',
+                stiffness: 220,
+                damping: 24,
+              }}
+              className="flex flex-col items-center gap-3 rounded-2xl border border-line/50 bg-surface/50 px-4 py-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-saffron/30 hover:bg-surface"
             >
-              {/* Number watermark */}
-              <span className="pointer-events-none absolute -right-2 -top-4 select-none font-display text-[8rem] font-black leading-none text-cream/[0.04] transition-all duration-500 group-hover:text-cream/[0.08]">
-                {p.n}
+              {/* Icon circle */}
+              <span
+                className={`flex h-14 w-14 items-center justify-center rounded-full ring-1 transition-transform duration-300 hover:scale-110 ${accent} ${ring}`}
+              >
+                <Icon className="h-6 w-6" strokeWidth={1.7} />
               </span>
 
-              {/* Icon */}
-              <div
-                className={`relative inline-flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[-6deg] ${ACCENT_BG[p.accent]}`}
-              >
-                <p.Icon size={22} strokeWidth={1.6} />
+              {/* Labels */}
+              <div>
+                <p className="text-sm font-bold leading-tight text-cream">
+                  {label}
+                </p>
+                <p className="mt-1 font-bangla text-[11px] text-cream/40">
+                  {bangla}
+                </p>
               </div>
-
-              {/* Text */}
-              <h3 className="relative mt-6 font-display text-xl font-bold leading-tight text-cream sm:text-2xl">
-                {p.title}
-              </h3>
-              <p className="relative mt-3 text-sm leading-relaxed text-cream/65">
-                {p.desc}
-              </p>
-
-              {/* Bottom edge underline */}
-              <span className="absolute inset-x-7 bottom-5 h-px scale-x-0 bg-gradient-to-r from-transparent via-saffron to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-            </motion.article>
+            </motion.div>
           ))}
         </div>
       </div>
