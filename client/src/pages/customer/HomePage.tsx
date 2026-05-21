@@ -1,4 +1,5 @@
 import { HeroBanner }       from '../../components/home/HeroBanner';
+import { PromoStrip }       from '../../components/home/PromoStrip';
 import { CategoryStrip }    from '../../components/home/CategoryStrip';
 import { FlashDeals }       from '../../components/home/FlashDeals';
 import { FeaturedProducts } from '../../components/home/FeaturedProducts';
@@ -10,6 +11,7 @@ export default function HomePage() {
   return (
     <>
       <HeroBanner />
+      <PromoStrip />
 
       <MarqueeBand
         items={['Fresh today', 'Free above ৳999', 'Same-day delivery', 'Daily essentials', 'Curated picks']}
