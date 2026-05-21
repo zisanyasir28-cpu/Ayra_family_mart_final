@@ -12,38 +12,31 @@ import { cn } from '../../lib/utils';
 // ─── Sort options ─────────────────────────────────────────────────────────────
 
 const SORT_OPTIONS = [
-  { value: 'newest',     label: 'Newest First' },
-  { value: 'oldest',     label: 'Oldest First' },
-  { value: 'price_asc',  label: 'Price: Low → High' },
-  { value: 'price_desc', label: 'Price: High → Low' },
-  { value: 'name_asc',   label: 'Name: A–Z' },
-  { value: 'name_desc',  label: 'Name: Z–A' },
+  { value: 'newest',     label: 'Newest First'       },
+  { value: 'oldest',     label: 'Oldest First'       },
+  { value: 'price_asc',  label: 'Price: Low → High'  },
+  { value: 'price_desc', label: 'Price: High → Low'  },
+  { value: 'name_asc',   label: 'Name: A–Z'          },
+  { value: 'name_desc',  label: 'Name: Z–A'          },
 ] as const;
 
 // ─── Pagination ───────────────────────────────────────────────────────────────
 
 interface PaginationProps {
-  page: number;
+  page:       number;
   totalPages: number;
-  onChange: (p: number) => void;
+  onChange:   (p: number) => void;
 }
 
 function Pagination({ page, totalPages, onChange }: PaginationProps) {
   const [inputVal, setInputVal] = useState(String(page));
-
-  useEffect(() => {
-    setInputVal(String(page));
-  }, [page]);
-
+  useEffect(() => setInputVal(String(page)), [page]);
   if (totalPages <= 1) return null;
 
-  // Build page number list with ellipsis
   function getPages(): (number | '…')[] {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
-    if (page <= 4) return [1, 2, 3, 4, 5, '…', totalPages];
-    if (page >= totalPages - 3) {
-      return [1, '…', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    }
+    if (page <= 4)              return [1, 2, 3, 4, 5, '…', totalPages];
+    if (page >= totalPages - 3) return [1, '…', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
     return [1, '…', page - 1, page, page + 1, '…', totalPages];
   }
 
@@ -55,30 +48,28 @@ function Pagination({ page, totalPages, onChange }: PaginationProps) {
 
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-      {/* Page numbers */}
+      {/* Page buttons */}
       <div className="flex items-center gap-1">
         <button
           onClick={() => onChange(page - 1)}
           disabled={page === 1}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition hover:bg-muted disabled:opacity-40"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-cream/60 transition hover:border-saffron/50 hover:text-saffron disabled:opacity-35 active:scale-90"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
 
         {getPages().map((p, i) =>
           p === '…' ? (
-            <span key={`ellipsis-${i}`} className="flex h-8 w-8 items-center justify-center text-muted-foreground">
-              …
-            </span>
+            <span key={`el-${i}`} className="flex h-8 w-8 items-center justify-center text-cream/35">…</span>
           ) : (
             <button
               key={p}
               onClick={() => onChange(p)}
               className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium transition',
+                'flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition',
                 p === page
-                  ? 'bg-green-600 text-white'
-                  : 'border border-border text-foreground hover:bg-muted',
+                  ? 'bg-saffron text-bg shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.6)]'
+                  : 'border border-line text-cream/70 hover:border-saffron/40 hover:text-saffron',
               )}
             >
               {p}
@@ -89,26 +80,26 @@ function Pagination({ page, totalPages, onChange }: PaginationProps) {
         <button
           onClick={() => onChange(page + 1)}
           disabled={page === totalPages}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition hover:bg-muted disabled:opacity-40"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-cream/60 transition hover:border-saffron/50 hover:text-saffron disabled:opacity-35 active:scale-90"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Go to page (desktop) */}
+      {/* Go-to page (desktop) */}
       <form onSubmit={handleGo} className="hidden items-center gap-2 text-sm sm:flex">
-        <span className="text-muted-foreground">Go to page</span>
+        <span className="text-cream/50">Go to page</span>
         <input
           type="number"
           min={1}
           max={totalPages}
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
-          className="w-14 rounded-lg border border-border bg-background px-2 py-1 text-center text-sm text-foreground focus:border-green-500 focus:outline-none"
+          className="w-14 rounded-xl border border-line bg-surface px-2 py-1 text-center text-sm text-cream focus:border-saffron focus:outline-none focus:ring-2 focus:ring-saffron/25"
         />
         <button
           type="submit"
-          className="rounded-lg border border-green-600 px-3 py-1 text-xs font-semibold text-green-700 transition hover:bg-green-50"
+          className="rounded-full border border-saffron/40 px-3 py-1 text-xs font-semibold text-saffron transition hover:bg-saffron/10"
         >
           Go
         </button>
@@ -117,19 +108,21 @@ function Pagination({ page, totalPages, onChange }: PaginationProps) {
   );
 }
 
-// ─── Empty State ──────────────────────────────────────────────────────────────
+// ─── Empty state ──────────────────────────────────────────────────────────────
 
 function EmptyState({ onClear }: { onClear: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
-      <PackageSearch className="h-16 w-16 text-muted-foreground/40" />
-      <h3 className="mt-4 text-lg font-semibold text-foreground">No products found</h3>
-      <p className="mt-1 max-w-xs text-sm text-muted-foreground">
-        Try adjusting your filters or search terms to find what you're looking for.
+      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-surface-2">
+        <PackageSearch className="h-12 w-12 text-cream/25" strokeWidth={1.5} />
+      </div>
+      <h3 className="mt-5 font-display text-xl font-bold text-cream">No products found</h3>
+      <p className="mt-2 max-w-xs text-sm text-cream/55">
+        Try adjusting your filters or search terms to find what you&apos;re looking for.
       </p>
       <button
         onClick={onClear}
-        className="mt-6 rounded-xl bg-green-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-green-700 active:scale-95"
+        className="mt-6 rounded-full bg-saffron px-7 py-3 text-sm font-bold uppercase tracking-[0.16em] text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.6)] active:scale-95"
       >
         Clear Filters
       </button>
@@ -137,16 +130,10 @@ function EmptyState({ onClear }: { onClear: () => void }) {
   );
 }
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
+// ─── Main page ────────────────────────────────────────────────────────────────
 
 const LIMIT = 12;
-
-const EMPTY_FILTERS: FilterState = {
-  categoryId: '',
-  minPrice: '',
-  maxPrice: '',
-  inStock: false,
-};
+const EMPTY_FILTERS: FilterState = { categoryId: '', minPrice: '', maxPrice: '', inStock: false };
 
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -195,7 +182,7 @@ export default function ProductsPage() {
   // Data
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
-    queryFn: fetchCategories,
+    queryFn:  fetchCategories,
     staleTime: 1000 * 60 * 10,
   });
 
@@ -205,49 +192,52 @@ export default function ProductsPage() {
     queryFn: () =>
       fetchProducts({
         page,
-        limit: LIMIT,
+        limit:      LIMIT,
         sortBy,
-        search:     search || undefined,
+        search:     search     || undefined,
         categoryId: categoryId || undefined,
-        minPrice:   minPrice ? Number(minPrice) : undefined,
-        maxPrice:   maxPrice ? Number(maxPrice) : undefined,
-        inStock:    inStock || undefined,
+        minPrice:   minPrice   ? Number(minPrice) : undefined,
+        maxPrice:   maxPrice   ? Number(maxPrice) : undefined,
+        inStock:    inStock    || undefined,
       }),
     placeholderData: (prev) => prev,
   });
 
-  const products    = data?.data ?? [];
-  const pagination  = data?.meta.pagination;
-  const totalPages  = pagination?.totalPages ?? 1;
-  const total       = pagination?.total ?? 0;
+  const products   = data?.data ?? [];
+  const pagination = data?.meta.pagination;
+  const totalPages = pagination?.totalPages ?? 1;
+  const total      = pagination?.total ?? 0;
 
   const hasActiveFilters = !!categoryId || !!minPrice || !!maxPrice || inStock || !!search;
 
   return (
-    <div className="container py-6">
-      {/* Mobile filter button + sort bar */}
+    <div className="container py-8">
+
+      {/* Top bar — mobile filter trigger + result count + sort */}
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
+          {/* Mobile filter button */}
           <button
             onClick={() => setMobileFilterOpen(true)}
-            className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition hover:bg-muted md:hidden"
+            className="flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-saffron md:hidden"
           >
-            <SlidersHorizontal className="h-4 w-4" />
+            <SlidersHorizontal className="h-4 w-4" strokeWidth={1.8} />
             Filters
             {hasActiveFilters && (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-saffron text-[9px] font-extrabold text-bg">
                 !
               </span>
             )}
           </button>
 
-          <p className="text-sm text-muted-foreground">
+          {/* Result count */}
+          <p className="text-sm text-cream/55">
             {isLoading ? (
-              <span className="inline-block h-4 w-24 animate-pulse rounded bg-muted" />
+              <span className="inline-block h-4 w-28 animate-pulse rounded-full bg-surface-2" />
             ) : (
-              <span>
-                <strong className="text-foreground">{total}</strong> products found
-              </span>
+              <>
+                <strong className="text-cream">{total}</strong> products found
+              </>
             )}
           </p>
         </div>
@@ -256,12 +246,10 @@ export default function ProductsPage() {
         <select
           value={sortBy}
           onChange={(e) => updateParams({ sortBy: e.target.value })}
-          className="rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500/30"
+          className="rounded-full border border-line bg-surface px-4 py-2 text-sm text-cream/80 focus:border-saffron focus:outline-none focus:ring-2 focus:ring-saffron/25"
         >
           {SORT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
+            <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
       </div>
@@ -281,7 +269,7 @@ export default function ProductsPage() {
         <div className="min-w-0 flex-1">
           <div
             className={cn(
-              'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 transition-opacity',
+              'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 transition-opacity duration-200',
               isFetching && !isLoading && 'opacity-60',
             )}
           >
