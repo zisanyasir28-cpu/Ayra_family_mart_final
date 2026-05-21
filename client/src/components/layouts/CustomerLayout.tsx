@@ -46,18 +46,18 @@ function getCategoryEmoji(slug: string): string {
 
 function AnnouncementBar() {
   return (
-    <div className="overflow-hidden border-b border-line bg-bg py-2">
+    <div className="overflow-hidden border-b border-line/40 bg-gradient-to-r from-bg via-surface/40 to-bg py-2">
       <div className="flex whitespace-nowrap text-[11px] tracking-[0.18em] animate-marquee-x-slow">
         {[0, 1].map((i) => (
           <span key={i} className="mx-4 inline-flex items-center gap-6 text-cream/60">
             <span className="flex items-center gap-2">
-              <span className="h-1 w-1 rounded-full bg-saffron" />
+              <span className="h-1.5 w-1.5 rounded-full bg-saffron animate-pulse" />
               <span>FREE DELIVERY ABOVE ৳999</span>
             </span>
             <span className="opacity-40">/</span>
             <span className="flex items-center gap-2">
               <span>USE</span>
-              <span className="font-bold text-saffron">WELCOME10</span>
+              <span className="rounded-md bg-coral/15 px-2 py-0.5 font-bold text-coral">WELCOME10</span>
               <span>FOR 10% OFF</span>
             </span>
             <span className="opacity-40">/</span>
@@ -126,10 +126,10 @@ function SearchBar() {
     <form ref={containerRef} onSubmit={handleSubmit} className="relative flex-1 max-w-md">
       <div
         className={cn(
-          'relative flex items-center rounded-full border bg-surface px-4 transition-all duration-300',
+          'relative flex items-center rounded-full border bg-surface/80 pl-4 pr-1.5 transition-all duration-300',
           focused
-            ? 'border-saffron shadow-saffron/30'
-            : 'border-line hover:border-cream/15',
+            ? 'border-saffron ring-2 ring-saffron/30 shadow-[0_0_24px_-6px_hsl(var(--saffron)/0.45)]'
+            : 'border-line hover:border-saffron/40',
         )}
       >
         <SearchIcon
@@ -144,19 +144,18 @@ function SearchBar() {
           placeholder="Search the market…"
           className="w-full bg-transparent py-2.5 pl-3 pr-2 text-sm text-cream placeholder:text-cream/35 focus:outline-none"
         />
-        <AnimatePresence>
-          {query.length > 0 && (
-            <motion.button
-              type="submit"
-              initial={{ opacity: 0, x: -4 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -4 }}
-              className="text-[11px] uppercase tracking-[0.2em] text-saffron hover:text-cream"
-            >
-              Go
-            </motion.button>
+        <button
+          type="submit"
+          aria-label="Search"
+          className={cn(
+            'grid h-8 w-8 shrink-0 place-items-center rounded-full transition-all duration-200',
+            query.length > 0
+              ? 'bg-saffron text-bg shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.7)] hover:scale-105'
+              : 'bg-saffron/15 text-saffron hover:bg-saffron/25',
           )}
-        </AnimatePresence>
+        >
+          <SearchLucide className="h-4 w-4" strokeWidth={2.4} />
+        </button>
       </div>
 
       {/* Autocomplete dropdown */}
@@ -215,7 +214,7 @@ function MobileSearch() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream md:hidden"
+        className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/10 hover:text-saffron md:hidden"
         aria-label="Search"
       >
         <SearchLucide className="h-5 w-5" />
@@ -256,7 +255,7 @@ function CartButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="relative flex items-center gap-2 rounded-full p-2.5 text-cream transition hover:bg-cream/5"
+      className="relative flex items-center gap-2 rounded-full p-2.5 text-cream transition hover:bg-saffron/10 hover:text-saffron"
       aria-label={`Cart (${count} items)`}
     >
       <BasketIcon size={20} strokeWidth={1.5} />
@@ -268,7 +267,7 @@ function CartButton({ onClick }: { onClick: () => void }) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{    scale: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 350, damping: 18 }}
-            className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-saffron font-display text-[10px] font-extrabold text-bg"
+            className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-saffron font-display text-[10px] font-extrabold text-bg ring-2 ring-bg"
           >
             {count > 99 ? '99+' : count}
           </motion.span>
@@ -342,12 +341,12 @@ function NotificationBell() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream"
+        className="relative flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/10 hover:text-saffron"
         aria-label="Notifications"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral font-display text-[9px] font-extrabold text-bg">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral font-display text-[9px] font-extrabold text-bg ring-2 ring-bg">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -606,7 +605,7 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
 
 function CategoryNav({ categories }: { categories: ApiCategory[] }) {
   return (
-    <div className="border-t border-line bg-bg/85 backdrop-blur">
+    <div className="border-y border-line/50 bg-bg/85 backdrop-blur-xl">
       <div className="container flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
         <NavLink
           to="/products"
@@ -614,7 +613,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
           className={({ isActive }) =>
             cn(
               'group relative shrink-0 px-3 py-1 text-sm transition-colors',
-              isActive ? 'text-saffron' : 'text-cream/65 hover:text-cream',
+              isActive ? 'text-saffron' : 'text-cream/65 hover:text-saffron',
             )
           }
         >
@@ -624,7 +623,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
               {isActive && (
                 <motion.span
                   layoutId="cat-underline"
-                  className="absolute -bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-saffron"
+                  className="absolute -bottom-0.5 left-3 right-3 h-[3px] rounded-full bg-saffron shadow-[0_0_8px_hsl(var(--saffron)/0.6)]"
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
@@ -647,7 +646,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
             className={({ isActive }) =>
               cn(
                 'group relative flex shrink-0 items-center gap-1.5 px-3 py-1 text-sm transition-colors',
-                isActive ? 'text-saffron' : 'text-cream/65 hover:text-cream',
+                isActive ? 'text-saffron' : 'text-cream/65 hover:text-saffron',
               )
             }
           >
@@ -658,7 +657,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
                 {isActive && (
                   <motion.span
                     layoutId="cat-underline"
-                    className="absolute -bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-saffron"
+                    className="absolute -bottom-0.5 left-3 right-3 h-[3px] rounded-full bg-saffron shadow-[0_0_8px_hsl(var(--saffron)/0.6)]"
                     transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                   />
                 )}
@@ -903,17 +902,20 @@ export default function CustomerLayout() {
 
       <AnnouncementBar />
 
-      {/* Sticky header — glass, premium */}
+      {/* Sticky header — purple glass with pink glow on scroll */}
       <header
         className={cn(
           'sticky top-0 z-30 transition-all duration-300',
-          scrolled ? 'glass-strong' : 'bg-bg',
+          scrolled
+            ? 'bg-bg/85 backdrop-blur-xl ring-1 ring-line/50 shadow-[0_8px_32px_-12px_hsl(var(--saffron)/0.25)]'
+            : 'bg-bg',
         )}
       >
         <div className="container flex items-center gap-4 py-4">
           <button
             onClick={() => setDrawerOpen(true)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition hover:bg-cream/5 active:scale-90 md:hidden"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition hover:bg-saffron/10 hover:text-saffron active:scale-90 md:hidden"
+            aria-label="Open menu"
           >
             <Menu className="h-5 w-5 text-cream" />
           </button>
@@ -928,7 +930,7 @@ export default function CustomerLayout() {
             <MobileSearch />
             <Link
               to="/wishlist"
-              className="hidden h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-cream/5 hover:text-cream sm:flex"
+              className="hidden h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/10 hover:text-saffron sm:flex"
               aria-label="Wishlist"
             >
               <Heart className="h-5 w-5" />
