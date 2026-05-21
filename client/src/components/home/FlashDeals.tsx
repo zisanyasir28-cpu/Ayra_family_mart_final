@@ -2,25 +2,24 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'motion/react';
+import { Zap, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
 import { ProductCard, ProductCardSkeleton } from '../product/ProductCard';
 import { useCountdown } from '../../hooks/useCountdown';
-import { ArrowRightIcon } from '../common/HandIcon';
-import { cn } from '../../lib/utils';
 
-// ─── Flip digit ──────────────────────────────────────────────────────────────
+// ─── Animated flip digit ──────────────────────────────────────────────────────
 
 function FlipDigit({ value }: { value: string }) {
   return (
-    <div className="relative inline-flex h-14 w-10 overflow-hidden rounded-lg bg-bg sm:h-16 sm:w-12">
+    <div className="relative inline-flex h-12 w-9 overflow-hidden rounded-lg bg-bg sm:h-14 sm:w-11">
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
           key={value}
           initial={{ y: '-110%', opacity: 0 }}
-          animate={{ y: 0,         opacity: 1 }}
-          exit={{    y: '110%',   opacity: 0 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 flex items-center justify-center font-display text-2xl font-black tabular-nums text-saffron sm:text-3xl"
+          animate={{ y: 0,        opacity: 1 }}
+          exit={{    y: '110%',  opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 flex items-center justify-center font-display text-xl font-black tabular-nums text-saffron sm:text-2xl"
         >
           {value}
         </motion.span>
@@ -29,43 +28,48 @@ function FlipDigit({ value }: { value: string }) {
   );
 }
 
-// ─── Page-level countdown ────────────────────────────────────────────────────
+// ─── Countdown block ──────────────────────────────────────────────────────────
 
-function HeadlineCountdown({ endsAt }: { endsAt: string | null }) {
+function DealCountdown({ endsAt }: { endsAt: string | null }) {
   const { hours, minutes, seconds, isExpired } = useCountdown(endsAt);
   if (isExpired || !endsAt) return null;
   const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
-    <div className="flex items-end gap-1.5">
-      <div className="flex flex-col items-center gap-1">
-        <div className="flex gap-1">
-          <FlipDigit value={pad(hours)[0]!} />
-          <FlipDigit value={pad(hours)[1]!} />
+    <div className="flex items-center gap-3">
+      <span className="text-[10px] uppercase tracking-[0.18em] text-cream/50 sm:text-xs">
+        Ending in
+      </span>
+      <div className="flex items-end gap-1">
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex gap-0.5">
+            <FlipDigit value={pad(hours)[0]!} />
+            <FlipDigit value={pad(hours)[1]!} />
+          </div>
+          <span className="text-[8px] uppercase tracking-[0.16em] text-cream/45">hrs</span>
         </div>
-        <span className="text-[9px] uppercase tracking-[0.18em] text-cream/55">hours</span>
-      </div>
-      <span className="pb-6 font-display text-3xl font-bold text-cream/40 sm:text-4xl">:</span>
-      <div className="flex flex-col items-center gap-1">
-        <div className="flex gap-1">
-          <FlipDigit value={pad(minutes)[0]!} />
-          <FlipDigit value={pad(minutes)[1]!} />
+        <span className="pb-5 font-display text-xl font-bold text-cream/30">:</span>
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex gap-0.5">
+            <FlipDigit value={pad(minutes)[0]!} />
+            <FlipDigit value={pad(minutes)[1]!} />
+          </div>
+          <span className="text-[8px] uppercase tracking-[0.16em] text-cream/45">min</span>
         </div>
-        <span className="text-[9px] uppercase tracking-[0.18em] text-cream/55">min</span>
-      </div>
-      <span className="pb-6 font-display text-3xl font-bold text-cream/40 sm:text-4xl">:</span>
-      <div className="flex flex-col items-center gap-1">
-        <div className="flex gap-1">
-          <FlipDigit value={pad(seconds)[0]!} />
-          <FlipDigit value={pad(seconds)[1]!} />
+        <span className="pb-5 font-display text-xl font-bold text-cream/30">:</span>
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex gap-0.5">
+            <FlipDigit value={pad(seconds)[0]!} />
+            <FlipDigit value={pad(seconds)[1]!} />
+          </div>
+          <span className="text-[8px] uppercase tracking-[0.16em] text-cream/45">sec</span>
         </div>
-        <span className="text-[9px] uppercase tracking-[0.18em] text-cream/55">sec</span>
       </div>
     </div>
   );
 }
 
-// ─── Main ────────────────────────────────────────────────────────────────────
+// ─── FlashDeals ───────────────────────────────────────────────────────────────
 
 export function FlashDeals() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -80,7 +84,7 @@ export function FlashDeals() {
   const products = data ?? [];
   if (!isLoading && products.length === 0) return null;
 
-  // Use the soonest-ending campaign for the page-level countdown
+  // Soonest-ending campaign for the countdown
   const earliest = products
     .map((p) => p.activeCampaign?.endsAt)
     .filter((d): d is string => Boolean(d))
@@ -91,109 +95,104 @@ export function FlashDeals() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-surface py-20 sm:py-24">
-      {/* Background elements */}
-      <div className="pointer-events-none absolute -left-32 top-1/3 h-[500px] w-[500px] rounded-full bg-coral/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-saffron/10 blur-3xl" />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),' +
-            'linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
-        }}
-      />
+    <section className="relative overflow-hidden bg-surface py-12 sm:py-16">
+
+      {/* Ambient glows */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-32 top-1/4 h-[400px] w-[400px] rounded-full bg-coral/10 blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-[350px] w-[350px] rounded-full bg-saffron/10 blur-3xl" />
+      </div>
 
       <div className="container relative">
-        {/* Header */}
-        <div className="mb-12 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="eyebrow text-coral">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-coral opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-coral" />
-              </span>
-              <span>Flash · Limited time</span>
+
+        {/* Header row */}
+        <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+          {/* Left: title + badge */}
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-coral/20 text-coral">
+              <Zap className="h-5 w-5 fill-current" />
+            </span>
+            <div>
+              <h2 className="font-display text-2xl font-black text-cream sm:text-3xl">
+                ⚡ Flash Deals
+              </h2>
+              <p className="text-xs text-cream/50">Limited-time offers — grab before they&apos;re gone!</p>
             </div>
-            <motion.h2
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="display-lg mt-4 max-w-xl text-cream"
-            >
-              Today's deals,<br />
-              <em className="text-coral">vanishing quickly.</em>
-            </motion.h2>
           </div>
 
-          {earliest && (
-            <div className="flex flex-col gap-3 lg:items-end">
-              <span className="text-[11px] uppercase tracking-[0.22em] text-cream/55">
-                First deal ends in
-              </span>
-              <HeadlineCountdown endsAt={earliest} />
-            </div>
-          )}
-        </div>
-
-        {/* Scroll controls */}
-        <div className="mb-6 flex items-center justify-end gap-2">
-          {[
-            { dir: 'left'  as const, label: 'Previous' },
-            { dir: 'right' as const, label: 'Next'     },
-          ].map(({ dir, label }) => (
-            <button
-              key={dir}
-              onClick={() => scroll(dir)}
-              aria-label={label}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-cream transition hover:border-saffron hover:text-saffron active:scale-90"
+          {/* Right: countdown + view all */}
+          <div className="flex flex-wrap items-center gap-4">
+            <DealCountdown endsAt={earliest} />
+            <Link
+              to="/products?onSale=true"
+              className="group hidden shrink-0 items-center gap-2 rounded-full border border-line px-5 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-cream/75 transition hover:border-saffron/50 hover:text-saffron sm:inline-flex"
             >
-              <ArrowRightIcon
-                size={14}
-                strokeWidth={2}
-                className={cn(dir === 'left' && 'rotate-180')}
-              />
-            </button>
-          ))}
+              View All Deals
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
 
-        {/* Product row */}
+        {/* Carousel controls */}
+        <div className="mb-4 flex items-center justify-end gap-2">
+          <button
+            onClick={() => scroll('left')}
+            aria-label="Previous products"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-cream/70 transition hover:bg-saffron hover:text-bg hover:shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)] active:scale-90"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            aria-label="Next products"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)] active:scale-90"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Product carousel */}
         <div
           ref={scrollRef}
-          className="-mx-4 flex gap-4 overflow-x-auto scroll-smooth px-4 pb-4 scrollbar-hide snap-x"
+          className="-mx-6 flex gap-4 overflow-x-auto scroll-smooth px-6 pb-4 scrollbar-hide snap-x"
         >
           {isLoading
             ? Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="w-60 shrink-0 snap-start">
+                <div key={i} className="w-56 shrink-0 snap-start sm:w-60">
                   <ProductCardSkeleton />
                 </div>
               ))
             : products.map((p, i) => (
                 <motion.div
                   key={p.id}
-                  initial={{ opacity: 0, x: 28 }}
+                  initial={{ opacity: 0, x: 24 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
-                  transition={{ delay: i * 0.05, type: 'spring', stiffness: 180, damping: 22 }}
-                  className="w-60 shrink-0 snap-start"
+                  transition={{
+                    delay: Math.min(i * 0.05, 0.3),
+                    type: 'spring',
+                    stiffness: 180,
+                    damping: 22,
+                  }}
+                  className="w-56 shrink-0 snap-start sm:w-60"
                 >
                   <ProductCard product={p} className="h-full" />
                 </motion.div>
               ))}
         </div>
 
-        {/* Footer link */}
-        <div className="mt-10 flex justify-center">
+        {/* Mobile "View All" */}
+        <div className="mt-6 flex justify-center sm:hidden">
           <Link
-            to="/products?deals=true"
-            className="group inline-flex items-center gap-3 rounded-full bg-coral px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-saffron hover:shadow-saffron"
+            to="/products?onSale=true"
+            className="group inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.6)]"
           >
-            See all deals
-            <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-1" />
+            View All Deals
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </div>
+
       </div>
     </section>
   );
