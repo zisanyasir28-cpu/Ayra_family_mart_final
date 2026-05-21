@@ -129,12 +129,21 @@ export function PromoStrip() {
               বিনামূল্যে ডেলিভারি
             </p>
 
-            <div
+            {/* Delivery truck SVG watermark */}
+            <svg
               aria-hidden
-              className="pointer-events-none absolute -right-6 -bottom-6 text-[80px] select-none leading-none opacity-15"
+              className="pointer-events-none absolute -right-3 -bottom-3 h-24 w-24 text-sage opacity-[0.13]"
+              viewBox="0 0 80 52"
+              fill="currentColor"
             >
-              🛵
-            </div>
+              <rect x="2" y="10" width="46" height="30" rx="3" opacity="0.4" />
+              <line x1="26" y1="10" x2="26" y2="40" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.55" />
+              <rect x="6" y="16" width="16" height="10" rx="2" opacity="0.2" />
+              <path d="M48 40 L48 20 L60 10 L74 10 L76 40 Z" opacity="0.5" />
+              <path d="M50 22 L57 12 L72 12 L74 22 Z" opacity="0.15" />
+              <circle cx="18" cy="43" r="8" opacity="0.5" />
+              <circle cx="62" cy="43" r="8" opacity="0.5" />
+            </svg>
           </motion.div>
 
           {/* ── Card 3: Member Exclusive ─────────────────────────────────── */}
@@ -216,12 +225,21 @@ export function PromoStrip() {
               <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
 
-            <div
+            {/* Coin stack SVG watermark */}
+            <svg
               aria-hidden
-              className="pointer-events-none absolute -right-6 -bottom-4 text-[72px] select-none leading-none opacity-10"
+              className="pointer-events-none absolute -right-3 -bottom-3 h-24 w-24 text-plum opacity-[0.14]"
+              viewBox="0 0 64 56"
+              fill="currentColor"
             >
-              🪙
-            </div>
+              <path d="M6 40 A26 9 0 0 1 58 40 L58 48 A26 9 0 0 0 6 48 Z" opacity="0.25" />
+              <ellipse cx="32" cy="40" rx="26" ry="9" opacity="0.3" />
+              <path d="M6 30 A26 9 0 0 1 58 30 L58 38 A26 9 0 0 0 6 38 Z" opacity="0.38" />
+              <ellipse cx="32" cy="30" rx="26" ry="9" opacity="0.45" />
+              <path d="M6 20 A26 9 0 0 1 58 20 L58 28 A26 9 0 0 0 6 28 Z" opacity="0.48" />
+              <ellipse cx="32" cy="20" rx="26" ry="9" opacity="0.62" />
+              <ellipse cx="24" cy="18" rx="10" ry="3.5" opacity="0.2" />
+            </svg>
           </motion.div>
 
         </motion.div>
