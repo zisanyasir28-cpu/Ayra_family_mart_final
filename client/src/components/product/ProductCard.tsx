@@ -119,9 +119,9 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
         {/* Bottom gradient */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface/80 to-transparent" />
 
-        {/* Discount chip — gold (bg-coral = gold in new palette) */}
+        {/* Discount chip — hot pink (saffron) pill per reference */}
         {discountPct > 0 && (
-          <div className="absolute left-2.5 top-2.5 rounded-full bg-coral px-2.5 py-1 text-[11px] font-extrabold text-bg shadow-[0_2px_8px_-2px_hsl(var(--coral)/0.5)] sm:left-3 sm:top-3">
+          <div className="absolute left-2.5 top-2.5 rounded-full bg-saffron px-2.5 py-1 text-[11px] font-extrabold text-bg shadow-[0_2px_10px_-2px_hsl(var(--saffron)/0.6)] sm:left-3 sm:top-3">
             −{discountPct}%
           </div>
         )}
@@ -206,7 +206,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-200 active:scale-90 sm:h-9 sm:w-9',
                     addedFlash
                       ? 'bg-sage text-bg shadow-[0_0_12px_-2px_hsl(var(--sage)/0.7)]'
-                      : 'bg-saffron text-bg hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.65)] hover:scale-105',
+                      : 'bg-saffron text-bg shadow-[0_4px_14px_-2px_hsl(var(--saffron)/0.55)] hover:bg-saffron/90 hover:shadow-[0_6px_20px_-2px_hsl(var(--saffron)/0.85)] hover:scale-105',
                   )}
                   aria-label="Add to cart"
                 >
