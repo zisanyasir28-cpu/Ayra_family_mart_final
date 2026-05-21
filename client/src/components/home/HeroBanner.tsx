@@ -197,6 +197,8 @@ export function HeroBanner() {
                 <circle cx="200" cy="200" r="176" stroke="hsl(var(--saffron) / 0.9)" strokeWidth="2.5" filter="url(#neon-glow-ring)" />
                 {/* Inner purple accent ring */}
                 <circle cx="200" cy="200" r="164" stroke="hsl(var(--plum) / 0.3)" strokeWidth="1.5" />
+                {/* Gold accent ring — warm in light mode (sunrise feel), subtle in dark */}
+                <circle cx="200" cy="200" r="158" stroke="hsl(var(--coral) / 0.4)" strokeWidth="1.2" />
               </svg>
 
               {/* Illustration inside ring — circular */}
@@ -231,7 +233,7 @@ export function HeroBanner() {
               initial={{ opacity: 0, x: 16, y: -12 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="absolute -right-3 top-2 z-20 min-w-[130px] rounded-2xl border border-coral/30 bg-surface/90 p-3.5 shadow-[0_8px_32px_-8px_hsl(var(--coral)/0.3)] backdrop-blur-xl sm:-right-2 sm:top-6"
+              className="invert-card absolute -right-3 top-2 z-20 min-w-[130px] rounded-2xl border border-coral/30 bg-surface/90 p-3.5 shadow-[0_8px_32px_-8px_hsl(var(--coral)/0.3)] backdrop-blur-xl sm:-right-2 sm:top-6"
             >
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-coral/70">
                 Special Offer

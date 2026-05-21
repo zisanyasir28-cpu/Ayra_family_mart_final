@@ -68,7 +68,7 @@ export function PromoStrip() {
           {/* ── Card 1: Today's Best Deal + countdown ──────────────────── */}
           <motion.div
             variants={cardVariants}
-            className="glass-shine relative overflow-hidden rounded-3xl border border-saffron/20 bg-gradient-to-br from-saffron/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--saffron)/0.4),inset_0_0_0_1px_hsl(var(--saffron)/0.25)]"
+            className="invert-card glass-shine relative overflow-hidden rounded-3xl border border-saffron/20 bg-gradient-to-br from-saffron/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--saffron)/0.4),inset_0_0_0_1px_hsl(var(--saffron)/0.25)]"
           >
             <div className="flex items-center gap-2.5 text-saffron">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-saffron/20">
@@ -106,7 +106,7 @@ export function PromoStrip() {
           {/* ── Card 2: Free Delivery ────────────────────────────────────── */}
           <motion.div
             variants={cardVariants}
-            className="glass-shine relative overflow-hidden rounded-3xl border border-sage/20 bg-gradient-to-br from-sage/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--sage)/0.3),inset_0_0_0_1px_hsl(var(--sage)/0.2)]"
+            className="invert-card glass-shine relative overflow-hidden rounded-3xl border border-sage/20 bg-gradient-to-br from-sage/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--sage)/0.3),inset_0_0_0_1px_hsl(var(--sage)/0.2)]"
           >
             <div className="flex items-center gap-2.5 text-sage">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sage/20">
@@ -140,7 +140,7 @@ export function PromoStrip() {
           {/* ── Card 3: Member Exclusive ─────────────────────────────────── */}
           <motion.div
             variants={cardVariants}
-            className="glass-shine relative overflow-hidden rounded-3xl border border-coral/20 bg-gradient-to-br from-coral/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--coral)/0.3),inset_0_0_0_1px_hsl(var(--coral)/0.2)]"
+            className="invert-card glass-shine relative overflow-hidden rounded-3xl border border-coral/20 bg-gradient-to-br from-coral/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--coral)/0.3),inset_0_0_0_1px_hsl(var(--coral)/0.2)]"
           >
             <div className="flex items-center gap-2.5 text-coral">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-coral/20">
@@ -177,7 +177,7 @@ export function PromoStrip() {
           {/* ── Card 4: Ayra Points ──────────────────────────────────────── */}
           <motion.div
             variants={cardVariants}
-            className="glass-shine relative overflow-hidden rounded-3xl border border-plum/20 bg-gradient-to-br from-plum/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--plum)/0.3),inset_0_0_0_1px_hsl(var(--plum)/0.2)]"
+            className="invert-card glass-shine relative overflow-hidden rounded-3xl border border-plum/20 bg-gradient-to-br from-plum/15 via-surface to-surface p-5 shadow-[0_0_28px_-6px_hsl(var(--plum)/0.3),inset_0_0_0_1px_hsl(var(--plum)/0.2)]"
           >
             <div className="flex items-center gap-2.5 text-plum">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-plum/20">

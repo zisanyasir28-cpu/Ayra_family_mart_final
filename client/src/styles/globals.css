@@ -239,6 +239,15 @@
   font-family: 'Inter', monospace;
 }
 
+/* Inverted dark card — stays dark in BOTH themes.
+   Dark mode: no-op (surface-dark == surface, --cream stays cream-lavender).
+   Light mode: overrides bg → dark forest green; cascades --cream → warm cream
+   so text-cream/* utilities inside the card read as light-on-dark correctly. */
+:root.light .invert-card {
+  background: hsl(var(--surface-dark));
+  --cream: var(--dark-fg);
+}
+
 /* Glass shine — subtle diagonal highlight in top-left corner of a card.
    Apply to: promo cards, feature banners, sidebar promo cards, OrderSummary */
 @utility glass-shine {
