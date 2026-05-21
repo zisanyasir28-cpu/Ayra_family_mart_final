@@ -12,8 +12,8 @@ const banners = [
     bangla:  'স্থানীয় খামার থেকে সরাসরি আপনার কাছে',
     cta:     'Shop Now',
     to:      '/products?collection=fresh',
-    emoji:   '🥬',
-    emojis:  ['🌽', '🍅', '🥕'],
+    // Wooden crate overflowing with fresh colourful vegetables
+    image:   'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=480&h=480&fit=crop&crop=center&q=85',
     bg:      'from-sage/30 via-sage/10 to-surface',
     border:  'border-sage/25',
     glow:    'hsl(var(--sage) / 0.2)',
@@ -28,8 +28,8 @@ const banners = [
     bangla:  'সেরা দামে সেরা পণ্য',
     cta:     'Grab Now',
     to:      '/products?onSale=true',
-    emoji:   '🛒',
-    emojis:  ['🍗', '🐟', '🥩'],
+    // Cooking oil bottle + assorted grocery items
+    image:   'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=480&h=480&fit=crop&crop=center&q=85',
     bg:      'from-blush/30 via-blush/10 to-surface',
     border:  'border-blush/25',
     glow:    'hsl(var(--blush) / 0.2)',
@@ -44,8 +44,8 @@ const banners = [
     bangla:  'সদস্যদের জন্য বিশেষ সুবিধা',
     cta:     'Join Now',
     to:      '/products?collection=fresh-plus',
-    emoji:   '🌿',
-    emojis:  ['🫐', '🥑', '🍋'],
+    // Green grocery bag overflowing with fresh produce
+    image:   'https://images.unsplash.com/photo-1542838132-92c53300491e?w=480&h=480&fit=crop&crop=center&q=85',
     bg:      'from-saffron/25 via-plum/15 to-surface',
     border:  'border-saffron/25',
     glow:    'hsl(var(--saffron) / 0.18)',
@@ -112,17 +112,18 @@ export function FeatureBanners() {
                   <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
 
-                {/* Decorative emojis — right side */}
-                <div className="pointer-events-none absolute right-5 top-1/2 flex -translate-y-1/2 flex-col items-end gap-1 text-3xl leading-none opacity-60 transition-transform duration-500 group-hover:-translate-y-[calc(50%+4px)] sm:text-4xl">
-                  <span>{b.emojis[0]}</span>
-                  <span className="ml-3">{b.emojis[1]}</span>
-                  <span>{b.emojis[2]}</span>
-                </div>
+                {/* Product illustration — bottom-right, 3D drop-shadow effect */}
+                <img
+                  src={b.image}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  decoding="async"
+                  className="pointer-events-none absolute -bottom-2 -right-2 h-[78%] w-auto max-w-[58%] select-none object-contain object-bottom drop-shadow-[0_8px_20px_rgba(0,0,0,0.4)] transition-all duration-500 group-hover:scale-[1.06] group-hover:-translate-y-1"
+                />
 
-                {/* Main emoji — bottom right corner */}
-                <div className="pointer-events-none absolute -bottom-3 -right-1 text-[72px] leading-none opacity-20 transition-all duration-500 group-hover:opacity-30 group-hover:scale-110 sm:text-[90px]">
-                  {b.emoji}
-                </div>
+                {/* Soft left-edge fade so the illustration blends into the gradient */}
+                <div className="pointer-events-none absolute inset-y-0 right-[30%] w-28 bg-gradient-to-r from-transparent via-transparent to-transparent" />
               </Link>
             </motion.div>
           ))}
