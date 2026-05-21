@@ -216,6 +216,25 @@
   font-family: 'Inter', monospace;
 }
 
+/* Glass shine — subtle diagonal highlight in top-left corner of a card.
+   Apply to: promo cards, feature banners, sidebar promo cards, OrderSummary */
+@utility glass-shine {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(135deg, hsl(0 0% 100% / 0.10) 0%, transparent 60%);
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 1;
+  }
+}
+
 /* ════════════════════════════════════════════════════════════════════════════
    Scrollbar — slim, themed
    ──────────────────────────────────────────────────────────────────────────── */

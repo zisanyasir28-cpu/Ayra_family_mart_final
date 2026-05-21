@@ -29,13 +29,14 @@ function getMeta(slug: string) {
 
 // ─── Compact category tile ────────────────────────────────────────────────────
 interface TileProps {
-  id:    string;
-  name:  string;
-  slug:  string;
-  index: number;
+  id:       string;
+  name:     string;
+  slug:     string;
+  imageUrl: string | null;
+  index:    number;
 }
 
-function CategoryTile({ id, name, slug, index }: TileProps) {
+function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
   const meta = getMeta(slug);
 
   return (
@@ -52,18 +53,28 @@ function CategoryTile({ id, name, slug, index }: TileProps) {
     >
       <Link
         to={`/products?categoryId=${id}`}
-        className="group flex flex-col items-center gap-2.5 rounded-2xl border border-line/50 bg-surface p-4 text-center transition-all duration-300 hover:-translate-y-1 hover:border-saffron/40 hover:bg-surface-2/80 hover:shadow-[0_8px_24px_-8px_hsl(var(--saffron)/0.25)] active:scale-[0.97]"
+        className="group flex flex-col overflow-hidden rounded-2xl border border-line/50 bg-surface text-center transition-all duration-300 hover:-translate-y-1 hover:border-saffron/40 hover:shadow-[0_8px_24px_-8px_hsl(var(--saffron)/0.25)] active:scale-[0.97]"
       >
-        {/* Emoji badge */}
-        <span
-          className={`flex h-14 w-14 items-center justify-center rounded-2xl text-2xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 ${meta.accent}`}
-        >
-          {meta.emoji}
-        </span>
+        {/* Photo area — image if available, else emoji fallback */}
+        <div className="aspect-square overflow-hidden bg-surface-2">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={name}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div
+              className={`flex h-full w-full items-center justify-center text-4xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 ${meta.accent}`}
+            >
+              {meta.emoji}
+            </div>
+          )}
+        </div>
 
         {/* Labels */}
-        <div>
-          <p className="text-[11px] font-bold leading-tight text-cream sm:text-xs">
+        <div className="p-2">
+          <p className="text-[11px] font-bold leading-tight text-cream">
             {meta.display || name}
           </p>
           <p className="mt-0.5 font-bangla text-[10px] text-cream/40">
@@ -78,9 +89,9 @@ function CategoryTile({ id, name, slug, index }: TileProps) {
 // ─── Skeleton tile ────────────────────────────────────────────────────────────
 function SkeletonTile() {
   return (
-    <div className="flex flex-col items-center gap-2.5 rounded-2xl border border-line/50 bg-surface p-4">
-      <div className="skeleton h-14 w-14 rounded-2xl" />
-      <div className="space-y-1.5 w-full">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-line/50 bg-surface">
+      <div className="skeleton aspect-square w-full" />
+      <div className="space-y-1.5 p-2">
         <div className="skeleton mx-auto h-3 w-3/4 rounded" />
         <div className="skeleton mx-auto h-2.5 w-1/2 rounded" />
       </div>
@@ -139,6 +150,7 @@ export function CategoryStrip() {
                   id={cat.id}
                   name={cat.name}
                   slug={cat.slug}
+                  imageUrl={cat.imageUrl}
                   index={i}
                 />
               ))}
