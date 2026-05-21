@@ -109,7 +109,12 @@ export function NewsletterBar() {
                 href="#"
                 className="group flex items-center gap-3 rounded-2xl border border-line/60 bg-surface-2/80 px-4 py-3 transition hover:border-saffron/40 hover:bg-surface-2"
               >
-                <span className="text-2xl">▶</span>
+                <svg viewBox="0 0 32 32" fill="none" className="h-6 w-6 shrink-0">
+                  <path d="M5 4.5L18 16 5 27.5V4.5z" fill="hsl(var(--saffron))" />
+                  <path d="M5 4.5L23 14 18 16 5 4.5z" fill="hsl(var(--sage))" />
+                  <path d="M5 27.5L23 18 18 16 5 27.5z" fill="hsl(var(--coral))" />
+                  <path d="M23 14L28 16 23 18 18 16z" fill="hsl(var(--plum))" />
+                </svg>
                 <div>
                   <p className="text-[9px] uppercase tracking-wider text-cream/50">Get it on</p>
                   <p className="font-display text-sm font-bold text-cream">Google Play</p>
@@ -120,7 +125,9 @@ export function NewsletterBar() {
                 href="#"
                 className="group flex items-center gap-3 rounded-2xl border border-line/60 bg-surface-2/80 px-4 py-3 transition hover:border-saffron/40 hover:bg-surface-2"
               >
-                <span className="text-2xl">🍎</span>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6 shrink-0 text-cream">
+                  <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+                </svg>
                 <div>
                   <p className="text-[9px] uppercase tracking-wider text-cream/50">Download on the</p>
                   <p className="font-display text-sm font-bold text-cream">App Store</p>

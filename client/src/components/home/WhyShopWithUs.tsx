@@ -51,8 +51,14 @@ const PILLARS: Array<{
 
 export function WhyShopWithUs() {
   return (
-    <section className="bg-bg py-12 sm:py-16">
-      <div className="container">
+    <section className="relative overflow-hidden bg-bg py-12 sm:py-16">
+      {/* Ambient glow */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-1/3 -top-24 h-72 w-72 rounded-full bg-sage/8 blur-3xl" />
+        <div className="absolute right-1/4 -bottom-16 h-64 w-64 rounded-full bg-saffron/8 blur-3xl" />
+        <div className="absolute left-0 bottom-1/4 h-48 w-48 rounded-full bg-plum/8 blur-3xl" />
+      </div>
+      <div className="container relative">
 
         {/* Section header */}
         <motion.div
