@@ -46,12 +46,12 @@ const NAV_ITEMS: { id: Section; label: string; icon: typeof User }[] = [
 const STATUS_COLORS: Record<string, string> = {
   PENDING:         'bg-saffron/15 text-saffron',
   CONFIRMED:       'bg-sage/15 text-sage',
-  PROCESSING:      'bg-blue-500/15 text-blue-400',
-  SHIPPED:         'bg-purple-500/15 text-purple-400',
-  OUT_FOR_DELIVERY:'bg-teal-500/15 text-teal-400',
+  PROCESSING:      'bg-plum/15 text-plum',
+  SHIPPED:         'bg-plum/15 text-plum',
+  OUT_FOR_DELIVERY:'bg-sage/15 text-sage',
   DELIVERED:       'bg-sage/20 text-sage',
   CANCELLED:       'bg-coral/15 text-coral',
-  REFUND_REQUESTED:'bg-orange-500/15 text-orange-400',
+  REFUND_REQUESTED:'bg-blush/15 text-blush',
   REFUNDED:        'bg-cream/10 text-cream/55',
 };
 

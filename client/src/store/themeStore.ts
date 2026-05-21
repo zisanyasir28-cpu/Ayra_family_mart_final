@@ -35,7 +35,7 @@ function applyTheme(resolved: 'dark' | 'light'): void {
   // Update meta theme-color so PWA install + mobile chrome address bar match
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
-    meta.setAttribute('content', resolved === 'dark' ? '#0E0D0B' : '#FBF7EC');
+    meta.setAttribute('content', resolved === 'dark' ? '#0F0823' : '#FFFAF0');
   }
 }
 

@@ -40,23 +40,23 @@ const AdminCampaignsPage   = lazy(() => import('./pages/admin/campaigns/Campaign
 function PageLoader() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" />
     </div>
   );
 }
 
 function AuthLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-50 via-white to-teal-50">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+    <div className="flex min-h-screen items-center justify-center bg-bg">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" />
     </div>
   );
 }
 
 function AdminLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    <div className="flex min-h-screen items-center justify-center bg-bg">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" />
     </div>
   );
 }
@@ -277,8 +277,8 @@ function PlaceholderPage({ title, emoji }: { title: string; emoji: string }) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
       <span className="text-7xl">{emoji}</span>
-      <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-      <p className="text-muted-foreground">Coming in the next phase.</p>
+      <h1 className="text-2xl font-bold text-cream">{title}</h1>
+      <p className="text-cream/55">Coming in the next phase.</p>
     </div>
   );
 }
@@ -287,8 +287,8 @@ function AdminPlaceholder({ title, emoji }: { title: string; emoji: string }) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
       <span className="text-6xl">{emoji}</span>
-      <h2 className="text-xl font-bold text-foreground">{title}</h2>
-      <p className="text-sm text-muted-foreground">Coming in a future phase.</p>
+      <h2 className="text-xl font-bold text-cream">{title}</h2>
+      <p className="text-sm text-cream/55">Coming in a future phase.</p>
     </div>
   );
 }
