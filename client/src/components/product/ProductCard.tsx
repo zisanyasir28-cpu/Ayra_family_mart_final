@@ -40,12 +40,11 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
     toggle(product.id); // optimistic
     try {
       const { added } = await toggleWishlistItem(product.id);
-      // If server disagrees with our toggle direction, revert
-      if (!added && wishlisted) return;  // was wishlisted, now removed ✓
-      if (added && !wishlisted) return;  // was not wishlisted, now added ✓
+      if (!added && wishlisted) return;
+      if (added && !wishlisted) return;
       toggle(product.id); // revert — server state differs
     } catch {
-      toggle(product.id); // revert on API error (demo mode is fine)
+      toggle(product.id); // revert on API error
     }
   }
 
@@ -70,7 +69,12 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
   return (
     <div
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl bg-surface ring-1 ring-line transition-[transform,box-shadow,border-color] duration-300 ease-editorial hover:-translate-y-1 hover:ring-saffron/40 hover:shadow-lift',
+        // ── Card shell ──────────────────────────────────────────────────────
+        // rounded-3xl (rounder), subtle ring border, pink glow on hover
+        'group relative flex h-full flex-col overflow-hidden rounded-3xl bg-surface',
+        'ring-1 ring-line/50 transition-[transform,box-shadow,ring-color] duration-300 ease-editorial',
+        'hover:-translate-y-1 hover:ring-saffron/35',
+        'hover:shadow-[0_0_36px_-10px_hsl(var(--saffron)/0.45)]',
         emphasis && 'hover:-translate-y-1.5',
         className,
       )}
@@ -79,7 +83,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
       {/* ── Image area ─────────────────────────────────────────────────────── */}
       <Link
         to={`/products/${product.slug}`}
-        className="relative block aspect-[4/5] overflow-hidden rounded-2xl bg-surface-2"
+        className="relative block aspect-[4/5] overflow-hidden rounded-3xl bg-surface-2"
       >
         {firstImage && !imgError ? (
           <>
@@ -91,7 +95,9 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
               onError={() => setImgError(true)}
               className={cn(
                 'absolute inset-0 h-full w-full object-cover transition-[transform,opacity] duration-500 ease-editorial',
-                secondImage ? 'group-hover:scale-[1.04] group-hover:opacity-0' : 'group-hover:scale-[1.04]',
+                secondImage
+                  ? 'group-hover:scale-[1.04] group-hover:opacity-0'
+                  : 'group-hover:scale-[1.04]',
               )}
             />
             {secondImage && (
@@ -110,13 +116,13 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           </div>
         )}
 
-        {/* Bottom gradient for text legibility */}
+        {/* Bottom gradient */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-surface/80 to-transparent" />
 
-        {/* Discount chip */}
+        {/* Discount chip — gold (bg-coral = gold in new palette) */}
         {discountPct > 0 && (
-          <div className="absolute left-2.5 top-2.5 rounded-full bg-coral px-2.5 py-1 text-[11px] font-bold text-bg sm:left-3 sm:top-3">
-            <span className="font-mono-num">−{discountPct}%</span>
+          <div className="absolute left-2.5 top-2.5 rounded-full bg-coral px-2.5 py-1 text-[11px] font-extrabold text-bg shadow-[0_2px_8px_-2px_hsl(var(--coral)/0.5)] sm:left-3 sm:top-3">
+            −{discountPct}%
           </div>
         )}
 
@@ -127,15 +133,15 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           </span>
         )}
 
-        {/* Wishlist (only desktop hover) */}
+        {/* Wishlist button */}
         {!isLowStock && (
           <button
             onClick={handleWishlist}
             className={cn(
               'absolute right-2.5 top-2.5 hidden h-9 w-9 items-center justify-center rounded-full transition-all duration-300 sm:flex sm:right-3 sm:top-3',
               wishlisted
-                ? 'bg-coral text-bg opacity-100'
-                : 'bg-bg/70 text-cream opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 backdrop-blur-sm',
+                ? 'bg-saffron text-bg opacity-100 shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.6)]'
+                : 'bg-bg/70 text-cream opacity-0 -translate-y-1 backdrop-blur-sm group-hover:opacity-100 group-hover:translate-y-0',
             )}
             aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           >
@@ -155,7 +161,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
 
       {/* ── Content ───────────────────────────────────────────────────────── */}
       <div className="flex flex-1 flex-col gap-1 px-3 pb-3 pt-2.5 sm:px-4 sm:pb-4 sm:pt-3">
-        <span className="text-[10px] uppercase tracking-[0.18em] text-cream/45">
+        <span className="text-[10px] uppercase tracking-[0.18em] text-cream/40">
           {product.category.name}
         </span>
 
@@ -166,14 +172,15 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           {product.name}
         </Link>
 
-        <span className="font-display text-[11px] italic text-cream/50 sm:text-xs">
+        <span className="font-display text-[11px] italic text-cream/45 sm:text-xs">
           per {product.unit}
         </span>
 
-        {/* Price + cart */}
+        {/* Price + cart controls */}
         <div className="mt-auto flex items-center justify-between gap-1.5 pt-3 sm:gap-2">
-          {/* Price group — can shrink so the button never overflows */}
-          <div className="min-w-0 shrink flex items-baseline gap-1 sm:gap-1.5">
+
+          {/* Price group */}
+          <div className="flex min-w-0 shrink items-baseline gap-1 sm:gap-1.5">
             <span className="font-display text-sm font-black text-cream sm:text-base md:text-lg">
               {formatPaisa(product.effectivePriceInPaisa)}
             </span>
@@ -187,45 +194,48 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           {!isOutOfStock && (
             <AnimatePresence mode="wait" initial={false}>
               {qty === 0 ? (
+                // ── Pink circular add-to-cart button ───────────────────────
                 <motion.button
                   key="add"
-                  initial={{ opacity: 0, scale: 0.85 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{    opacity: 0, scale: 0.85 }}
+                  exit={{    opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.16 }}
                   onClick={handleAdd}
                   className={cn(
-                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors active:scale-90 sm:h-9 sm:w-9',
+                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-200 active:scale-90 sm:h-9 sm:w-9',
                     addedFlash
-                      ? 'bg-sage text-bg'
-                      : 'bg-cream text-bg hover:bg-saffron',
+                      ? 'bg-sage text-bg shadow-[0_0_12px_-2px_hsl(var(--sage)/0.7)]'
+                      : 'bg-saffron text-bg hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.65)] hover:scale-105',
                   )}
                   aria-label="Add to cart"
                 >
                   {addedFlash ? '✓' : <PlusIcon size={14} strokeWidth={2} />}
                 </motion.button>
               ) : (
+                // ── Quantity pill ──────────────────────────────────────────
+                // Purple-tinted pill with pink "+" button (matches CartDrawer)
                 <motion.div
                   key="qty"
-                  initial={{ opacity: 0, scale: 0.85 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{    opacity: 0, scale: 0.85 }}
+                  exit={{    opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.16 }}
-                  className="flex shrink-0 items-center gap-0.5 rounded-full bg-cream p-0.5 text-bg sm:gap-1"
+                  className="flex shrink-0 items-center gap-0.5 rounded-full border border-line bg-bg p-0.5 sm:gap-1"
                 >
                   <button
                     onClick={() => decrement(product.id, qty)}
-                    className="flex h-6 w-6 items-center justify-center rounded-full transition-colors hover:bg-bg/10 active:scale-90 sm:h-7 sm:w-7"
+                    className="flex h-6 w-6 items-center justify-center rounded-full text-cream/70 transition-colors hover:bg-saffron/15 hover:text-cream active:scale-90 sm:h-7 sm:w-7"
                     aria-label="Decrease quantity"
                   >
                     <MinusIcon size={11} strokeWidth={2} />
                   </button>
-                  <span className="min-w-[1.25rem] text-center font-display text-xs font-bold tabular-nums sm:min-w-[1.5rem] sm:text-sm">
+                  <span className="min-w-[1.25rem] text-center font-display text-xs font-bold tabular-nums text-cream sm:min-w-[1.5rem] sm:text-sm">
                     {qty}
                   </span>
                   <button
                     onClick={() => increment(product.id, qty, product.stockQuantity)}
-                    className="flex h-6 w-6 items-center justify-center rounded-full bg-bg text-cream transition-colors hover:bg-saffron hover:text-bg active:scale-90 sm:h-7 sm:w-7"
+                    className="flex h-6 w-6 items-center justify-center rounded-full bg-saffron text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_8px_-2px_hsl(var(--saffron)/0.6)] hover:scale-105 active:scale-90 sm:h-7 sm:w-7"
                     aria-label="Increase quantity"
                   >
                     <PlusIcon size={11} strokeWidth={2} />
@@ -241,10 +251,6 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
 }
 
 // ─── Memoized export ──────────────────────────────────────────────────────────
-//
-// Custom equality: re-render only when the props that visually matter change.
-// Wishlist state is read internally via Zustand selector so it doesn't need
-// to be in the equality check.
 export const ProductCard = memo(ProductCardImpl, (prev, next) =>
   prev.product.id                    === next.product.id &&
   prev.product.effectivePriceInPaisa === next.product.effectivePriceInPaisa &&
@@ -258,15 +264,15 @@ export const ProductCard = memo(ProductCardImpl, (prev, next) =>
 
 export function ProductCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn('flex flex-col rounded-2xl bg-surface ring-1 ring-line', className)}>
-      <div className="aspect-[4/5] skeleton rounded-2xl" />
+    <div className={cn('flex flex-col rounded-3xl bg-surface ring-1 ring-line/50', className)}>
+      <div className="aspect-[4/5] skeleton rounded-3xl" />
       <div className="flex flex-col gap-2 px-3 pb-3 pt-2.5 sm:px-4 sm:pb-4 sm:pt-3">
         <div className="h-2.5 w-16 skeleton rounded" />
         <div className="h-4   w-3/4 skeleton rounded" />
         <div className="h-3   w-1/3 skeleton rounded" />
         <div className="mt-2 flex items-center justify-between">
           <div className="h-6 w-16 skeleton rounded" />
-          <div className="h-9 w-9 skeleton rounded-full" />
+          <div className="h-9 w-9  skeleton rounded-full" />
         </div>
       </div>
     </div>
