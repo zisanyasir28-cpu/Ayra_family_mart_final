@@ -87,3 +87,49 @@ The customer-facing storefront is being redesigned in small chunks (see `.claude
 - Persistent left vertical sidebar nav on desktop (`lg+`); existing mobile drawer + bottom tab bar preserved
 
 All Zustand stores, TanStack Query hooks, and API service modules are stable contracts — UI work must not modify them.
+
+---
+
+## Phase I — Pixel-Parity Redesign Progress
+
+**Goal**: Component-by-component carbon copy of the dark-mode reference screenshot. Light mode deferred until dark mode parity is complete.
+
+**Live preview**: https://zisanyasir28-cpu.github.io/Ayra_family_mart_final/
+
+**Worktree**: `.claude/worktrees/intelligent-kepler-372c38` (branch `claude/intelligent-kepler-372c38`)
+**Git flow**: commit on worktree branch → push → ff-merge to `main` → push → GH Pages auto-deploys
+
+**Full plan file**: `.claude/plans/goofy-watching-babbage.md`
+
+### Completed chunks ✅
+
+| Chunk | Component | What was done |
+|---|---|---|
+| I1 | `Logo.tsx` | Horizontal layout — leaf LEFT, "Ayra® / FAMILY MART" text column RIGHT |
+| I2 | `CustomerLayout.tsx` header | All Categories dropdown, Location selector, Gold Member badge, search bar rework |
+| I3 | `HeroBanner.tsx` | Real Unsplash circular photo inside neon ring, ring wrapper sizing |
+| I4 | `HeroBanner.tsx` CTAs | Shop Now: pink→orange gradient pill. Explore Deals: glass-gradient ring border |
+| I5 | `ProductCard.tsx` | Hot-pink discount chip (`bg-saffron`), always-on glow on `+` button |
+| I6 | `CustomerSidebar.tsx` | Chevron on active pill, 28px outlined icon circles, basket photo, gradient headphone avatar, 24/7 + Live Chat |
+| I7 | `FeatureBanners.tsx` | Real Unsplash product photos (veggie crate / cooking oil / produce bag) replacing all emojis |
+| I8 | `CustomerSidebar.tsx` | Glass-gradient ring borders on both bottom cards (`p-[1.5px]` wrapper), plum→sage for Shop Now |
+| I9 | `CustomerSidebar.tsx` | Decorative background art (CSS blur orbs + inline SVG watermarks), sage "Shop Now", text-shadow on buttons |
+
+### Key design patterns established (reuse these)
+
+- **Gradient ring border** (Explore Deals, both sidebar cards): outer `div` with `bg-gradient-to-r ... p-[1.5px] rounded-2xl`, inner `div` with `bg-bg/60 backdrop-blur-md rounded-[calc(1rem-1.5px)]`
+- **Glass shine overlay**: `pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]`
+- **CSS glow orbs**: `pointer-events-none absolute h-28 w-28 rounded-full bg-<token>/<opacity> blur-3xl`
+- **SVG watermarks**: inline `<svg aria-hidden className="pointer-events-none absolute ... opacity-[0.08]">` with lucide paths
+- **Text shadow on buttons**: `[text-shadow:0_1px_4px_rgba(0,0,0,0.4)]`
+- **Active sidebar pill**: `bg-gradient-to-r from-saffron to-blush text-bg font-bold shadow-[...]` + `<ChevronRight>` on right
+- **Inactive icon circles**: `ring-1 ring-line/40 h-7 w-7 rounded-full flex items-center justify-center`
+
+### Up next (user will share reference crops)
+- PromoStrip cards (countdown / free delivery / member / points) — illustration polish
+- CategoryStrip tile design check
+- FlashDeals — countdown header + carousel
+- WhyShopWithUs — 5-icon trust strip
+- NewsletterBar — app download + subscribe + social
+- Footer — 4-column layout check
+- Then: remaining customer pages (Products, ProductDetail, Checkout, Orders, Account, Wishlist)
