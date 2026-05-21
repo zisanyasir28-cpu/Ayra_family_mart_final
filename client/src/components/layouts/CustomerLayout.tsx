@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Logo }            from '../common/Logo';
 import { CartDrawer }      from '../CartDrawer';
+import { CustomerSidebar } from './CustomerSidebar';
 import { CursorFollower }  from '../common/CursorFollower';
 import { SearchIcon, BasketIcon, ArrowRightIcon } from '../common/HandIcon';
 import { cn, formatPaisa } from '../../lib/utils';
@@ -808,7 +809,7 @@ function BottomTabBar({ onCartClick }: { onCartClick: () => void }) {
   ] as const;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-bg/95 backdrop-blur md:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-bg/95 backdrop-blur-xl ring-1 ring-saffron/10 pb-[env(safe-area-inset-bottom,0px)] lg:hidden">
       {navTabs.slice(0, 2).map(({ icon: Icon, label, to, end }) => (
         <NavLink
           key={to}
@@ -914,7 +915,7 @@ export default function CustomerLayout() {
         <div className="container flex items-center gap-4 py-4">
           <button
             onClick={() => setDrawerOpen(true)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition hover:bg-saffron/10 hover:text-saffron active:scale-90 md:hidden"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition hover:bg-saffron/10 hover:text-saffron active:scale-90 lg:hidden"
             aria-label="Open menu"
           >
             <Menu className="h-5 w-5 text-cream" />
@@ -952,9 +953,12 @@ export default function CustomerLayout() {
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
 
-      <main className="flex-1 pb-16 md:pb-0">
-        <Outlet />
-      </main>
+      <div className="flex flex-1">
+        <CustomerSidebar />
+        <main className="min-w-0 flex-1 pb-16 lg:pb-0">
+          <Outlet />
+        </main>
+      </div>
 
       <Footer />
 
