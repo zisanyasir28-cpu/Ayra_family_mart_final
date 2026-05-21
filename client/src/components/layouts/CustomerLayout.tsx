@@ -97,6 +97,105 @@ function AnnouncementBar() {
   );
 }
 
+// ─── All Categories dropdown ──────────────────────────────────────────────────
+
+function AllCategoriesDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const { data: cats = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn:  fetchCategories,
+    staleTime: 1000 * 60 * 10,
+  });
+
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative shrink-0">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-2 rounded-full bg-saffron px-4 py-2.5 text-sm font-bold text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)] active:scale-95"
+      >
+        <LayoutGrid className="h-4 w-4" />
+        <span className="hidden lg:block">All Categories</span>
+        <ChevronDown
+          className={cn('h-3.5 w-3.5 transition-transform duration-200', open && 'rotate-180')}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{    opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-line bg-surface shadow-lift"
+          >
+            <div className="p-1.5">
+              <Link
+                to="/products"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-cream transition hover:bg-surface-2"
+              >
+                <LayoutGrid className="h-4 w-4 text-saffron" strokeWidth={1.8} />
+                All Products
+              </Link>
+              {cats.slice(0, 12).map((cat) => (
+                <Link
+                  key={cat.id}
+                  to={`/products?categoryId=${cat.id}`}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-cream transition hover:bg-surface-2"
+                >
+                  <span className="text-base leading-none">{getCategoryEmoji(cat.slug)}</span>
+                  <span className="flex-1 truncate">{cat.name}</span>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Location selector ────────────────────────────────────────────────────────
+
+function LocationSelector() {
+  return (
+    <div className="hidden xl:flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-line/50 bg-surface/50 px-3.5 py-2 transition hover:border-saffron/40">
+      <MapPin className="h-3.5 w-3.5 shrink-0 text-saffron" />
+      <div className="leading-tight">
+        <p className="text-[9px] uppercase tracking-[0.16em] text-cream/40">Deliver to</p>
+        <p className="text-xs font-semibold text-cream">Dhaka, Bangladesh</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Gold Member badge ────────────────────────────────────────────────────────
+
+function GoldMemberBadge() {
+  const { isAuthenticated } = useAuthStore();
+  if (!isAuthenticated) return null;
+  return (
+    <Link
+      to="/products?collection=fresh-plus"
+      className="hidden xl:flex shrink-0 items-center gap-1.5 rounded-full border border-coral/40 bg-coral/10 px-3.5 py-1.5 transition hover:border-coral/70 hover:bg-coral/15"
+    >
+      <span className="text-[13px] leading-none">👑</span>
+      <span className="text-[11px] font-bold text-coral">Gold Member</span>
+    </Link>
+  );
+}
+
 // ─── Search bar ───────────────────────────────────────────────────────────────
 
 function SearchBar() {
@@ -142,7 +241,7 @@ function SearchBar() {
   const showDropdown = focused && debounced.length >= 2 && hits.length > 0;
 
   return (
-    <form ref={containerRef} onSubmit={handleSubmit} className="relative flex-1 max-w-md">
+    <form ref={containerRef} onSubmit={handleSubmit} className="relative flex-1">
       <div
         className={cn(
           'relative flex items-center rounded-full border bg-surface/80 pl-4 pr-1.5 transition-all duration-300',
@@ -160,7 +259,7 @@ function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
-          placeholder="Search the market…"
+          placeholder="Search products, brands and more…"
           className="w-full bg-transparent py-2.5 pl-3 pr-2 text-sm text-cream placeholder:text-cream/35 focus:outline-none"
         />
         <button
@@ -1012,7 +1111,8 @@ export default function CustomerLayout() {
             : 'bg-bg',
         )}
       >
-        <div className="container flex items-center gap-4 py-4">
+        <div className="container flex items-center gap-3 py-3.5">
+          {/* Hamburger — mobile only */}
           <button
             onClick={() => setDrawerOpen(true)}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition hover:bg-saffron/10 hover:text-saffron active:scale-90 lg:hidden"
@@ -1023,11 +1123,18 @@ export default function CustomerLayout() {
 
           <Logo size="sm" className="shrink-0" />
 
-          <div className="hidden flex-1 items-center md:flex">
+          {/* All Categories + Search — md+ */}
+          <div className="hidden flex-1 items-center gap-3 md:flex">
+            <AllCategoriesDropdown />
             <SearchBar />
           </div>
 
-          <div className="ml-auto flex items-center gap-1.5">
+          {/* Location + Gold Member — xl+ */}
+          <LocationSelector />
+          <GoldMemberBadge />
+
+          {/* Right actions */}
+          <div className="ml-auto flex items-center gap-1.5 md:ml-0">
             <MobileSearch />
             <Link
               to="/wishlist"
