@@ -92,65 +92,84 @@ export function CustomerSidebar() {
         ))}
       </nav>
 
-      {/* Ayra Fresh+ promo card */}
-      <div className="relative mx-1 mt-6 overflow-hidden rounded-2xl border border-sage/30 bg-gradient-to-br from-sage/25 via-sage/10 to-bg/50 p-4">
-        <div className="relative z-10 max-w-[60%]">
-          <div className="mb-2 flex items-center gap-1.5">
-            <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25 text-sage">
-              <Leaf className="h-3.5 w-3.5" />
-            </span>
-            <span className="font-display text-[10px] font-bold uppercase tracking-[0.16em] text-sage">
-              Ayra Fresh+
-            </span>
+      {/* Ayra Fresh+ promo card — glass-gradient ring border */}
+      <div className="relative mx-1 mt-6 rounded-2xl bg-gradient-to-br from-saffron/35 via-sage/25 to-saffron/25 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--sage)/0.4)]">
+        <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-sage/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
+          {/* Glass shine — diagonal white highlight, top-left */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]"
+          />
+          <div className="relative z-10 max-w-[60%]">
+            <div className="mb-2 flex items-center gap-1.5">
+              <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25 text-sage">
+                <Leaf className="h-3.5 w-3.5" />
+              </span>
+              <span className="font-display text-[10px] font-bold uppercase tracking-[0.16em] text-sage">
+                Ayra Fresh+
+              </span>
+            </div>
+            <p className="font-display text-[15px] font-extrabold leading-tight text-cream">
+              Extra 15% Off
+            </p>
+            <p className="mt-0.5 text-[10px] text-cream/55">On Fresh Produce</p>
+            <NavLink
+              to="/products?collection=fresh-plus"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-plum px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-cream shadow-[0_4px_14px_-2px_hsl(var(--plum)/0.5)] transition hover:bg-plum/90 hover:shadow-[0_6px_18px_-2px_hsl(var(--plum)/0.7)]"
+            >
+              Shop Now <ArrowRight className="h-3 w-3" />
+            </NavLink>
           </div>
-          <p className="font-display text-[15px] font-extrabold leading-tight text-cream">
-            Extra 15% Off
-          </p>
-          <p className="mt-0.5 text-[10px] text-cream/55">On Fresh Produce</p>
-          <NavLink
-            to="/products?collection=fresh-plus"
-            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-saffron px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.7)]"
-          >
-            Shop Now <ArrowRight className="h-3 w-3" />
-          </NavLink>
+          {/* Produce basket illustration — bottom-right */}
+          <img
+            src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=200&h=200&fit=crop&crop=center&q=85"
+            alt=""
+            aria-hidden
+            loading="lazy"
+            decoding="async"
+            className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 select-none rounded-2xl object-cover opacity-90"
+          />
         </div>
-        {/* Produce basket illustration — bottom-right */}
-        <img
-          src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=200&h=200&fit=crop&crop=center&q=85"
-          alt=""
-          aria-hidden
-          loading="lazy"
-          decoding="async"
-          className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 select-none rounded-2xl object-cover opacity-90"
-        />
       </div>
 
-      {/* Need Help? — 24/7 Live chat CTA */}
-      <div className="mx-1 mt-3 overflow-hidden rounded-2xl border border-plum/30 bg-gradient-to-br from-plum/25 via-plum/10 to-bg/40 p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cream/65">
-          Need Help?
-        </p>
-        <p className="mt-0.5 text-[10px] text-cream/45">We&apos;re here for you</p>
+      {/* Need Help? — 24/7 Live chat CTA, glass-gradient ring border */}
+      <div className="mx-1 mt-3 rounded-2xl bg-gradient-to-br from-saffron/40 via-plum/30 to-saffron/35 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--plum)/0.4)]">
+        <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-plum/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
+          {/* Glass shine */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]"
+          />
+          <div className="relative z-10">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cream/65">
+              Need Help?
+            </p>
+            <p className="mt-0.5 text-[10px] text-cream/45">We&apos;re here for you</p>
 
-        <div className="mt-3 flex items-center gap-3">
-          {/* Gradient headphone avatar — purple → pink */}
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-plum to-saffron shadow-[0_4px_14px_-2px_hsl(var(--saffron)/0.45)]">
-            <Headphones className="h-4 w-4 text-bg" strokeWidth={2} />
-          </span>
-          <span className="font-display text-2xl font-black leading-none tabular-nums text-cream">
-            24/7
-          </span>
+            <div className="mt-3 flex items-center gap-3">
+              {/* Gradient headphone avatar — purple → pink */}
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-plum to-saffron shadow-[0_4px_14px_-2px_hsl(var(--saffron)/0.45)]">
+                <Headphones className="h-4 w-4 text-bg" strokeWidth={2} />
+              </span>
+              <span className="font-display text-2xl font-black leading-none tabular-nums text-cream">
+                24/7
+              </span>
+            </div>
+
+            {/* Live Chat — glass-gradient border pill (matches Hero "Explore Deals" technique) */}
+            <button
+              type="button"
+              className="group relative mt-3 flex w-full rounded-full bg-gradient-to-r from-saffron/60 via-plum/40 to-saffron/60 p-[1px] transition hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.55)]"
+            >
+              <span className="flex w-full items-center justify-between gap-1.5 rounded-full bg-bg/60 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-cream backdrop-blur-md transition group-hover:bg-bg/40">
+                Live Chat
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-saffron text-bg transition group-hover:translate-x-0.5">
+                  <ArrowRight className="h-3 w-3" strokeWidth={2.4} />
+                </span>
+              </span>
+            </button>
+          </div>
         </div>
-
-        <button
-          type="button"
-          className="group mt-3 flex w-full items-center justify-between gap-1.5 rounded-full border border-saffron/45 bg-saffron/5 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-cream transition hover:bg-saffron/15 hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.5)]"
-        >
-          Live Chat
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-saffron text-bg transition group-hover:translate-x-0.5">
-            <ArrowRight className="h-3 w-3" strokeWidth={2.4} />
-          </span>
-        </button>
       </div>
     </aside>
   );
