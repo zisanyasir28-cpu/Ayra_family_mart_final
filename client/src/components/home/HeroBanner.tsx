@@ -121,9 +121,10 @@ export function HeroBanner() {
               transition={{ duration: 0.45, delay: 0.38 }}
               className="mt-8 flex flex-wrap items-center gap-4"
             >
+              {/* Shop Now — pink → orange gradient pill with double-glow */}
               <Link
                 to="/products"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-saffron px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_32px_-6px_hsl(var(--saffron)/0.7)] active:scale-95"
+                className="group inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-saffron via-saffron to-blush px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6),0_2px_8px_-2px_hsl(var(--blush)/0.4)] transition-all hover:shadow-[0_12px_36px_-6px_hsl(var(--saffron)/0.8),0_4px_14px_-2px_hsl(var(--blush)/0.5)] active:scale-95"
               >
                 Shop Now
                 <ArrowIcon
@@ -131,12 +132,16 @@ export function HeroBanner() {
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
+
+              {/* Explore Deals — glass pill with gradient ring border */}
               <Link
                 to="/products?onSale=true"
-                className="group inline-flex items-center gap-2.5 rounded-full border border-line px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-cream/80 transition-all hover:border-saffron/50 hover:text-cream active:scale-95"
+                className="group relative inline-flex rounded-full bg-gradient-to-r from-saffron/70 via-plum/40 to-blush/70 p-[1.5px] shadow-[0_4px_18px_-4px_hsl(var(--saffron)/0.3)] transition-all hover:shadow-[0_6px_22px_-2px_hsl(var(--saffron)/0.55)] active:scale-95"
               >
-                <Play className="h-3.5 w-3.5 fill-current" />
-                Explore Deals
+                <span className="inline-flex items-center gap-2.5 rounded-full bg-bg/40 px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-cream/85 backdrop-blur-md transition-colors group-hover:bg-bg/20 group-hover:text-cream">
+                  <Play className="h-3.5 w-3.5 fill-current" />
+                  Explore Deals
+                </span>
               </Link>
             </motion.div>
 
