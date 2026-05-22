@@ -831,12 +831,20 @@ function Footer() {
   ];
 
   return (
-    <footer className="relative border-t border-line/50 bg-gradient-to-b from-surface/30 via-bg to-bg">
-      <div className="container py-16">
+    <footer className="relative overflow-hidden border-t border-line/50 bg-gradient-to-b from-surface/30 via-bg to-bg">
+
+      {/* Ambient glows */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-40 -top-16 h-[400px] w-[400px] rounded-full bg-saffron/7 blur-3xl" />
+        <div className="absolute -right-32 top-1/3 h-[350px] w-[350px] rounded-full bg-plum/8 blur-3xl" />
+        <div className="absolute left-1/2 bottom-0 h-[280px] w-[280px] -translate-x-1/2 rounded-full bg-coral/6 blur-3xl" />
+      </div>
+
+      <div className="container relative py-16">
         {/* Brand line */}
         <div className="border-b border-line/60 pb-10">
           <h2 className="display-xl select-none text-cream/95">
-            Ayra<span className="text-saffron">.</span>
+            Ayra<span className="text-saffron [text-shadow:0_0_24px_hsl(var(--saffron)/0.65)]">.</span>
           </h2>
           <p className="mt-4 max-w-2xl font-display text-base italic text-cream/55 sm:text-lg">
             A family-run Bengali marketplace, brought to your screen.
