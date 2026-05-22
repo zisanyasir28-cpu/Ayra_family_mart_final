@@ -244,14 +244,14 @@ export function HeroBanner() {
             >
               {/* Coral neon ring border */}
               <div
-                className="group rounded-2xl bg-gradient-to-br from-coral/70 via-saffron/40 to-coral/20 p-[1.5px] transition-all duration-300 hover:from-coral/95 hover:via-saffron/60 hover:to-coral/35"
+                className="group rounded-sm bg-gradient-to-br from-coral/60 via-saffron/40 to-coral/20 p-[1.5px] transition-all duration-300 hover:from-coral/75 hover:via-saffron/60 hover:to-coral/35"
                 style={{
                   boxShadow:
                     '0 0 14px -2px hsl(var(--coral)/0.55), 0 0 32px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
                 }}
               >
                 {/* Inner glass surface — REAL glass (has something to blur) */}
-                <div className="relative min-w-[145px] overflow-hidden rounded-[calc(1rem-1.5px)] bg-bg/65 p-3.5 backdrop-blur-xl">
+                <div className="relative min-w-[145px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-bg/85 p-3.5 backdrop-blur-xl">
                   {/* Inner coral wash for warmth */}
                   <div
                     aria-hidden
@@ -266,7 +266,7 @@ export function HeroBanner() {
                   {/* Sparkle accent — top-right */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute right-2.5 top-2.5 h-1 w-1 rounded-full bg-white/85 shadow-[0_0_8px_2px_rgba(255,255,255,0.7)]"
+                    className="pointer-events-none absolute right-2.5 top-2.5 h-1 w-1 rounded-full bg-white/53 shadow-[0_0_8px_2px_rgba(255,255,255,0.7)]"
                   />
                   {/* Glass shine arc — top-left */}
                   <div
@@ -298,7 +298,7 @@ export function HeroBanner() {
                   {/* Shop Now — saffron→blush neon pill */}
                   <Link
                     to="/products?onSale=true"
-                    className="relative mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-saffron to-blush px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-bg shadow-[0_0_14px_-2px_hsl(var(--saffron)/0.7)] transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_20px_-2px_hsl(var(--saffron)/0.95)]"
+                    className="relative mt-3 inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-saffron to-blush px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-bg shadow-[0_0_14px_-2px_hsl(var(--saffron)/0.7)] transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_20px_-2px_hsl(var(--saffron)/0.95)]"
                   >
                     Shop Now
                     <ArrowIcon size={10} />
