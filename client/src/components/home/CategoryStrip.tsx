@@ -53,31 +53,34 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
     >
       <Link
         to={`/products?categoryId=${id}`}
-        className="group flex flex-col overflow-hidden rounded-2xl border border-line/50 bg-surface text-center transition-all duration-300 hover:-translate-y-1 hover:border-saffron/40 hover:shadow-[0_8px_24px_-8px_hsl(var(--saffron)/0.25)] active:scale-[0.97]"
+        className="group relative block aspect-square overflow-hidden rounded-2xl ring-1 ring-line/50 transition-all duration-300 hover:-translate-y-1 hover:ring-saffron/45 hover:shadow-[0_10px_28px_-10px_hsl(var(--saffron)/0.35)] active:scale-[0.97]"
       >
-        {/* Photo area — image if available, else emoji fallback */}
-        <div className="aspect-square overflow-hidden bg-surface-2">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={name}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <div
-              className={`flex h-full w-full items-center justify-center text-4xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 ${meta.accent}`}
-            >
-              {meta.emoji}
-            </div>
-          )}
-        </div>
+        {/* Photo fill */}
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div
+            className={`absolute inset-0 flex items-center justify-center text-5xl transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 ${meta.accent}`}
+          >
+            {meta.emoji}
+          </div>
+        )}
 
-        {/* Labels */}
-        <div className="p-2">
-          <p className="text-[11px] font-bold leading-tight text-cream">
+        {/* Bottom gradient overlay for label legibility */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-bg/95 via-bg/60 to-transparent" />
+
+        {/* Labels overlaid on photo */}
+        <div className="absolute inset-x-0 bottom-0 px-2.5 pb-2 text-left">
+          <p className="text-[11px] font-bold leading-tight text-cream drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
             {meta.display || name}
           </p>
-          <p className="mt-0.5 font-bangla text-[10px] text-cream/40">
+          <p className="mt-0.5 font-bangla text-[10px] text-cream/75 drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
             {meta.bangla}
           </p>
         </div>
@@ -89,12 +92,8 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
 // ─── Skeleton tile ────────────────────────────────────────────────────────────
 function SkeletonTile() {
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-line/50 bg-surface">
-      <div className="skeleton aspect-square w-full" />
-      <div className="space-y-1.5 p-2">
-        <div className="skeleton mx-auto h-3 w-3/4 rounded" />
-        <div className="skeleton mx-auto h-2.5 w-1/2 rounded" />
-      </div>
+    <div className="relative aspect-square overflow-hidden rounded-2xl ring-1 ring-line/50">
+      <div className="skeleton absolute inset-0" />
     </div>
   );
 }

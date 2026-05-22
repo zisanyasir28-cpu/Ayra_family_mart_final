@@ -1,49 +1,43 @@
 import { motion } from 'motion/react';
-import { Leaf, Zap, MessageCircle, ShieldCheck, Package } from 'lucide-react';
+import { Truck, Clock, RefreshCw, ShieldCheck, Leaf } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // ─── 5-pillar data ────────────────────────────────────────────────────────────
 const PILLARS: Array<{
-  icon:    LucideIcon;
-  label:   string;
-  bangla:  string;
-  accent:  string;
-  ring:    string;
+  Icon:   LucideIcon;
+  label:  string;
+  desc:   string;
+  accent: string;
 }> = [
   {
-    icon:   Leaf,
+    Icon:   Truck,
     label:  'Farm to Doorstep',
-    bangla: 'খামার থেকে দরজায়',
+    desc:   'From our farms to your home',
     accent: 'bg-sage/15 text-sage',
-    ring:   'ring-sage/25',
   },
   {
-    icon:   Zap,
+    Icon:   Clock,
     label:  '60 Min Delivery',
-    bangla: '৬০ মিনিটে ডেলিভারি',
+    desc:   'Super fast delivery in 60 minutes',
     accent: 'bg-saffron/15 text-saffron',
-    ring:   'ring-saffron/25',
   },
   {
-    icon:   MessageCircle,
+    Icon:   RefreshCw,
     label:  '24/7 Support',
-    bangla: 'সার্বক্ষণিক সহায়তা',
+    desc:   'We’re here anytime',
     accent: 'bg-plum/15 text-plum',
-    ring:   'ring-plum/25',
   },
   {
-    icon:   ShieldCheck,
+    Icon:   ShieldCheck,
     label:  'Secure Payment',
-    bangla: 'নিরাপদ পেমেন্ট',
+    desc:   '100% secure transactions',
     accent: 'bg-coral/15 text-coral',
-    ring:   'ring-coral/25',
   },
   {
-    icon:   Package,
-    label:  'Eco Packaging',
-    bangla: 'পরিবেশবান্ধব প্যাকেজিং',
+    Icon:   Leaf,
+    label:  'Eco Friendly',
+    desc:   'Sustainable packing for a better tomorrow',
     accent: 'bg-sage/15 text-sage',
-    ring:   'ring-sage/25',
   },
 ];
 
@@ -51,67 +45,39 @@ const PILLARS: Array<{
 
 export function WhyShopWithUs() {
   return (
-    <section className="relative overflow-hidden bg-bg py-12 sm:py-16">
-      {/* Ambient glow */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/3 -top-24 h-72 w-72 rounded-full bg-sage/8 blur-3xl" />
-        <div className="absolute right-1/4 -bottom-16 h-64 w-64 rounded-full bg-saffron/8 blur-3xl" />
-        <div className="absolute left-0 bottom-1/4 h-48 w-48 rounded-full bg-plum/8 blur-3xl" />
-      </div>
-      <div className="container relative">
+    <section className="relative overflow-hidden border-y border-line/40 bg-surface/40 py-5 backdrop-blur-sm sm:py-6">
 
-        {/* Section header */}
+      {/* Ambient glow underlay */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-24 top-1/2 h-40 w-80 -translate-y-1/2 rounded-full bg-saffron/6 blur-3xl" />
+        <div className="absolute -right-24 top-1/2 h-40 w-80 -translate-y-1/2 rounded-full bg-plum/6 blur-3xl" />
+      </div>
+
+      <div className="container relative">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5 }}
-          className="mb-8 text-center"
+          className="grid grid-cols-2 gap-x-5 gap-y-5 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-6"
         >
-          <h2 className="font-display text-2xl font-black text-cream sm:text-3xl">
-            Why Shop With{' '}
-            <span className="text-saffron">Ayra?</span>
-          </h2>
-          <p className="mt-2 text-sm text-cream/50">
-            Five promises we keep for every order, every time.
-          </p>
-        </motion.div>
-
-        {/* 5-icon strip */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
-          {PILLARS.map(({ icon: Icon, label, bangla, accent, ring }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{
-                delay: i * 0.07,
-                type: 'spring',
-                stiffness: 220,
-                damping: 24,
-              }}
-              className="flex flex-col items-center gap-3 rounded-2xl border border-line/50 bg-surface/50 px-4 py-5 text-center transition-all duration-300 hover:-translate-y-1 hover:border-saffron/30 hover:bg-surface"
-            >
+          {PILLARS.map(({ Icon, label, desc, accent }) => (
+            <div key={label} className="flex items-center gap-3">
               {/* Icon circle */}
               <span
-                className={`flex h-14 w-14 items-center justify-center rounded-full ring-1 transition-transform duration-300 hover:scale-110 ${accent} ${ring}`}
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${accent}`}
               >
-                <Icon className="h-6 w-6" strokeWidth={1.7} />
+                <Icon className="h-5 w-5" strokeWidth={1.8} />
               </span>
 
-              {/* Labels */}
-              <div>
-                <p className="text-sm font-bold leading-tight text-cream">
-                  {label}
-                </p>
-                <p className="mt-1 font-bangla text-[11px] text-cream/40">
-                  {bangla}
-                </p>
+              {/* Text block */}
+              <div className="min-w-0">
+                <p className="text-sm font-bold leading-tight text-cream">{label}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-cream/55">{desc}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

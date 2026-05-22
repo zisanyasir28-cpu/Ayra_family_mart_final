@@ -134,52 +134,54 @@ export function FlashDeals() {
           </div>
         </div>
 
-        {/* Carousel controls */}
-        <div className="mb-4 flex items-center justify-end gap-2">
+        {/* Product carousel with side-edge controls */}
+        <div className="relative">
+          {/* Left arrow — floats over the left edge */}
           <button
             onClick={() => scroll('left')}
             aria-label="Previous products"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-cream/70 transition hover:bg-saffron hover:text-bg hover:shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)] active:scale-90"
+            className="absolute left-0 top-1/2 z-20 hidden h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-surface-2/90 text-cream/85 ring-1 ring-line/60 backdrop-blur-md transition-all duration-200 hover:bg-saffron hover:text-bg hover:ring-saffron hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.7)] active:scale-90 sm:flex"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
+
+          {/* Right arrow — floats over the right edge */}
           <button
             onClick={() => scroll('right')}
             aria-label="Next products"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)] active:scale-90"
+            className="absolute right-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full bg-surface-2/90 text-cream/85 ring-1 ring-line/60 backdrop-blur-md transition-all duration-200 hover:bg-saffron hover:text-bg hover:ring-saffron hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.7)] active:scale-90 sm:flex"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
-        </div>
 
-        {/* Product carousel */}
-        <div
-          ref={scrollRef}
-          className="-mx-6 flex gap-4 overflow-x-auto scroll-smooth px-6 pb-4 scrollbar-hide snap-x"
-        >
-          {isLoading
-            ? Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="w-44 shrink-0 snap-start sm:w-48">
-                  <ProductCardSkeleton />
-                </div>
-              ))
-            : products.map((p, i) => (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, x: 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{
-                    delay: Math.min(i * 0.05, 0.3),
-                    type: 'spring',
-                    stiffness: 180,
-                    damping: 22,
-                  }}
-                  className="w-44 shrink-0 snap-start sm:w-48"
-                >
-                  <ProductCard product={p} className="h-full" />
-                </motion.div>
-              ))}
+          <div
+            ref={scrollRef}
+            className="-mx-6 flex gap-4 overflow-x-auto scroll-smooth px-6 pb-4 scrollbar-hide snap-x"
+          >
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="w-44 shrink-0 snap-start sm:w-48">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
+              : products.map((p, i) => (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, x: 24 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{
+                      delay: Math.min(i * 0.05, 0.3),
+                      type: 'spring',
+                      stiffness: 180,
+                      damping: 22,
+                    }}
+                    className="w-44 shrink-0 snap-start sm:w-48"
+                  >
+                    <ProductCard product={p} className="h-full" />
+                  </motion.div>
+                ))}
+          </div>
         </div>
 
         {/* Mobile "View All" */}
