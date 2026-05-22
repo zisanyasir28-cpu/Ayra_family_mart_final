@@ -92,31 +92,19 @@ export function HeroBanner() {
         <rect x="1378" y="90"  width="22" height="50" />
       </svg>
 
-      {/* ── Gradient bokeh floating particles ─────────────────────────────────── */}
-      {/* Particle 1 — amber, large, pfloat-A */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '14%', left: '7%', width: '18px', height: '18px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(42,92%,60%,0.88) 0%, hsla(42,92%,60%,0.38) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-A 8.2s ease-in-out infinite', animationDelay: '0s' }} />
-      {/* Particle 2 — sage, medium, pfloat-B */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '32%', left: '13%', width: '13px', height: '13px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(158,64%,55%,0.85) 0%, hsla(158,64%,55%,0.35) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-B 9.5s ease-in-out infinite', animationDelay: '1.4s' }} />
-      {/* Particle 3 — warm gold, small, pfloat-C */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '9%', left: '38%', width: '10px', height: '10px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(50,100%,66%,0.90) 0%, hsla(50,100%,66%,0.40) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-C 7.1s ease-in-out infinite', animationDelay: '2.6s' }} />
-      {/* Particle 4 — plum, large, pfloat-D */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '58%', left: '4%', width: '20px', height: '20px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(262,84%,68%,0.80) 0%, hsla(262,84%,68%,0.32) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-D 10.3s ease-in-out infinite', animationDelay: '0.5s' }} />
-      {/* Particle 5 — coral, medium, pfloat-E */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '22%', left: '55%', width: '14px', height: '14px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(38,92%,54%,0.86) 0%, hsla(38,92%,54%,0.36) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-E 8.8s ease-in-out infinite', animationDelay: '3.2s' }} />
-      {/* Particle 6 — pink, small, pfloat-A */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '44%', right: '10%', width: '11px', height: '11px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(330,70%,68%,0.82) 0%, hsla(330,70%,68%,0.33) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-A 7.6s ease-in-out infinite', animationDelay: '1.9s' }} />
-      {/* Particle 7 — amber, extra-large, pfloat-C */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '68%', right: '24%', width: '22px', height: '22px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(42,92%,60%,0.75) 0%, hsla(42,92%,60%,0.28) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-C 11.0s ease-in-out infinite', animationDelay: '0.3s' }} />
-      {/* Particle 8 — sage, small, pfloat-D */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '15%', right: '38%', width: '9px', height: '9px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(158,64%,55%,0.88) 0%, hsla(158,64%,55%,0.38) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-D 6.9s ease-in-out infinite', animationDelay: '4.1s' }} />
-      {/* Particle 9 — warm gold, medium, pfloat-B */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '78%', left: '28%', width: '15px', height: '15px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(50,100%,66%,0.83) 0%, hsla(50,100%,66%,0.33) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-B 9.2s ease-in-out infinite', animationDelay: '2.1s' }} />
-      {/* Particle 10 — plum, small, pfloat-E */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '50%', right: '42%', width: '8px', height: '8px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(262,84%,68%,0.90) 0%, hsla(262,84%,68%,0.40) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-E 7.8s ease-in-out infinite', animationDelay: '3.7s' }} />
-      {/* Particle 11 — coral, large, pfloat-A */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '36%', right: '6%', width: '17px', height: '17px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(38,92%,54%,0.78) 0%, hsla(38,92%,54%,0.30) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-A 10.5s ease-in-out infinite', animationDelay: '0.8s' }} />
-      {/* Particle 12 — pink, medium, pfloat-C */}
-      <div aria-hidden className="pointer-events-none absolute" style={{ top: '6%', left: '22%', width: '12px', height: '12px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(330,70%,68%,0.84) 0%, hsla(330,70%,68%,0.34) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-C 8.4s ease-in-out infinite', animationDelay: '1.1s' }} />
+      {/* ── Gradient bokeh floating particles — position/anim in CSS classes ──── */}
+      <div aria-hidden className="hb-particle hb-p01" style={{ background: 'radial-gradient(circle, hsla(42,92%,60%,0.88) 0%, hsla(42,92%,60%,0.38) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p02" style={{ background: 'radial-gradient(circle, hsla(158,64%,55%,0.85) 0%, hsla(158,64%,55%,0.35) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p03" style={{ background: 'radial-gradient(circle, hsla(50,100%,66%,0.90) 0%, hsla(50,100%,66%,0.40) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p04" style={{ background: 'radial-gradient(circle, hsla(262,84%,68%,0.80) 0%, hsla(262,84%,68%,0.32) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p05" style={{ background: 'radial-gradient(circle, hsla(38,92%,54%,0.86) 0%, hsla(38,92%,54%,0.36) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p06" style={{ background: 'radial-gradient(circle, hsla(330,70%,68%,0.82) 0%, hsla(330,70%,68%,0.33) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p07" style={{ background: 'radial-gradient(circle, hsla(42,92%,60%,0.75) 0%, hsla(42,92%,60%,0.28) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p08" style={{ background: 'radial-gradient(circle, hsla(158,64%,55%,0.88) 0%, hsla(158,64%,55%,0.38) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p09" style={{ background: 'radial-gradient(circle, hsla(50,100%,66%,0.83) 0%, hsla(50,100%,66%,0.33) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p10" style={{ background: 'radial-gradient(circle, hsla(262,84%,68%,0.90) 0%, hsla(262,84%,68%,0.40) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p11" style={{ background: 'radial-gradient(circle, hsla(38,92%,54%,0.78) 0%, hsla(38,92%,54%,0.30) 42%, transparent 70%)' }} />
+      <div aria-hidden className="hb-particle hb-p12" style={{ background: 'radial-gradient(circle, hsla(330,70%,68%,0.84) 0%, hsla(330,70%,68%,0.34) 42%, transparent 70%)' }} />
 
       {/* ── Botanical leaf-cluster SVG watermark — upper-right ───────────────── */}
       <svg
