@@ -199,7 +199,7 @@ const BANNERS: Banner[] = [
     label:         null,
     cta:           'Grab Now',
     to:            '/products?onSale=true',
-    image:         'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=520&h=520&fit=crop&crop=center&q=85',
+    image:         'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=520&h=520&fit=crop&crop=center&q=85',
     colorWash:     'bg-gradient-to-br from-blush/10 via-transparent to-transparent',
     glowColor:     'hsl(var(--blush) / 0.72)',
     imgFilter:     'saturate(1.4) hue-rotate(5deg)',
@@ -248,7 +248,7 @@ export function FeatureBanners() {
             // Per-banner neon ring — near-black glass card style
             className={`group relative p-[1.5px] rounded-xl bg-gradient-to-br ${b.ringGrad} ${b.ringGradHover} transition-all duration-300 hover:-translate-y-1`}
             style={{
-              boxShadow: `0 0 16px -3px ${b.glowColor}, 0 0 44px -6px ${b.glowColor}, 0 22px 60px -12px ${b.glowColor}`,
+              boxShadow: `0 0 6px -1px ${b.glowColor}, 0 0 18px -8px ${b.glowColor}, 0 8px 22px -14px ${b.glowColor}`,
             }}
           >
             <Link
@@ -270,16 +270,10 @@ export function FeatureBanners() {
               {/* Glass shine diagonal */}
               <div aria-hidden className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.11)_0%,transparent_40%)]" />
 
-              {/* ── Concentrated neon orb — right-centre atmospheric light source ── */}
-              {/* Primary orb: large soft glow from right edge */}
+              {/* ── Concentrated neon orb — single tight light source behind medallion ── */}
               <div
                 aria-hidden
-                className={`pointer-events-none absolute -right-16 top-1/2 z-[3] h-72 w-72 -translate-y-1/2 rounded-full ${b.neonOrb} blur-[72px]`}
-              />
-              {/* Secondary orb: tighter, near bottom-right, for depth */}
-              <div
-                aria-hidden
-                className={`pointer-events-none absolute -bottom-8 -right-6 z-[3] h-40 w-40 rounded-full ${b.neonOrb} opacity-60 blur-3xl`}
+                className={`pointer-events-none absolute -right-10 top-1/2 z-[3] h-48 w-48 -translate-y-1/2 rounded-full ${b.neonOrb} blur-[56px]`}
               />
 
               {/* Top-right icon chip */}
@@ -297,11 +291,11 @@ export function FeatureBanners() {
               )}
 
               {/* Title block */}
-              <div className={`relative z-[6] max-w-[58%] ${b.label ? 'mt-2.5' : 'mt-0'}`}>
-                <p className="font-display text-[1.65rem] font-black leading-[1.05] text-cream sm:text-[1.85rem]">
+              <div className={`relative z-[6] max-w-[60%] ${b.label ? 'mt-2.5' : 'mt-0'}`}>
+                <p className="font-display text-[1.7rem] font-black leading-[1.05] text-cream sm:text-[1.95rem]">
                   {b.title}
                 </p>
-                <p className="font-display text-[1.65rem] font-black leading-[1.05] text-cream sm:text-[1.85rem]">
+                <p className="font-display text-[1.7rem] font-black leading-[1.05] text-cream sm:text-[1.95rem]">
                   {b.subtitle}
                 </p>
                 <p className="mt-2.5 font-bangla text-[11px] leading-snug text-cream/85 whitespace-pre-line">
@@ -320,18 +314,46 @@ export function FeatureBanners() {
                 <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
 
-              {/* ── Product photo — strong coloured drop-shadow for neon bloom ── */}
-              <img
-                src={b.image}
-                alt=""
+              {/* ── Magical circular image medallion ── */}
+              <div
                 aria-hidden
-                loading="lazy"
-                decoding="async"
-                className="pointer-events-none absolute -bottom-3 -right-3 z-[5] h-[88%] w-auto max-w-[58%] select-none object-contain object-bottom transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.07]"
-                style={{
-                  filter: `${b.imgFilter} drop-shadow(0 8px 24px ${b.glowColor}) drop-shadow(0 0 55px ${b.glowColor})`,
-                }}
-              />
+                className="pointer-events-none absolute -bottom-6 -right-6 z-[5] h-[170px] w-[170px] sm:h-[180px] sm:w-[180px]"
+              >
+                {/* Outer halo — soft coloured bloom behind the disk */}
+                <div
+                  className={`absolute inset-0 scale-110 rounded-full ${b.neonOrb} opacity-70 blur-2xl`}
+                />
+
+                {/* Neon gradient ring + glass border */}
+                <div
+                  className={`relative h-full w-full rounded-full p-[2px] bg-gradient-to-br ${b.ringGrad} transition-transform duration-500 group-hover:scale-[1.04]`}
+                  style={{
+                    boxShadow: `0 0 18px -2px ${b.glowColor}, inset 0 0 12px ${b.glowColor}`,
+                  }}
+                >
+                  {/* Image disk */}
+                  <div className="relative h-full w-full overflow-hidden rounded-full bg-bg">
+                    <img
+                      src={b.image}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full select-none object-cover transition-transform duration-700 group-hover:scale-110"
+                      style={{ filter: b.imgFilter }}
+                    />
+                    {/* Color-cohesion overlay — soft-light tint matching banner palette */}
+                    <div
+                      aria-hidden
+                      className={`pointer-events-none absolute inset-0 ${b.colorWash} mix-blend-soft-light`}
+                    />
+                    {/* Glass shine arc — top-left highlight gives sphere illusion */}
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_25%,hsl(0_0%_100%/0.25),transparent_45%)]"
+                    />
+                  </div>
+                </div>
+              </div>
             </Link>
           </motion.div>
         );
