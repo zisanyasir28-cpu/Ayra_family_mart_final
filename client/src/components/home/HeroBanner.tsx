@@ -40,7 +40,7 @@ export function HeroBanner() {
 
       {/* Ambient background glow */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-20 h-[500px] w-[500px] rounded-full bg-saffron/10 blur-[120px]" />
+        <div className="absolute -left-60 -top-20 h-[500px] w-[500px] rounded-full bg-saffron/10 blur-[120px]" />
         <div className="absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-plum/20 blur-[100px]" />
       </div>
 
@@ -239,7 +239,7 @@ export function HeroBanner() {
               initial={{ opacity: 0, x: 16, y: -12 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="invert-card absolute -right-3 top-2 z-20 min-w-[130px] rounded-2xl border border-coral/30 bg-surface/90 p-3.5 shadow-[0_8px_32px_-8px_hsl(var(--coral)/0.3)] backdrop-blur-xl sm:-right-2 sm:top-6"
+              className="invert-card absolute -right-3 top-2 z-20 min-w-[130px] rounded-xl border border-coral/40 bg-transparent p-3.5 shadow-[0_8px_32px_-8px_hsl(var(--coral)/0.3)] backdrop-blur-sm sm:-right-2 sm:top-6"
             >
               <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-coral/70">
                 Special Offer
@@ -247,10 +247,10 @@ export function HeroBanner() {
               <p className="font-display text-xl font-black text-coral sm:text-2xl">
                 40% OFF
               </p>
-              <p className="text-[10px] text-cream/50">This Week Only</p>
+              <p className="text-[10px] text-cream/80">This Week Only</p>
               <Link
                 to="/products?onSale=true"
-                className="mt-2 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-saffron transition hover:text-cream"
+                className="mt-4 inline-flex items-center gap-1 rounded-full border border-coral/50 bg-gradient-to-r from-saffron/40 via-saffron/30 to-transparent px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-cream shadow-lg transition hover:text-white"
               >
                 Shop Now{' '}
                 <ArrowIcon size={9} />
@@ -262,9 +262,9 @@ export function HeroBanner() {
               initial={{ opacity: 0, x: -16, y: 12 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.65 }}
-              className="absolute -left-3 bottom-6 z-20 flex items-center gap-2.5 rounded-full border border-sage/30 bg-surface/90 px-4 py-2 shadow-[0_8px_24px_-6px_hsl(var(--sage)/0.25)] backdrop-blur-xl sm:left-0"
+              className="absolute -left-3 bottom-6 z-20 flex items-center gap-2.5 rounded-full border border-sage/45 bg-surface/50 px-4 py-2 shadow-[0_8px_10px_-15px_hsl(var(--sage)/0.25)] backdrop-blur-xl sm:left-0"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sage/20 text-base select-none">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sage/20 shadow-lg text-base select-none">
                 🎉
               </span>
               <div>
