@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, MotionConfig } from 'motion/react';
 import { Play, ShieldCheck, Zap, RotateCcw, Leaf, BadgePercent } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -12,6 +12,39 @@ const trustItems: Array<{ icon: LucideIcon; label: string; sublabel: string }> =
 ];
 
 const AVATARS = ['🙂', '😊', '🥰', '😄'];
+
+// ─── Bokeh floating particles — driven by Motion (WAAPI) so they animate
+//     reliably across Chrome desktop, Android, and Claude preview. Pure
+//     CSS @keyframes were being silently killed by `prefers-reduced-motion`
+//     and Chrome's compositor on some desktops. Motion runs JS-driven
+//     transforms that bypass those CSS rules entirely. ────────────────────
+type Bokeh = {
+  top?: string; left?: string; right?: string;
+  size: number;
+  hsl: string;          // e.g. '42, 92%, 60%'
+  inner: number;        // inner-stop alpha
+  outer: number;        // 42%-stop alpha
+  x: [number, number, number];
+  y: [number, number, number];
+  s: [number, number, number]; // scale waypoints
+  dur: number;
+  delay: number;
+};
+
+const BOKEH: Bokeh[] = [
+  { top: '14%', left:  '7%', size: 18, hsl: '42, 92%, 60%',  inner: 0.88, outer: 0.38, x: [0,  16,  26], y: [0, -28, -54], s: [0.4,  1,    0.3], dur:  8.2, delay: 0   },
+  { top: '32%', left: '13%', size: 13, hsl: '158, 64%, 55%', inner: 0.85, outer: 0.35, x: [0, -18, -28], y: [0, -30, -56], s: [0.35, 0.95, 0.25], dur:  9.5, delay: 1.4 },
+  { top:  '9%', left: '38%', size: 10, hsl: '50, 100%, 66%', inner: 0.90, outer: 0.40, x: [0,  10,   4], y: [0, -20, -58], s: [0.5,  1.05, 0.2],  dur:  7.1, delay: 2.6 },
+  { top: '58%', left:  '4%', size: 20, hsl: '262, 84%, 68%', inner: 0.80, outer: 0.32, x: [0,  22,  36], y: [0, -32, -62], s: [0.3,  1.1,  0.2],  dur: 10.3, delay: 0.5 },
+  { top: '22%', left: '55%', size: 14, hsl: '38, 92%, 54%',  inner: 0.86, outer: 0.36, x: [0,  -8, -14], y: [0, -25, -48], s: [0.45, 0.88, 0.3],  dur:  8.8, delay: 3.2 },
+  { top: '44%', right:'10%', size: 11, hsl: '330, 70%, 68%', inner: 0.82, outer: 0.33, x: [0,  16,  26], y: [0, -28, -54], s: [0.4,  1,    0.3],  dur:  7.6, delay: 1.9 },
+  { top: '68%', right:'24%', size: 22, hsl: '42, 92%, 60%',  inner: 0.75, outer: 0.28, x: [0,  10,   4], y: [0, -20, -58], s: [0.5,  1.05, 0.2],  dur: 11.0, delay: 0.3 },
+  { top: '15%', right:'38%', size:  9, hsl: '158, 64%, 55%', inner: 0.88, outer: 0.38, x: [0,  22,  36], y: [0, -32, -62], s: [0.3,  1.1,  0.2],  dur:  6.9, delay: 4.1 },
+  { top: '78%', left: '28%', size: 15, hsl: '50, 100%, 66%', inner: 0.83, outer: 0.33, x: [0, -18, -28], y: [0, -30, -56], s: [0.35, 0.95, 0.25], dur:  9.2, delay: 2.1 },
+  { top: '50%', right:'42%', size:  8, hsl: '262, 84%, 68%', inner: 0.90, outer: 0.40, x: [0,  -8, -14], y: [0, -25, -48], s: [0.45, 0.88, 0.3],  dur:  7.8, delay: 3.7 },
+  { top: '36%', right: '6%', size: 17, hsl: '38, 92%, 54%',  inner: 0.78, outer: 0.30, x: [0,  16,  26], y: [0, -28, -54], s: [0.4,  1,    0.3],  dur: 10.5, delay: 0.8 },
+  { top:  '6%', left: '22%', size: 12, hsl: '330, 70%, 68%', inner: 0.84, outer: 0.34, x: [0,  10,   4], y: [0, -20, -58], s: [0.5,  1.05, 0.2],  dur:  8.4, delay: 1.1 },
+];
 
 // ─── Small arrow SVG ──────────────────────────────────────────────────────────
 function ArrowIcon({ size = 14, className = '' }: { size?: number; className?: string }) {
@@ -92,19 +125,36 @@ export function HeroBanner() {
         <rect x="1378" y="90"  width="22" height="50" />
       </svg>
 
-      {/* ── Gradient bokeh floating particles — position/anim in CSS classes ──── */}
-      <div aria-hidden className="hb-particle hb-p01" style={{ background: 'radial-gradient(circle, hsla(42,92%,60%,0.88) 0%, hsla(42,92%,60%,0.38) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p02" style={{ background: 'radial-gradient(circle, hsla(158,64%,55%,0.85) 0%, hsla(158,64%,55%,0.35) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p03" style={{ background: 'radial-gradient(circle, hsla(50,100%,66%,0.90) 0%, hsla(50,100%,66%,0.40) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p04" style={{ background: 'radial-gradient(circle, hsla(262,84%,68%,0.80) 0%, hsla(262,84%,68%,0.32) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p05" style={{ background: 'radial-gradient(circle, hsla(38,92%,54%,0.86) 0%, hsla(38,92%,54%,0.36) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p06" style={{ background: 'radial-gradient(circle, hsla(330,70%,68%,0.82) 0%, hsla(330,70%,68%,0.33) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p07" style={{ background: 'radial-gradient(circle, hsla(42,92%,60%,0.75) 0%, hsla(42,92%,60%,0.28) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p08" style={{ background: 'radial-gradient(circle, hsla(158,64%,55%,0.88) 0%, hsla(158,64%,55%,0.38) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p09" style={{ background: 'radial-gradient(circle, hsla(50,100%,66%,0.83) 0%, hsla(50,100%,66%,0.33) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p10" style={{ background: 'radial-gradient(circle, hsla(262,84%,68%,0.90) 0%, hsla(262,84%,68%,0.40) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p11" style={{ background: 'radial-gradient(circle, hsla(38,92%,54%,0.78) 0%, hsla(38,92%,54%,0.30) 42%, transparent 70%)' }} />
-      <div aria-hidden className="hb-particle hb-p12" style={{ background: 'radial-gradient(circle, hsla(330,70%,68%,0.84) 0%, hsla(330,70%,68%,0.34) 42%, transparent 70%)' }} />
+      {/* ── Gradient bokeh particles — driven by Motion (WAAPI, JS-backed) ────── */}
+      {/* reducedMotion="never" forces these to animate even when the OS has    */}
+      {/* prefers-reduced-motion set, since they're purely decorative and tiny. */}
+      <MotionConfig reducedMotion="never">
+        {BOKEH.map((p, i) => (
+          <motion.div
+            key={i}
+            aria-hidden
+            className="pointer-events-none absolute"
+            style={{
+              top:    p.top,
+              left:   p.left,
+              right:  p.right,
+              width:  p.size,
+              height: p.size,
+              borderRadius: '50%',
+              background: `radial-gradient(circle, hsla(${p.hsl}, ${p.inner}) 0%, hsla(${p.hsl}, ${p.outer}) 42%, transparent 70%)`,
+              filter: 'blur(1.8px)',
+            }}
+            initial={{ x: 0, y: 0, scale: p.s[0], opacity: 0 }}
+            animate={{ x: p.x, y: p.y, scale: p.s, opacity: [0, 0.72, 0] }}
+            transition={{
+              duration: p.dur,
+              delay:    p.delay,
+              repeat:   Infinity,
+              ease:     'easeInOut',
+            }}
+          />
+        ))}
+      </MotionConfig>
 
       {/* ── Botanical leaf-cluster SVG watermark — upper-right ───────────────── */}
       <svg
