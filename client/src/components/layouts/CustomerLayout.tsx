@@ -52,11 +52,59 @@ function FloatingLeaves() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
-      <Leaf className="absolute -left-12 top-16 h-[200px] w-[200px] -rotate-[20deg] text-sage opacity-[0.07]" strokeWidth={1} />
-      <Leaf className="absolute -right-8 top-40 h-[140px] w-[140px] rotate-[30deg] text-sage opacity-[0.06]" strokeWidth={1} />
-      <Leaf className="absolute -left-4 top-[52%] h-[100px] w-[100px] rotate-[12deg] text-sage opacity-[0.05]" strokeWidth={1} />
-      <Leaf className="absolute right-8 top-[65%] h-20 w-20 -rotate-[10deg] text-sage opacity-[0.04]" strokeWidth={1} />
-      <Leaf className="absolute -right-16 bottom-24 h-[160px] w-[160px] -rotate-[15deg] text-sage opacity-[0.06]" strokeWidth={1} />
+      {/* Animated leaves — leaf-sway animation, staggered durations */}
+      <Leaf
+        className="absolute -left-12 top-16 h-[200px] w-[200px] -rotate-[20deg] text-sage opacity-[0.07]"
+        strokeWidth={1}
+        style={{ animation: 'leaf-sway 8s ease-in-out infinite', animationDelay: '0s', willChange: 'transform' }}
+      />
+      <Leaf
+        className="absolute -right-8 top-40 h-[140px] w-[140px] rotate-[30deg] text-sage opacity-[0.06]"
+        strokeWidth={1}
+        style={{ animation: 'leaf-sway 10s ease-in-out infinite', animationDelay: '1.3s', willChange: 'transform' }}
+      />
+      <Leaf
+        className="absolute -left-4 top-[52%] h-[100px] w-[100px] rotate-[12deg] text-sage opacity-[0.05]"
+        strokeWidth={1}
+        style={{ animation: 'leaf-sway 7s ease-in-out infinite', animationDelay: '2.1s', willChange: 'transform' }}
+      />
+      <Leaf
+        className="absolute right-8 top-[65%] h-20 w-20 -rotate-[10deg] text-sage opacity-[0.04]"
+        strokeWidth={1}
+        style={{ animation: 'leaf-sway 9s ease-in-out infinite', animationDelay: '0.6s', willChange: 'transform' }}
+      />
+      <Leaf
+        className="absolute -right-16 bottom-24 h-[160px] w-[160px] -rotate-[15deg] text-sage opacity-[0.06]"
+        strokeWidth={1}
+        style={{ animation: 'leaf-sway 11s ease-in-out infinite', animationDelay: '1.8s', willChange: 'transform' }}
+      />
+
+      {/* Mid-page organic ring watermark */}
+      <div className="absolute left-[4%] top-[40%] h-48 w-48 text-sage opacity-[0.04]">
+        <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" strokeWidth="0.8" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="70" strokeDasharray="4 7" />
+          <circle cx="80" cy="80" r="52" strokeDasharray="2 9" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+            <path
+              key={deg}
+              transform={`rotate(${deg} 80 80)`}
+              d="M80 10 C85 25 85 40 80 50 C75 40 75 25 80 10Z"
+            />
+          ))}
+        </svg>
+      </div>
+
+      {/* Lower-page botanical cluster watermark */}
+      <div className="absolute right-[3%] top-[72%] h-36 w-36 rotate-[20deg] text-plum opacity-[0.045]">
+        <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 105 C60 105 18 72 23 34 C28 8 60 4 60 4 C60 4 92 8 97 34 C102 72 60 105 60 105Z" />
+          <path d="M60 105 C60 105 8 82 16 44 C23 16 54 14 60 4 C66 14 97 16 104 44 C112 82 60 105 60 105Z" opacity="0.45" />
+          <line x1="60" y1="105" x2="60" y2="6" strokeDasharray="3 5" />
+          <path d="M60 42 Q76 32 87 38" />
+          <path d="M60 54 Q44 44 33 50" />
+          <path d="M60 66 Q79 56 90 62" />
+        </svg>
+      </div>
     </div>
   );
 }

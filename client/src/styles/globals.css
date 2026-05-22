@@ -518,6 +518,28 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
+   Sparkle + leaf-sway animations (compositor-only — transform + opacity)
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@keyframes sparkle-pulse {
+  0%, 100% { transform: scale(0.25); opacity: 0.1;  }
+  50%       { transform: scale(1);   opacity: 0.85; }
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-6deg) translateY(0px);  }
+  40%       { transform: rotate(5deg)  translateY(-8px); }
+  70%       { transform: rotate(-2deg) translateY(-4px); }
+}
+
+.animate-sparkle {
+  animation: sparkle-pulse var(--duration, 3s) ease-in-out infinite;
+}
+.animate-sway {
+  animation: leaf-sway var(--duration, 7s) ease-in-out infinite;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
    Reduce-motion respect
    ──────────────────────────────────────────────────────────────────────────── */
 

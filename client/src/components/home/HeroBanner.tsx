@@ -38,11 +38,96 @@ export function HeroBanner() {
   return (
     <section className="relative overflow-hidden bg-bg pt-8 pb-12 sm:pt-10 sm:pb-16 md:pb-20">
 
-      {/* Ambient background glow */}
+      {/* ── Ambient background glows ────────────────────────────────────────── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-60 -top-20 h-[500px] w-[500px] rounded-full bg-saffron/10 blur-[120px]" />
         <div className="absolute -right-40 bottom-0 h-[450px] w-[450px] rounded-full bg-plum/20 blur-[100px]" />
+        {/* Sage "farm-fresh" green glow — left side, matches reference */}
+        <div className="absolute -left-20 top-1/4 h-[520px] w-[520px] rounded-full bg-sage/10 blur-[140px]" />
       </div>
+
+      {/* ── Dot-grid texture overlay ─────────────────────────────────────────── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: 'radial-gradient(circle, hsl(var(--cream)/0.045) 1px, transparent 1px)',
+          backgroundSize: '30px 30px',
+        }}
+      />
+
+      {/* ── City skyline SVG watermark — bottom of hero ──────────────────────── */}
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 right-0 w-full text-cream opacity-[0.05]"
+        viewBox="0 0 1400 140"
+        preserveAspectRatio="xMidYMax slice"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Bridge arch */}
+        <path d="M0 140 Q350 30 700 95 Q1050 30 1400 140 Z" opacity="0.4" />
+        {/* Left building cluster */}
+        <rect x="30"  y="80"  width="28" height="60" />
+        <rect x="65"  y="55"  width="22" height="85" />
+        <rect x="94"  y="70"  width="18" height="70" />
+        <rect x="118" y="40"  width="30" height="100" />
+        <rect x="155" y="65"  width="20" height="75" />
+        <rect x="182" y="90"  width="25" height="50" />
+        <rect x="214" y="75"  width="16" height="65" />
+        <rect x="250" y="95"  width="18" height="45" />
+        <rect x="275" y="82"  width="12" height="58" />
+        <rect x="310" y="100" width="14" height="40" />
+        {/* Right building cluster */}
+        <rect x="1080" y="95"  width="18" height="45" />
+        <rect x="1110" y="82"  width="14" height="58" />
+        <rect x="1130" y="100" width="15" height="40" />
+        <rect x="1155" y="72"  width="18" height="68" />
+        <rect x="1180" y="60"  width="25" height="80" />
+        <rect x="1212" y="40"  width="32" height="100" />
+        <rect x="1251" y="70"  width="20" height="70" />
+        <rect x="1278" y="85"  width="28" height="55" />
+        <rect x="1313" y="55"  width="22" height="85" />
+        <rect x="1342" y="75"  width="30" height="65" />
+        <rect x="1378" y="90"  width="22" height="50" />
+      </svg>
+
+      {/* ── Floating sparkle particles ───────────────────────────────────────── */}
+      {([
+        { top: '12%', left: '8%',   dur: '2.8s', delay: '0s'   },
+        { top: '28%', left: '18%',  dur: '3.5s', delay: '0.7s' },
+        { top: '8%',  left: '45%',  dur: '2.2s', delay: '1.2s' },
+        { top: '55%', left: '5%',   dur: '4s',   delay: '0.3s' },
+        { top: '18%', right: '22%', dur: '3.1s', delay: '1.8s' },
+        { top: '42%', right: '12%', dur: '2.6s', delay: '0.9s' },
+        { top: '70%', right: '30%', dur: '3.8s', delay: '2.1s' },
+      ] as Array<{ top: string; left?: string; right?: string; dur: string; delay: string }>).map((s, i) => (
+        <div
+          key={i}
+          aria-hidden
+          className="animate-sparkle pointer-events-none absolute h-[3px] w-[3px] rounded-full bg-white/90 shadow-[0_0_6px_2px_rgba(255,255,255,0.5)]"
+          style={{ top: s.top, left: s.left, right: s.right, '--duration': s.dur, animationDelay: s.delay } as React.CSSProperties}
+        />
+      ))}
+
+      {/* ── Botanical leaf-cluster SVG watermark — upper-right ───────────────── */}
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute right-6 top-4 h-36 w-36 -rotate-12 text-sage opacity-[0.07]"
+        viewBox="0 0 120 120"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M60 105 C60 105 18 72 23 34 C28 8 60 4 60 4 C60 4 92 8 97 34 C102 72 60 105 60 105Z" />
+        <path d="M60 105 C60 105 8 82 16 44 C23 16 54 14 60 4 C66 14 97 16 104 44 C112 82 60 105 60 105Z" opacity="0.45" />
+        <line x1="60" y1="105" x2="60" y2="6" strokeDasharray="3 5" />
+        <path d="M60 42 Q76 32 87 38" />
+        <path d="M60 54 Q44 44 33 50" />
+        <path d="M60 66 Q79 56 90 62" />
+        <path d="M60 78 Q41 68 30 74" />
+      </svg>
 
       <div className="container relative">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
