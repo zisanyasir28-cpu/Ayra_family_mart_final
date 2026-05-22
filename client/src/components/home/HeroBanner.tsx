@@ -279,12 +279,17 @@ export function HeroBanner() {
                     Special Offer
                   </p>
 
-                  {/* "40% OFF" — neon-glow hero */}
+                  {/* "40% OFF" — gradient + neon-glow hero */}
                   <p
-                    className="relative font-display text-2xl font-black leading-none text-coral sm:text-[1.7rem]"
+                    className="relative font-display text-2xl font-black leading-none sm:text-[1.7rem]"
                     style={{
-                      textShadow:
-                        '0 0 14px hsl(var(--coral) / 0.7), 0 0 28px hsl(var(--coral) / 0.4), 0 2px 8px rgba(0,0,0,0.6)',
+                      background:
+                        'linear-gradient(135deg, hsl(var(--saffron)) 0%, hsl(var(--coral)) 45%, hsl(var(--blush)) 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      filter:
+                        'drop-shadow(0 0 8px hsl(var(--coral)/0.75)) drop-shadow(0 0 18px hsl(var(--saffron)/0.45))',
                     }}
                   >
                     40% OFF
