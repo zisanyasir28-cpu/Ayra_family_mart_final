@@ -279,20 +279,21 @@ export function HeroBanner() {
                     Special Offer
                   </p>
 
-                  {/* "40% OFF" — gradient + neon-glow hero */}
-                  <p
-                    className="relative font-display text-2xl font-black leading-none sm:text-[1.7rem]"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, hsl(var(--saffron)) 0%, hsl(var(--coral)) 45%, hsl(var(--blush)) 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      filter:
-                        'drop-shadow(0 0 8px hsl(var(--coral)/0.75)) drop-shadow(0 0 18px hsl(var(--saffron)/0.45))',
-                    }}
-                  >
-                    40% OFF
+                  {/* "40% OFF" — gradient on "40%", solid on "OFF" */}
+                  <p className="relative font-display text-2xl font-black leading-none sm:text-[1.7rem]">
+                    <span
+                      style={{
+                        background: 'linear-gradient(to right, hsl(var(--saffron)), hsl(var(--blush)))',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                      }}
+                    >
+                      40%
+                    </span>
+                    <span className="ml-1 text-cream [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]">
+                      OFF
+                    </span>
                   </p>
 
                   {/* "This Week Only" — readable supporting line */}
