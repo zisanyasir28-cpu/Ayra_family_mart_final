@@ -22,7 +22,7 @@ Online superstore for Bangladesh. Customers buy groceries, daily goods, electron
 - **PWA**: `vite-plugin-pwa` 1.3 + Workbox 7
 
 ### Backend (`/server`)
-- **Runtime**: Node.js 22+ + Express 5 + TypeScript 6 (strict mode)
+- **Runtime**: Node.js 24+ (Active LTS — Krypton, v24.16.0 as of May 2026) + Express 5 + TypeScript 6 (strict mode)
 - **ORM**: Prisma 6 (PostgreSQL provider)
 - **Validation**: Zod 3 (via `@superstore/shared`)
 - **Security**: Helmet 7, `express-rate-limit` 7, `hpp`, `xss-clean`, `express-mongo-sanitize`, cookie-parser, CORS allow-list from env
