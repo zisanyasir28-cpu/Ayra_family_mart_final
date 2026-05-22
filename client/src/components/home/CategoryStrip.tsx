@@ -11,33 +11,42 @@ import { fetchCategories } from '../../services/categories';
 
 // ─── Bilingual + watermark metadata (slug-keyed) ─────────────────────────────
 const META: Record<string, {
-  bangla:    string;
-  display:   string;
-  Watermark: LucideIcon;
-  tint:      string;
+  bangla:      string;
+  display:     string;
+  Watermark:   LucideIcon;
+  tint:        string;
+  bgFrom:      string;   // Tailwind bg-gradient from class for no-photo fallback
+  ringFrom:    string;   // border ring accent
 }> = {
-  vegetables:      { bangla: 'তাজা সবজি',         display: 'Fresh Vegetables',  Watermark: LeafIcon, tint: 'text-sage'    },
-  fruits:          { bangla: 'ফল ও বাদাম',         display: 'Fruits & Nuts',     Watermark: Apple,    tint: 'text-coral'   },
-  dairy:           { bangla: 'দুধ ও ডিম',          display: 'Dairy & Eggs',      Watermark: Milk,     tint: 'text-cream'   },
-  beverages:       { bangla: 'পানীয়',             display: 'Beverages',          Watermark: Coffee,   tint: 'text-blush'   },
-  snacks:          { bangla: 'স্ন্যাকস',           display: 'Snacks & Munchies', Watermark: Cookie,   tint: 'text-coral'   },
-  rice:            { bangla: 'চাল ও শস্য',         display: 'Rice & Grains',     Watermark: Wheat,    tint: 'text-saffron' },
-  household:       { bangla: 'হাউসহোল্ড কেয়ার',  display: 'Household Care',    Watermark: Droplets, tint: 'text-plum'    },
-  'personal-care': { bangla: 'পার্সোনাল কেয়ার',  display: 'Personal Care',     Watermark: Sparkles, tint: 'text-blush'   },
-  meat:            { bangla: 'মাংস ও পোল্ট্রি',   display: 'Meat & Poultry',    Watermark: Beef,     tint: 'text-coral'   },
-  fish:            { bangla: 'মাছ ও সামুদ্রিক',   display: 'Fish & Seafood',    Watermark: Fish,     tint: 'text-plum'    },
-  bakery:          { bangla: 'বেকারি',            display: 'Bakery',             Watermark: Croissant, tint: 'text-coral'  },
-  baby:            { bangla: 'শিশু পণ্য',          display: 'Baby & Kids',       Watermark: Baby,     tint: 'text-saffron' },
+  vegetables:      { bangla: 'তাজা সবজি',         display: 'Fresh Vegetables',  Watermark: LeafIcon,  tint: 'text-sage',    bgFrom: 'from-sage/30 via-sage/15',     ringFrom: 'from-sage/60'    },
+  fruits:          { bangla: 'ফল ও বাদাম',         display: 'Fruits & Nuts',     Watermark: Apple,     tint: 'text-coral',   bgFrom: 'from-coral/30 via-coral/15',   ringFrom: 'from-coral/60'   },
+  dairy:           { bangla: 'দুধ ও ডিম',          display: 'Dairy & Eggs',      Watermark: Milk,      tint: 'text-cream',   bgFrom: 'from-cream/25 via-cream/12',   ringFrom: 'from-cream/50'   },
+  beverages:       { bangla: 'পানীয়',             display: 'Beverages',          Watermark: Coffee,    tint: 'text-blush',   bgFrom: 'from-blush/30 via-blush/15',   ringFrom: 'from-blush/60'   },
+  snacks:          { bangla: 'স্ন্যাকস',           display: 'Snacks & Munchies', Watermark: Cookie,    tint: 'text-coral',   bgFrom: 'from-coral/28 via-saffron/12', ringFrom: 'from-coral/55'   },
+  rice:            { bangla: 'চাল ও শস্য',         display: 'Rice & Grains',     Watermark: Wheat,     tint: 'text-saffron', bgFrom: 'from-saffron/30 via-saffron/14', ringFrom: 'from-saffron/60' },
+  household:       { bangla: 'হাউসহোল্ড কেয়ার',  display: 'Household Care',    Watermark: Droplets,  tint: 'text-plum',    bgFrom: 'from-plum/30 via-plum/15',     ringFrom: 'from-plum/55'    },
+  'personal-care': { bangla: 'পার্সোনাল কেয়ার',  display: 'Personal Care',     Watermark: Sparkles,  tint: 'text-blush',   bgFrom: 'from-blush/28 via-blush/13',   ringFrom: 'from-blush/55'   },
+  meat:            { bangla: 'মাংস ও পোল্ট্রি',   display: 'Meat & Poultry',    Watermark: Beef,      tint: 'text-coral',   bgFrom: 'from-coral/28 via-coral/13',   ringFrom: 'from-coral/55'   },
+  fish:            { bangla: 'মাছ ও সামুদ্রিক',   display: 'Fish & Seafood',    Watermark: Fish,      tint: 'text-plum',    bgFrom: 'from-plum/28 via-plum/13',     ringFrom: 'from-plum/55'    },
+  bakery:          { bangla: 'বেকারি',            display: 'Bakery',             Watermark: Croissant, tint: 'text-coral',   bgFrom: 'from-coral/28 via-saffron/14', ringFrom: 'from-coral/55'   },
+  baby:            { bangla: 'শিশু পণ্য',          display: 'Baby & Kids',       Watermark: Baby,      tint: 'text-saffron', bgFrom: 'from-saffron/28 via-saffron/13', ringFrom: 'from-saffron/55' },
 };
 
 function getMeta(slug: string) {
   for (const [key, m] of Object.entries(META)) {
     if (slug.includes(key)) return m;
   }
-  return { bangla: 'আরও পণ্য', display: 'More', Watermark: ShoppingBasket, tint: 'text-cream' };
+  return {
+    bangla:   'আরও পণ্য',
+    display:  'More',
+    Watermark: ShoppingBasket,
+    tint:     'text-cream',
+    bgFrom:   'from-surface-2 via-surface',
+    ringFrom: 'from-cream/40',
+  };
 }
 
-// ─── Pearl-glass category tile w/ watermark ──────────────────────────────────
+// ─── Pearl-glass category tile ───────────────────────────────────────────────
 interface TileProps {
   id:       string;
   name:     string;
@@ -47,8 +56,8 @@ interface TileProps {
 }
 
 function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
-  const meta = getMeta(slug);
-  const Watermark = meta.Watermark;
+  const meta    = getMeta(slug);
+  const WM      = meta.Watermark;
 
   return (
     <motion.div
@@ -61,13 +70,14 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
         stiffness: 220,
         damping:   24,
       }}
-      className="group relative p-[1.5px] rounded-2xl bg-gradient-to-br from-white/35 via-saffron/20 to-plum/12 transition-all duration-300 hover:from-white/55 hover:via-saffron/35 hover:to-plum/22 hover:-translate-y-1 hover:shadow-[0_12px_30px_-10px_hsl(var(--saffron)/0.4)]"
+      // Pearl-shimmer ring — richer gradient, subtle hover lift
+      className="group relative p-[1.5px] rounded-2xl bg-gradient-to-br from-white/35 via-saffron/18 to-plum/12 transition-all duration-300 hover:from-white/55 hover:via-saffron/32 hover:to-plum/22 hover:-translate-y-1 hover:shadow-[0_10px_28px_-8px_hsl(var(--saffron)/0.38)]"
     >
       <Link
         to={`/products?categoryId=${id}`}
-        className="relative block aspect-square overflow-hidden rounded-[calc(1rem-1.5px)] bg-surface-2 active:scale-[0.97] transition-transform"
+        className="relative block aspect-square overflow-hidden rounded-[calc(1rem-1.5px)] bg-surface active:scale-[0.97] transition-transform"
       >
-        {/* Photo fill */}
+        {/* ── Photo fill ── */}
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -77,34 +87,46 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
             className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="absolute inset-0 z-[1] flex items-center justify-center bg-surface">
-            <Watermark className={`h-12 w-12 ${meta.tint}`} strokeWidth={1.5} />
+          /* ── No-photo fallback: coloured glass with large centred icon ── */
+          <div className={`absolute inset-0 z-[1] bg-gradient-to-br ${meta.bgFrom} to-bg`}>
+            {/* Giant faint watermark fills the background */}
+            <WM
+              aria-hidden
+              className={`absolute inset-0 m-auto h-16 w-16 opacity-[0.14] ${meta.tint}`}
+              strokeWidth={1}
+            />
+            {/* Centred frosted icon circle */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-bg/35 backdrop-blur-sm ring-1 ring-white/20">
+                <WM className={`h-5 w-5 ${meta.tint}`} strokeWidth={1.8} />
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Decorative watermark icon (oversized, faint, top-right corner) */}
-        <Watermark
+        {/* Oversized decorative watermark — top-right, always visible */}
+        <WM
           aria-hidden
-          className={`pointer-events-none absolute -right-3 -top-3 z-[3] h-16 w-16 opacity-25 mix-blend-screen ${meta.tint}`}
+          className={`pointer-events-none absolute -right-3 -top-3 z-[3] h-14 w-14 opacity-[0.18] ${meta.tint}`}
           strokeWidth={1.2}
         />
 
-        {/* Tiny sparkle dot — top-left for character */}
+        {/* Tiny sparkle dot — top-left */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full bg-white/70 shadow-[0_0_8px_2px_rgba(255,255,255,0.6)]"
+          className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full bg-white/75 shadow-[0_0_8px_2px_rgba(255,255,255,0.6)]"
         />
 
         {/* Glass shine diagonal */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.14)_0%,transparent_42%)]"
+          className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.15)_0%,transparent_44%)]"
         />
 
-        {/* Bottom gradient overlay for label legibility */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[62%] bg-gradient-to-t from-bg/95 via-bg/55 to-transparent" />
+        {/* Bottom gradient for label legibility */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[65%] bg-gradient-to-t from-bg/96 via-bg/60 to-transparent" />
 
-        {/* Labels overlaid on photo */}
+        {/* Labels */}
         <div className="absolute inset-x-0 bottom-0 z-[5] px-2.5 pb-2 text-left">
           <p className="text-[11px] font-bold leading-tight text-cream drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
             {meta.display || name}
@@ -118,7 +140,7 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
   );
 }
 
-// ─── Skeleton tile ───────────────────────────────────────────────────────────
+// ─── Skeleton tile ────────────────────────────────────────────────────────────
 function SkeletonTile() {
   return (
     <div className="p-[1.5px] rounded-2xl bg-gradient-to-br from-white/15 via-line/25 to-line/15">

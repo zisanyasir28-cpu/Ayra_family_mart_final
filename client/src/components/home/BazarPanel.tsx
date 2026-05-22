@@ -12,11 +12,11 @@ export function BazarPanel() {
 
         {/* ── Outer pearl-shimmer ring ──────────────────────────────────── */}
         <div
-          className="relative p-[1.5px] rounded-[2.25rem] bg-gradient-to-br from-white/40 via-saffron/22 to-plum/15"
+          className="relative p-[1.5px] rounded-2xl bg-gradient-to-br from-white/40 via-saffron/22 to-plum/15"
           style={{ boxShadow: '0 30px 90px -32px hsl(var(--saffron) / 0.32), 0 12px 36px -16px hsl(var(--plum) / 0.28)' }}
         >
           {/* ── Inner glass shell ───────────────────────────────────────── */}
-          <div className="relative overflow-hidden rounded-[calc(2.25rem-1.5px)] bg-gradient-to-br from-surface/85 via-bg/75 to-surface/85 p-4 backdrop-blur-md sm:p-6 lg:p-8">
+          <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-surface/85 via-bg/75 to-surface/85 p-4 backdrop-blur-md sm:p-6 lg:p-8">
 
             {/* Ambient glow orbs */}
             <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">

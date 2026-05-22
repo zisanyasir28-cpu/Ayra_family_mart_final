@@ -1,24 +1,238 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowRight, Sparkles, Leaf, BadgePercent } from 'lucide-react';
+import { ArrowRight, Sparkles, BadgePercent } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+
+// ─── SVG Background Art ──────────────────────────────────────────────────────
+// Hand-crafted inline SVG watermark art, unique per banner theme
+
+/** Farm Fresh — botanical: leaves, veins, vine, herb sprigs, berry clusters */
+function FarmFreshArt() {
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[1] h-full w-full"
+      viewBox="0 0 400 280"
+      fill="none"
+      preserveAspectRatio="xMaxYMid meet"
+    >
+      {/* ── Main leaf cluster (bottom-right quadrant) ── */}
+      <g opacity="0.13">
+        {/* Primary large leaf */}
+        <path
+          d="M352 18 C388 44 400 96 382 142 C364 188 320 200 294 172 C268 144 274 96 302 62 C317 44 337 26 352 18Z"
+          fill="white"
+        />
+        {/* Central vein */}
+        <path d="M352 18 C337 74 312 130 290 170" stroke="white" strokeWidth="1.2" strokeLinecap="round" opacity="0.5"/>
+        {/* Side veins — left */}
+        <path d="M327 58 C310 63 294 76 292 93" stroke="white" strokeWidth="0.9" strokeLinecap="round" opacity="0.45"/>
+        <path d="M316 93 C297 100 282 113 280 130" stroke="white" strokeWidth="0.9" strokeLinecap="round" opacity="0.4"/>
+        <path d="M302 128 C286 135 272 146 270 160" stroke="white" strokeWidth="0.8" strokeLinecap="round" opacity="0.35"/>
+        {/* Side veins — right */}
+        <path d="M362 53 C377 58 384 70 380 83" stroke="white" strokeWidth="0.9" strokeLinecap="round" opacity="0.4"/>
+        <path d="M372 88 C384 94 390 106 384 118" stroke="white" strokeWidth="0.8" strokeLinecap="round" opacity="0.35"/>
+        {/* Second overlapping leaf */}
+        <path
+          d="M312 38 C342 56 352 98 337 133 C322 168 284 178 264 155 C244 132 250 90 274 64 C286 50 300 40 312 38Z"
+          fill="white"
+          opacity="0.65"
+        />
+        {/* Third small leaf */}
+        <path
+          d="M272 168 C294 163 307 176 304 194 C301 212 282 218 265 208 C248 198 250 174 272 168Z"
+          fill="white"
+          opacity="0.5"
+          transform="rotate(-15 286 193)"
+        />
+      </g>
+
+      {/* ── Scattered small leaves ── */}
+      <path
+        d="M48 48 C58 36 73 38 74 53 C75 68 61 76 48 68 C35 60 38 60 48 48Z"
+        fill="white" opacity="0.08"
+        transform="rotate(-25 61 62)"
+      />
+      <path
+        d="M88 228 C98 216 113 218 114 233 C115 248 101 256 88 248 C75 240 78 240 88 228Z"
+        fill="white" opacity="0.07"
+        transform="rotate(20 101 242)"
+      />
+      <path
+        d="M178 13 C186 4 198 6 199 18 C200 30 189 36 179 30 C169 24 170 22 178 13Z"
+        fill="white" opacity="0.07"
+        transform="rotate(-10 189 20)"
+      />
+
+      {/* ── Dotted vine / stem ── */}
+      <path
+        d="M10 258 C42 228 72 208 112 190 C152 172 188 163 222 153 C256 143 288 136 318 128"
+        stroke="white" strokeWidth="1.5" strokeDasharray="3 8"
+        strokeLinecap="round" opacity="0.09" fill="none"
+      />
+
+      {/* ── Berry cluster ── */}
+      <circle cx="22" cy="163" r="5.5" fill="white" opacity="0.09"/>
+      <circle cx="32" cy="153" r="4"   fill="white" opacity="0.08"/>
+      <circle cx="14" cy="152" r="3.5" fill="white" opacity="0.07"/>
+      <circle cx="28" cy="176" r="3"   fill="white" opacity="0.06"/>
+
+      {/* ── Herb sprig ── */}
+      <g opacity="0.09">
+        <path d="M65 128 L65 178" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+        <path d="M65 140 C58 133 50 132 47 138 C44 144 50 150 58 148" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round"/>
+        <path d="M65 153 C72 146 80 145 83 151 C86 157 80 163 72 161" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round"/>
+        <path d="M65 166 C58 159 50 158 47 164 C44 170 50 176 58 174" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      </g>
+
+      {/* ── Dew drop dots ── */}
+      <circle cx="157" cy="78"  r="2.5" fill="white" opacity="0.08"/>
+      <circle cx="172" cy="93"  r="1.8" fill="white" opacity="0.07"/>
+      <circle cx="147" cy="98"  r="2"   fill="white" opacity="0.07"/>
+      <circle cx="252" cy="198" r="2.5" fill="white" opacity="0.07"/>
+    </svg>
+  );
+}
+
+/** Bazar Deal — sale/market: 16-pt starburst, 5-pointed stars, price tag, coins */
+function BazarDealArt() {
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[1] h-full w-full"
+      viewBox="0 0 400 280"
+      fill="none"
+      preserveAspectRatio="xMaxYMid meet"
+    >
+      {/* ── 16-point starburst — dominant anchor ── */}
+      <g transform="translate(330 155)" opacity="0.11">
+        <path d="M0,-85 L14,-32 L60,-60 L28,-8 L82,0 L28,8 L60,60 L14,32 L0,85 L-14,32 L-60,60 L-28,8 L-82,0 L-28,-8 L-60,-60 L-14,-32Z" fill="white"/>
+      </g>
+
+      {/* ── Medium starburst — top ── */}
+      <g transform="translate(370 48)" opacity="0.08">
+        <path d="M0,-48 L8,-18 L34,-34 L16,-5 L46,0 L16,5 L34,34 L8,18 L0,48 L-8,18 L-34,34 L-16,5 L-46,0 L-16,-5 L-34,-34 L-8,-18Z" fill="white"/>
+      </g>
+
+      {/* ── 5-pointed stars scattered ── */}
+      <path d="M75 26 L79 39 L93 39 L82 47 L86 60 L75 52 L64 60 L68 47 L57 39 L71 39Z" fill="white" opacity="0.10"/>
+      <path d="M143 238 L146 248 L156 248 L148 254 L151 264 L143 258 L135 264 L138 254 L130 248 L140 248Z" fill="white" opacity="0.08"/>
+      <path d="M23 203 L25 210 L32 210 L27 214 L29 221 L23 217 L17 221 L19 214 L14 210 L21 210Z" fill="white" opacity="0.09"/>
+      <path d="M198 13 L202 26 L216 26 L205 34 L209 47 L198 39 L187 47 L191 34 L180 26 L194 26Z" fill="white" opacity="0.07"/>
+
+      {/* ── Price tag ── */}
+      <g opacity="0.08">
+        <path d="M38 63 L93 63 L110 86 L93 110 L38 110 Q30 110 26 103 L26 70 Q30 63 38 63Z" fill="white"/>
+        <circle cx="42" cy="86" r="6" fill="none" stroke="white" strokeWidth="1.8" opacity="0.6"/>
+        <line x1="60" y1="76" x2="86" y2="76" stroke="white" strokeWidth="1.4" strokeLinecap="round" opacity="0.5"/>
+        <line x1="60" y1="86" x2="83" y2="86" stroke="white" strokeWidth="1.4" strokeLinecap="round" opacity="0.5"/>
+        <line x1="60" y1="96" x2="78" y2="96" stroke="white" strokeWidth="1.4" strokeLinecap="round" opacity="0.5"/>
+      </g>
+
+      {/* ── Coin outlines ── */}
+      <circle cx="108" cy="203" r="14" fill="none" stroke="white" strokeWidth="2"   opacity="0.09"/>
+      <circle cx="108" cy="203" r="9"  fill="white"                                 opacity="0.04"/>
+      <circle cx="138" cy="223" r="11" fill="none" stroke="white" strokeWidth="1.8" opacity="0.07"/>
+      <circle cx="78"  cy="228" r="9"  fill="none" stroke="white" strokeWidth="1.5" opacity="0.07"/>
+
+      {/* ── Confetti dots ── */}
+      <circle cx="193" cy="58"  r="3"   fill="white" opacity="0.11"/>
+      <circle cx="213" cy="73"  r="2"   fill="white" opacity="0.09"/>
+      <circle cx="178" cy="76"  r="2.5" fill="white" opacity="0.09"/>
+      <circle cx="163" cy="53"  r="2"   fill="white" opacity="0.08"/>
+      <circle cx="238" cy="48"  r="3"   fill="white" opacity="0.08"/>
+      <circle cx="53"  cy="173" r="2.5" fill="white" opacity="0.09"/>
+      <circle cx="33"  cy="163" r="2"   fill="white" opacity="0.08"/>
+    </svg>
+  );
+}
+
+/** Ayra Fresh+ — premium luxury: crown, diamonds, constellation, sparkle asterisks */
+function FreshPlusArt() {
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[1] h-full w-full"
+      viewBox="0 0 400 280"
+      fill="none"
+      preserveAspectRatio="xMaxYMid meet"
+    >
+      {/* ── Crown ── */}
+      <g transform="translate(295 115)" opacity="0.12">
+        <path d="M-65 55 L-65 -18 L-32 12 L0 -45 L32 12 L65 -18 L65 55 Q65 62 58 62 L-58 62 Q-65 62 -65 55Z" fill="white"/>
+        <rect x="-65" y="44" width="130" height="18" rx="4" fill="white" opacity="0.5"/>
+        <circle cx="0"   cy="-45" r="8" fill="white" opacity="0.7"/>
+        <circle cx="-32" cy="12"  r="6" fill="white" opacity="0.55"/>
+        <circle cx="32"  cy="12"  r="6" fill="white" opacity="0.55"/>
+        <line x1="0" y1="-53" x2="0" y2="-66" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.6"/>
+        <circle cx="0" cy="-66" r="4" fill="white" opacity="0.5"/>
+      </g>
+
+      {/* ── Diamond shapes ── */}
+      <path d="M58 53 L80 80 L58 108 L36 80Z"   fill="white" opacity="0.09"/>
+      <path d="M103 208 L118 228 L103 248 L88 228Z" fill="white" opacity="0.08"/>
+      <path d="M183 28 L196 46 L183 64 L170 46Z"  fill="white" opacity="0.08"/>
+      <path d="M358 213 L370 230 L358 248 L346 230Z" fill="white" opacity="0.07"/>
+      <path d="M38 178 L46 189 L38 200 L30 189Z"  fill="white" opacity="0.08"/>
+
+      {/* ── Star constellation ── */}
+      <circle cx="36" cy="128" r="3.5" fill="white" opacity="0.15"/>
+      <circle cx="63" cy="108" r="2.5" fill="white" opacity="0.13"/>
+      <circle cx="78" cy="133" r="2"   fill="white" opacity="0.12"/>
+      <circle cx="53" cy="156" r="3"   fill="white" opacity="0.13"/>
+      <circle cx="26" cy="160" r="2"   fill="white" opacity="0.10"/>
+      <circle cx="88" cy="156" r="1.8" fill="white" opacity="0.11"/>
+      <circle cx="108" cy="128" r="2.5" fill="white" opacity="0.10"/>
+      <line x1="36"  y1="128" x2="63"  y2="108" stroke="white" strokeWidth="0.7" opacity="0.09"/>
+      <line x1="63"  y1="108" x2="78"  y2="133" stroke="white" strokeWidth="0.7" opacity="0.09"/>
+      <line x1="78"  y1="133" x2="53"  y2="156" stroke="white" strokeWidth="0.7" opacity="0.09"/>
+      <line x1="53"  y1="156" x2="26"  y2="160" stroke="white" strokeWidth="0.7" opacity="0.08"/>
+      <line x1="78"  y1="133" x2="88"  y2="156" stroke="white" strokeWidth="0.7" opacity="0.08"/>
+      <line x1="88"  y1="156" x2="108" y2="128" stroke="white" strokeWidth="0.7" opacity="0.08"/>
+
+      {/* ── 4-point sparkle asterisks ── */}
+      <g transform="translate(163 183)" opacity="0.13">
+        <line x1="-9" y1="0"  x2="9"  y2="0"  stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
+        <line x1="0"  y1="-9" x2="0"  y2="9"  stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
+        <line x1="-6" y1="-6" x2="6"  y2="6"  stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+        <line x1="6"  y1="-6" x2="-6" y2="6"  stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+      </g>
+      <g transform="translate(53 38)" opacity="0.10">
+        <line x1="-7" y1="0"  x2="7"  y2="0"  stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+        <line x1="0"  y1="-7" x2="0"  y2="7"  stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+        <line x1="-5" y1="-5" x2="5"  y2="5"  stroke="white" strokeWidth="1"   strokeLinecap="round"/>
+        <line x1="5"  y1="-5" x2="-5" y2="5"  stroke="white" strokeWidth="1"   strokeLinecap="round"/>
+      </g>
+      <g transform="translate(198 243)" opacity="0.09">
+        <line x1="-6" y1="0"  x2="6"  y2="0"  stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+        <line x1="0"  y1="-6" x2="0"  y2="6"  stroke="white" strokeWidth="1.3" strokeLinecap="round"/>
+        <line x1="-4" y1="-4" x2="4"  y2="4"  stroke="white" strokeWidth="0.9" strokeLinecap="round"/>
+        <line x1="4"  y1="-4" x2="-4" y2="4"  stroke="white" strokeWidth="0.9" strokeLinecap="round"/>
+      </g>
+
+      {/* ── Concentric glow rings ── */}
+      <circle cx="208" cy="258" r="30" fill="none" stroke="white" strokeWidth="1.2" opacity="0.07"/>
+      <circle cx="208" cy="258" r="20" fill="none" stroke="white" strokeWidth="1"   opacity="0.06"/>
+      <circle cx="208" cy="258" r="10" fill="none" stroke="white" strokeWidth="0.8" opacity="0.05"/>
+    </svg>
+  );
+}
 
 // ─── Banner config ────────────────────────────────────────────────────────────
 interface Banner {
-  id:         string;
-  title:      string;
-  subtitle:   string;
-  bangla:     string;
-  extra:      string | null;
-  label:      string | null;
-  cta:        string;
-  to:         string;
-  image:      string;
-  bg:         string;
-  glowColor:  string;
-  topIcon:    LucideIcon | null;
-  watermark:  LucideIcon;
-  wmTint:     string;
+  id:        string;
+  title:     string;
+  subtitle:  string;
+  bangla:    string;
+  extra:     string | null;
+  label:     string | null;
+  cta:       string;
+  to:        string;
+  image:     string;
+  bg:        string;
+  glowColor: string;
+  topIcon:   LucideIcon | null;
+  Art:       () => JSX.Element;
 }
 
 const BANNERS: Banner[] = [
@@ -35,8 +249,7 @@ const BANNERS: Banner[] = [
     bg:        'bg-gradient-to-br from-sage/85 via-sage/55 to-sage/25',
     glowColor: 'hsl(var(--sage) / 0.45)',
     topIcon:   null,
-    watermark: Leaf,
-    wmTint:    'text-sage',
+    Art:       FarmFreshArt,
   },
   {
     id:        'bazar-deal',
@@ -51,8 +264,7 @@ const BANNERS: Banner[] = [
     bg:        'bg-gradient-to-br from-blush via-blush/90 to-blush/65',
     glowColor: 'hsl(var(--blush) / 0.55)',
     topIcon:   BadgePercent,
-    watermark: BadgePercent,
-    wmTint:    'text-bg',
+    Art:       BazarDealArt,
   },
   {
     id:        'fresh-plus',
@@ -67,8 +279,7 @@ const BANNERS: Banner[] = [
     bg:        'bg-gradient-to-br from-plum/80 via-plum/55 to-plum/25',
     glowColor: 'hsl(var(--plum) / 0.5)',
     topIcon:   Sparkles,
-    watermark: Sparkles,
-    wmTint:    'text-saffron',
+    Art:       FreshPlusArt,
   },
 ];
 
@@ -78,8 +289,8 @@ export function FeatureBanners() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {BANNERS.map((b, i) => {
-        const TopIcon   = b.topIcon;
-        const Watermark = b.watermark;
+        const TopIcon = b.topIcon;
+        const Art     = b.Art;
         return (
           <motion.div
             key={b.id}
@@ -92,32 +303,22 @@ export function FeatureBanners() {
               stiffness: 200,
               damping:   22,
             }}
-            // ── Pearl-shimmer outer ring ──────────────────────────────────
-            className="group relative p-[1.5px] rounded-[1.85rem] bg-gradient-to-br from-white/40 via-saffron/22 to-plum/15 transition-all duration-300 hover:from-white/55 hover:via-saffron/35 hover:to-plum/22 hover:-translate-y-1"
+            className="group relative p-[1.5px] rounded-[1.6rem] bg-gradient-to-br from-white/40 via-saffron/22 to-plum/15 transition-all duration-300 hover:from-white/55 hover:via-saffron/35 hover:to-plum/22 hover:-translate-y-1"
             style={{ boxShadow: `0 20px 60px -20px ${b.glowColor}` }}
           >
             <Link
               to={b.to}
-              className={`relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[calc(1.85rem-1.5px)] p-6 active:scale-[0.98] ${b.bg}`}
+              className={`relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[calc(1.6rem-1.5px)] p-6 active:scale-[0.98] ${b.bg}`}
             >
-              {/* ─── Decorative art watermark ─── giant faded icon clusters */}
-              <Watermark
-                aria-hidden
-                className={`pointer-events-none absolute -bottom-8 left-4 z-[1] h-32 w-32 opacity-[0.10] ${b.wmTint}`}
-                strokeWidth={1}
-              />
-              <Watermark
-                aria-hidden
-                className={`pointer-events-none absolute top-1/2 left-12 z-[1] h-10 w-10 -translate-y-1/2 opacity-[0.08] ${b.wmTint}`}
-                strokeWidth={1}
-              />
+              {/* ── Themed SVG background art ── */}
+              <Art />
 
-              {/* Sparkle dots scattered (decorative) */}
+              {/* Sparkle dots */}
               <div aria-hidden className="pointer-events-none absolute right-12 top-8 z-[2] h-1.5 w-1.5 rounded-full bg-white/70 shadow-[0_0_8px_2px_rgba(255,255,255,0.5)]" />
               <div aria-hidden className="pointer-events-none absolute right-20 bottom-12 z-[2] h-1 w-1 rounded-full bg-white/60 shadow-[0_0_6px_1px_rgba(255,255,255,0.5)]" />
               <div aria-hidden className="pointer-events-none absolute left-1/3 top-3 z-[2] h-1 w-1 rounded-full bg-white/50 shadow-[0_0_4px_1px_rgba(255,255,255,0.4)]" />
 
-              {/* Glass shine diagonal overlay */}
+              {/* Glass shine diagonal */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.16)_0%,transparent_42%)]"
@@ -130,7 +331,7 @@ export function FeatureBanners() {
                 </span>
               )}
 
-              {/* Optional small brand label ("Ayra Fresh+") */}
+              {/* Optional brand label */}
               {b.label && (
                 <p className="relative z-[6] font-display text-base font-extrabold leading-none text-cream">
                   Ayra Fresh<span className="text-sage">+</span>
