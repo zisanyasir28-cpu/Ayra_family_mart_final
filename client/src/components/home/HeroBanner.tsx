@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Play, ShieldCheck, Zap, RotateCcw, Leaf } from 'lucide-react';
+import { Play, ShieldCheck, Zap, RotateCcw, Leaf, BadgePercent } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // ─── Trust strip items ────────────────────────────────────────────────────────
@@ -234,27 +234,77 @@ export function HeroBanner() {
               </motion.div>
             </div>
 
-            {/* Floating offer card — top-right */}
+            {/* Floating offer card — magical neon-glass medallion (top-right) */}
             <motion.div
               initial={{ opacity: 0, x: 16, y: -12 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="invert-card absolute -right-3 top-2 z-20 min-w-[130px]  rounded-sm border border-coral/33 bg-transparent p-3.5 shadow-[0_8px_32px_-80px_hsl(var(--coral)/0.3)] backdrop-blur-lg sm:-right-2 sm:top-6"
+              whileHover={{ y: -3 }}
+              className="absolute -right-3 top-2 z-20 sm:-right-2 sm:top-6"
             >
-              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-coral/70">
-                Special Offer
-              </p>
-              <p className="font-display text-xl font-black text-coral sm:text-2xl">
-                40% OFF
-              </p>
-              <p className="  text-shadow-sm text-cream/100  font-black   text-[20px]">This Week Only</p>
-              <Link
-                to="/products?onSale=true"
-                className="mt-4 inline-flex items-center gap-1 rounded-full border border-coral/50 bg-gradient-to-r from-saffron/40 via-saffron/30 to-transparent px-4 py-1 text-[10px] font-bold uppercase tracking-wider text-cream shadow-lg transition hover:text-white"
+              {/* Coral neon ring border */}
+              <div
+                className="group rounded-2xl bg-gradient-to-br from-coral/70 via-saffron/40 to-coral/20 p-[1.5px] transition-all duration-300 hover:from-coral/95 hover:via-saffron/60 hover:to-coral/35"
+                style={{
+                  boxShadow:
+                    '0 0 14px -2px hsl(var(--coral)/0.55), 0 0 32px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
+                }}
               >
-                Shop Now{' '}
-                <ArrowIcon size={9} />
-              </Link>
+                {/* Inner glass surface — REAL glass (has something to blur) */}
+                <div className="relative min-w-[145px] overflow-hidden rounded-[calc(1rem-1.5px)] bg-bg/65 p-3.5 backdrop-blur-xl">
+                  {/* Inner coral wash for warmth */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-br from-coral/15 via-transparent to-saffron/8"
+                  />
+                  {/* Decorative BadgePercent watermark — bottom-right corner */}
+                  <BadgePercent
+                    aria-hidden
+                    className="pointer-events-none absolute -bottom-2 -right-2 h-14 w-14 text-coral/15"
+                    strokeWidth={1.5}
+                  />
+                  {/* Sparkle accent — top-right */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute right-2.5 top-2.5 h-1 w-1 rounded-full bg-white/85 shadow-[0_0_8px_2px_rgba(255,255,255,0.7)]"
+                  />
+                  {/* Glass shine arc — top-left */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(0_0%_100%/0.12)_0%,transparent_45%)]"
+                  />
+
+                  {/* "SPECIAL OFFER" — eyebrow label */}
+                  <p className="relative text-[9px] font-bold uppercase tracking-[0.2em] text-coral [text-shadow:0_1px_4px_rgba(0,0,0,0.7)]">
+                    Special Offer
+                  </p>
+
+                  {/* "40% OFF" — neon-glow hero */}
+                  <p
+                    className="relative font-display text-2xl font-black leading-none text-coral sm:text-[1.7rem]"
+                    style={{
+                      textShadow:
+                        '0 0 14px hsl(var(--coral) / 0.7), 0 0 28px hsl(var(--coral) / 0.4), 0 2px 8px rgba(0,0,0,0.6)',
+                    }}
+                  >
+                    40% OFF
+                  </p>
+
+                  {/* "This Week Only" — readable supporting line */}
+                  <p className="relative mt-1 text-[10.5px] font-semibold text-cream/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.75)]">
+                    This Week Only
+                  </p>
+
+                  {/* Shop Now — saffron→blush neon pill */}
+                  <Link
+                    to="/products?onSale=true"
+                    className="relative mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-saffron to-blush px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-bg shadow-[0_0_14px_-2px_hsl(var(--saffron)/0.7)] transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_20px_-2px_hsl(var(--saffron)/0.95)]"
+                  >
+                    Shop Now
+                    <ArrowIcon size={10} />
+                  </Link>
+                </div>
+              </div>
             </motion.div>
 
             {/* Floating saver pill — bottom-left */}
