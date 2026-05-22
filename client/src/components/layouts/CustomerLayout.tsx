@@ -52,57 +52,152 @@ function FloatingLeaves() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
-      {/* Animated leaves — leaf-sway animation, staggered durations */}
-      <Leaf
-        className="absolute -left-12 top-16 h-[200px] w-[200px] -rotate-[20deg] text-sage opacity-[0.07]"
-        strokeWidth={1}
-        style={{ animation: 'leaf-sway 8s ease-in-out infinite', animationDelay: '0s', willChange: 'transform' }}
-      />
-      <Leaf
-        className="absolute -right-8 top-40 h-[140px] w-[140px] rotate-[30deg] text-sage opacity-[0.06]"
-        strokeWidth={1}
-        style={{ animation: 'leaf-sway 10s ease-in-out infinite', animationDelay: '1.3s', willChange: 'transform' }}
-      />
-      <Leaf
-        className="absolute -left-4 top-[52%] h-[100px] w-[100px] rotate-[12deg] text-sage opacity-[0.05]"
-        strokeWidth={1}
-        style={{ animation: 'leaf-sway 7s ease-in-out infinite', animationDelay: '2.1s', willChange: 'transform' }}
-      />
-      <Leaf
-        className="absolute right-8 top-[65%] h-20 w-20 -rotate-[10deg] text-sage opacity-[0.04]"
-        strokeWidth={1}
-        style={{ animation: 'leaf-sway 9s ease-in-out infinite', animationDelay: '0.6s', willChange: 'transform' }}
-      />
-      <Leaf
-        className="absolute -right-16 bottom-24 h-[160px] w-[160px] -rotate-[15deg] text-sage opacity-[0.06]"
-        strokeWidth={1}
-        style={{ animation: 'leaf-sway 11s ease-in-out infinite', animationDelay: '1.8s', willChange: 'transform' }}
-      />
+      {/* ── MONSTERA LEAF — large, left edge, animated sway ──────────────── */}
+      <div
+        className="absolute -left-16 top-20 h-[280px] w-[240px] text-sage opacity-[0.07]"
+        style={{ animation: 'leaf-sway 9s ease-in-out infinite', animationDelay: '0s', willChange: 'transform' }}
+      >
+        <svg viewBox="0 0 200 230" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 225 C70 195,20 165,15 115 C10 65,50 30,80 18 C95 12,105 12,120 18 C150 30,190 65,185 115 C180 165,130 195,100 225Z"
+            fill="currentColor" fillOpacity="0.1" />
+          {/* Monstera characteristic holes */}
+          <path d="M64 84 C72 66,92 66,92 84 C92 102,72 102,64 84Z" fill="hsl(260,70%,8%)" stroke="none" />
+          <path d="M110 70 C118 52,140 54,140 72 C140 90,118 90,110 70Z" fill="hsl(260,70%,8%)" stroke="none" />
+          <path d="M40 132 C44 116,64 116,64 132 C64 148,44 148,40 132Z" fill="hsl(260,70%,8%)" stroke="none" />
+          {/* Veins */}
+          <line x1="100" y1="225" x2="100" y2="18" strokeDasharray="4 5" opacity="0.4" />
+          <path d="M100 100 Q130 80 155 88" opacity="0.35" />
+          <path d="M100 120 Q68 100 44 108" opacity="0.35" />
+          <path d="M100 148 Q136 128 160 136" opacity="0.28" />
+          <path d="M100 168 Q62 148 38 156" opacity="0.28" />
+        </svg>
+      </div>
 
-      {/* Mid-page organic ring watermark */}
-      <div className="absolute left-[4%] top-[40%] h-48 w-48 text-sage opacity-[0.04]">
-        <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" strokeWidth="0.8" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="80" cy="80" r="70" strokeDasharray="4 7" />
-          <circle cx="80" cy="80" r="52" strokeDasharray="2 9" />
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-            <path
+      {/* ── PALM FROND — right edge, animated sway ───────────────────────── */}
+      <div
+        className="absolute -right-10 top-36 h-[240px] w-[210px] text-sage opacity-[0.055]"
+        style={{ animation: 'leaf-sway 12s ease-in-out infinite', animationDelay: '2.4s', willChange: 'transform' }}
+      >
+        <svg viewBox="0 0 180 210" fill="none" stroke="currentColor" strokeWidth="0.9" xmlns="http://www.w3.org/2000/svg">
+          <path d="M90 200 C90 165,96 122,102 82 S110 42,112 12" strokeWidth="1.5" opacity="0.5" />
+          <path d="M98 155 C80 136,54 130,38 142" /><path d="M100 134 C78 112,50 106,32 118" />
+          <path d="M102 113 C82 88,54 82,34 90"  /><path d="M104 92 C86 66,60 60,40 68"  />
+          <path d="M106 72 C92 46,68 38,50 44"  /><path d="M108 52 C96 28,74 22,58 28"  />
+          <path d="M100 155 C118 136,144 130,160 142" /><path d="M102 134 C124 112,152 106,170 118" />
+          <path d="M104 113 C126 88,154 82,172 90"  /><path d="M106 92 C128 66,154 60,172 68"  />
+          <path d="M108 72 C128 46,152 38,168 44"  /><path d="M110 52 C130 28,154 22,168 28"  />
+        </svg>
+      </div>
+
+      {/* ── SMALL BOTANICAL LEAVES — mid-page ───────────────────────────── */}
+      <div
+        className="absolute -left-4 top-[52%] h-[105px] w-[105px] text-sage opacity-[0.05]"
+        style={{ animation: 'leaf-sway 7s ease-in-out infinite', animationDelay: '1.4s', willChange: 'transform' }}
+      >
+        <svg viewBox="0 0 100 105" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 100 C34 82,6 62,8 36 C10 12,36 4,50 3 C64 4,90 12,92 36 C94 62,66 82,50 100Z" fill="currentColor" fillOpacity="0.08" />
+          <line x1="50" y1="100" x2="50" y2="4" strokeDasharray="3 4" opacity="0.5" />
+          <path d="M50 40 Q65 30 76 36" opacity="0.4" /><path d="M50 56 Q35 46 24 52" opacity="0.4" />
+          <path d="M50 72 Q67 62 78 68" opacity="0.32" />
+        </svg>
+      </div>
+      <div
+        className="absolute right-6 top-[65%] h-[85px] w-[85px] text-sage opacity-[0.04]"
+        style={{ animation: 'leaf-sway 10s ease-in-out infinite', animationDelay: '3.2s', willChange: 'transform' }}
+      >
+        <svg viewBox="0 0 100 105" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 100 C34 82,6 62,8 36 C10 12,36 4,50 3 C64 4,90 12,92 36 C94 62,66 82,50 100Z" />
+          <line x1="50" y1="100" x2="50" y2="4" strokeDasharray="3 4" opacity="0.5" />
+        </svg>
+      </div>
+      <div
+        className="absolute -right-14 bottom-28 h-[165px] w-[165px] text-sage opacity-[0.055]"
+        style={{ animation: 'leaf-sway 13s ease-in-out infinite', animationDelay: '0.9s', willChange: 'transform' }}
+      >
+        <svg viewBox="0 0 100 105" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 100 C34 82,6 62,8 36 C10 12,36 4,50 3 C64 4,90 12,92 36 C94 62,66 82,50 100Z" fill="currentColor" fillOpacity="0.08" />
+          <line x1="50" y1="100" x2="50" y2="4" strokeDasharray="3 4" opacity="0.5" />
+          <path d="M50 40 Q65 30 76 36" opacity="0.4" /><path d="M50 56 Q35 46 24 52" opacity="0.4" />
+          <path d="M50 72 Q67 62 78 68" opacity="0.32" /><path d="M50 86 Q33 76 22 82" opacity="0.28" />
+        </svg>
+      </div>
+
+      {/* ── WHEAT STALK — harvest/grain motif, mid-left ──────────────────── */}
+      <div className="absolute left-[5%] top-[56%] h-56 w-16 text-sage opacity-[0.048] rotate-[6deg]">
+        <svg viewBox="0 0 60 220" fill="none" stroke="currentColor" strokeWidth="0.9" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="215" x2="30" y2="12" strokeWidth="1.4" />
+          <path d="M30 165 C18 157,8 148,14 140 C20 132,30 165,30 165Z" />
+          <path d="M30 165 C42 157,52 148,46 140 C40 132,30 165,30 165Z" />
+          <path d="M30 145 C18 137,8 128,14 120 C20 112,30 145,30 145Z" />
+          <path d="M30 145 C42 137,52 128,46 120 C40 112,30 145,30 145Z" />
+          <path d="M30 125 C18 117,8 108,14 100 C20 92,30 125,30 125Z" />
+          <path d="M30 125 C42 117,52 108,46 100 C40 92,30 125,30 125Z" />
+          <path d="M30 105 C18 97,8 88,14 80 C20 72,30 105,30 105Z" />
+          <path d="M30 105 C42 97,52 88,46 80 C40 72,30 105,30 105Z" />
+          <path d="M30 85 C18 77,8 68,14 60 C20 52,30 85,30 85Z" />
+          <path d="M30 85 C42 77,52 68,46 60 C40 52,30 85,30 85Z" />
+          <path d="M30 65 C18 57,8 48,14 40 C20 32,30 65,30 65Z" />
+          <path d="M30 65 C42 57,52 48,46 40 C40 32,30 65,30 65Z" />
+          <path d="M30 40 C24 26,22 16,26 8 C30 2,30 40,30 40Z" />
+          <path d="M30 40 C36 26,38 16,34 8 C30 2,30 40,30 40Z" />
+        </svg>
+      </div>
+
+      {/* ── SHOPPING CART WATERMARK — right side, superstore motif ──────── */}
+      <div className="absolute right-[4%] top-[38%] h-32 w-32 text-coral opacity-[0.038]">
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 16 L18 16 L28 62 L78 62 L90 28 L26 28" strokeLinecap="round" strokeLinejoin="round" />
+          <line x1="30" y1="36" x2="78" y2="36" opacity="0.6" />
+          <line x1="32" y1="44" x2="76" y2="44" opacity="0.6" />
+          <line x1="34" y1="52" x2="74" y2="52" opacity="0.6" />
+          <line x1="46" y1="28" x2="49" y2="62" opacity="0.5" />
+          <line x1="62" y1="28" x2="64" y2="62" opacity="0.5" />
+          <circle cx="36" cy="72" r="6" /><circle cx="70" cy="72" r="6" />
+          <circle cx="36" cy="72" r="2.2" fill="currentColor" opacity="0.5" />
+          <circle cx="70" cy="72" r="2.2" fill="currentColor" opacity="0.5" />
+          <path d="M36 28 C36 22,42 20,42 28" opacity="0.45" />
+          <path d="M56 28 C56 21,64 19,64 28" opacity="0.45" />
+        </svg>
+      </div>
+
+      {/* ── ORGANIC BADGE WATERMARK — lower-left ─────────────────────────── */}
+      <div className="absolute left-[2%] top-[80%] h-40 w-40 text-sage opacity-[0.042] -rotate-[10deg]">
+        <svg viewBox="0 0 140 140" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="70" r="62" strokeDasharray="3 5" />
+          <circle cx="70" cy="70" r="54" />
+          <path d="M70 90 C57 76,42 60,46 42 C50 26,67 20,70 18 C73 20,90 26,94 42 C98 60,83 76,70 90Z"
+            fill="currentColor" fillOpacity="0.12" />
+          <line x1="70" y1="90" x2="70" y2="20" strokeDasharray="2 4" opacity="0.6" />
+          <path d="M70 52 Q81 42,88 47" opacity="0.5" /><path d="M70 64 Q59 54,52 59" opacity="0.5" />
+          {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg) => (
+            <circle
               key={deg}
-              transform={`rotate(${deg} 80 80)`}
-              d="M80 10 C85 25 85 40 80 50 C75 40 75 25 80 10Z"
+              cx={70 + 46 * Math.cos((deg - 90) * Math.PI / 180)}
+              cy={70 + 46 * Math.sin((deg - 90) * Math.PI / 180)}
+              r="1.2" fill="currentColor" opacity="0.65"
             />
           ))}
         </svg>
       </div>
 
-      {/* Lower-page botanical cluster watermark */}
+      {/* ── ORGANIC MANDALA RING — mid-page ──────────────────────────────── */}
+      <div className="absolute left-[4%] top-[40%] h-48 w-48 text-sage opacity-[0.04]">
+        <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" strokeWidth="0.8" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="80" r="70" strokeDasharray="4 7" />
+          <circle cx="80" cy="80" r="52" strokeDasharray="2 9" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+            <path key={deg} transform={`rotate(${deg} 80 80)`} d="M80 10 C85 25 85 40 80 50 C75 40 75 25 80 10Z" />
+          ))}
+        </svg>
+      </div>
+
+      {/* ── BOTANICAL CLUSTER — lower-right ──────────────────────────────── */}
       <div className="absolute right-[3%] top-[72%] h-36 w-36 rotate-[20deg] text-plum opacity-[0.045]">
         <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
           <path d="M60 105 C60 105 18 72 23 34 C28 8 60 4 60 4 C60 4 92 8 97 34 C102 72 60 105 60 105Z" />
           <path d="M60 105 C60 105 8 82 16 44 C23 16 54 14 60 4 C66 14 97 16 104 44 C112 82 60 105 60 105Z" opacity="0.45" />
           <line x1="60" y1="105" x2="60" y2="6" strokeDasharray="3 5" />
-          <path d="M60 42 Q76 32 87 38" />
-          <path d="M60 54 Q44 44 33 50" />
-          <path d="M60 66 Q79 56 90 62" />
+          <path d="M60 42 Q76 32 87 38" /><path d="M60 54 Q44 44 33 50" /><path d="M60 66 Q79 56 90 62" />
         </svg>
       </div>
     </div>
