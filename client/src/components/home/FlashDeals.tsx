@@ -159,7 +159,7 @@ export function FlashDeals() {
         >
           {isLoading
             ? Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="w-56 shrink-0 snap-start sm:w-60">
+                <div key={i} className="w-44 shrink-0 snap-start sm:w-48">
                   <ProductCardSkeleton />
                 </div>
               ))
@@ -175,7 +175,7 @@ export function FlashDeals() {
                     stiffness: 180,
                     damping: 22,
                   }}
-                  className="w-56 shrink-0 snap-start sm:w-60"
+                  className="w-44 shrink-0 snap-start sm:w-48"
                 >
                   <ProductCard product={p} className="h-full" />
                 </motion.div>
