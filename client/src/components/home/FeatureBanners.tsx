@@ -167,7 +167,7 @@ interface Banner {
   /** Tailwind bg-color class for the concentrated right-side neon orb */
   neonOrb:       string;
   topIcon:       LucideIcon | null;
-  Art:           () => JSX.Element;
+  Art:           () => React.JSX.Element;
 }
 
 const BANNERS: Banner[] = [
