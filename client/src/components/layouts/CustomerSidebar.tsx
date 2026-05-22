@@ -97,8 +97,8 @@ export function CustomerSidebar() {
         <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-sage/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
 
           {/* ── Background art layer ── */}
-          {/* Glass shine — diagonal white highlight */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
+          {/* Glass shine — diagonal, theme-aware */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit]" style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.10) 0%, transparent 55%)' }} />
           {/* Sage glow orb — top-right ambient light source */}
           <div aria-hidden className="pointer-events-none absolute -right-8 -top-6 h-28 w-28 rounded-full bg-sage/30 blur-3xl" />
           {/* Saffron warm accent orb */}
@@ -153,8 +153,8 @@ export function CustomerSidebar() {
         <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-plum/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
 
           {/* ── Background art layer ── */}
-          {/* Glass shine */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
+          {/* Glass shine — theme-aware */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit]" style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.10) 0%, transparent 55%)' }} />
           {/* Plum glow orb — top-left ambient */}
           <div aria-hidden className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 rounded-full bg-plum/35 blur-3xl" />
           {/* Saffron warm accent orb — bottom-right */}

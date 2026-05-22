@@ -92,7 +92,7 @@ export function HeroBanner() {
       {/* ── City skyline SVG watermark — bottom of hero ──────────────────────── */}
       <svg
         aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 right-0 w-full text-cream opacity-[0.05]"
+        className="pointer-events-none absolute bottom-0 left-0 right-0 w-full text-cream opacity-[0.07]"
         viewBox="0 0 1400 140"
         preserveAspectRatio="xMidYMax slice"
         fill="currentColor"
@@ -155,6 +155,65 @@ export function HeroBanner() {
           />
         ))}
       </MotionConfig>
+
+      {/* ── Light-mode butterflies — visible only when :root.light is active ─── */}
+      {/* opacity-0 by default; globals.css :root.light .butterfly sets opacity-85 */}
+      <motion.div
+        aria-hidden
+        className="butterfly pointer-events-none absolute"
+        style={{ top: '12%', right: '16%' }}
+        animate={{ y: [0, -10, 2, -8, 0], rotate: [0, 4, -3, 2, 0] }}
+        transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="7"  cy="7"  rx="6.5" ry="5.5" fill="hsl(48,96%,55%)"  fillOpacity="0.88" transform="rotate(-20  7  7)"  />
+          <ellipse cx="21" cy="7"  rx="6.5" ry="5.5" fill="hsl(48,96%,55%)"  fillOpacity="0.88" transform="rotate( 20 21  7)"  />
+          <ellipse cx="7"  cy="15" rx="5"   ry="4"   fill="hsl(42,92%,50%)"  fillOpacity="0.75" transform="rotate( 15  7 15)"  />
+          <ellipse cx="21" cy="15" rx="5"   ry="4"   fill="hsl(42,92%,50%)"  fillOpacity="0.75" transform="rotate(-15 21 15)"  />
+          <path d="M13 3 Q14 11 13 19" stroke="hsl(35,50%,30%)" strokeWidth="1.2" fill="none" />
+          <path d="M14 3 Q14 11 15 19" stroke="hsl(35,50%,30%)" strokeWidth="1.2" fill="none" />
+          <path d="M12 3 Q10 1 8 2" stroke="hsl(35,50%,30%)" strokeWidth="0.9" fill="none" />
+          <path d="M16 3 Q18 1 20 2" stroke="hsl(35,50%,30%)" strokeWidth="0.9" fill="none" />
+        </svg>
+      </motion.div>
+
+      <motion.div
+        aria-hidden
+        className="butterfly pointer-events-none absolute"
+        style={{ top: '38%', right: '8%' }}
+        animate={{ y: [0, -8, 4, -6, 0], rotate: [0, -3, 5, -2, 0] }}
+        transition={{ duration: 7.2, repeat: Infinity, ease: 'easeInOut', delay: 1.4 }}
+      >
+        <svg width="22" height="18" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="7"  cy="7"  rx="6.5" ry="5.5" fill="hsl(50,100%,60%)" fillOpacity="0.85" transform="rotate(-20  7  7)"  />
+          <ellipse cx="21" cy="7"  rx="6.5" ry="5.5" fill="hsl(50,100%,60%)" fillOpacity="0.85" transform="rotate( 20 21  7)"  />
+          <ellipse cx="7"  cy="15" rx="5"   ry="4"   fill="hsl(44,90%,52%)"  fillOpacity="0.72" transform="rotate( 15  7 15)"  />
+          <ellipse cx="21" cy="15" rx="5"   ry="4"   fill="hsl(44,90%,52%)"  fillOpacity="0.72" transform="rotate(-15 21 15)"  />
+          <path d="M13 3 Q14 11 13 19" stroke="hsl(35,50%,30%)" strokeWidth="1.2" fill="none" />
+          <path d="M14 3 Q14 11 15 19" stroke="hsl(35,50%,30%)" strokeWidth="1.2" fill="none" />
+          <path d="M12 3 Q10 1 8 2"  stroke="hsl(35,50%,30%)" strokeWidth="0.9" fill="none" />
+          <path d="M16 3 Q18 1 20 2" stroke="hsl(35,50%,30%)" strokeWidth="0.9" fill="none" />
+        </svg>
+      </motion.div>
+
+      <motion.div
+        aria-hidden
+        className="butterfly pointer-events-none absolute"
+        style={{ top: '22%', right: '34%' }}
+        animate={{ y: [0, -12, 3, -9, 0], rotate: [0, 6, -4, 3, 0] }}
+        transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 2.8 }}
+      >
+        <svg width="18" height="14" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="7"  cy="7"  rx="6.5" ry="5.5" fill="hsl(45,95%,58%)"  fillOpacity="0.90" transform="rotate(-20  7  7)"  />
+          <ellipse cx="21" cy="7"  rx="6.5" ry="5.5" fill="hsl(45,95%,58%)"  fillOpacity="0.90" transform="rotate( 20 21  7)"  />
+          <ellipse cx="7"  cy="15" rx="5"   ry="4"   fill="hsl(40,92%,48%)"  fillOpacity="0.78" transform="rotate( 15  7 15)"  />
+          <ellipse cx="21" cy="15" rx="5"   ry="4"   fill="hsl(40,92%,48%)"  fillOpacity="0.78" transform="rotate(-15 21 15)"  />
+          <path d="M13 3 Q14 11 13 19" stroke="hsl(35,50%,30%)" strokeWidth="1.2" fill="none" />
+          <path d="M14 3 Q14 11 15 19" stroke="hsl(35,50%,30%)" strokeWidth="1.2" fill="none" />
+          <path d="M12 3 Q10 1 8 2"  stroke="hsl(35,50%,30%)" strokeWidth="0.9" fill="none" />
+          <path d="M16 3 Q18 1 20 2" stroke="hsl(35,50%,30%)" strokeWidth="0.9" fill="none" />
+        </svg>
+      </motion.div>
 
       {/* ── Botanical leaf-cluster SVG watermark — upper-right ───────────────── */}
       <svg
@@ -286,13 +345,13 @@ export function HeroBanner() {
               {trustItems.map(({ icon: Icon, label, sublabel }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2.5 rounded-md border border-line/100 bg-surface/2 px-3 py-2.5 backdrop-blur-md"
+                  className="flex items-center gap-2.5 rounded-sm border border-line/100 bg-surface/2 px-3 py-2.5 backdrop-blur-ms"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-saffron/15 text-saffron">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full backdrop-blur-xxl bg-saffron7 din dey na korun 5 s text-saffron">
                     <Icon className="h-4 w-4" strokeWidth={1.8} />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-[11px] font-bold leading-tight text-cream">
+                    <p className="truncate text-[11px] font-bold   leading-tight text-cream">
                       {label}
                     </p>
                     <p className="font-bangla text-[10px] text-cream/45">{sublabel}</p>
@@ -381,8 +440,8 @@ export function HeroBanner() {
                     '0 0 7px -8px hsl(var(--coral)/0.55), 0 0 8px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
                 }}
               >
-                {/* Inner glass surface — REAL glass (has something to blur) */}
-                <div className="relative min-w-[145px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-bg/85 p-3.5 backdrop-blur-xl">
+                {/* Inner glass surface — always dark in both themes */}
+                <div className="relative min-w-[145px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-surface-dark/90 p-3.5 backdrop-blur-xl">
                   {/* Inner coral wash for warmth */}
                   <div
                     aria-hidden
@@ -394,10 +453,14 @@ export function HeroBanner() {
                     className="pointer-events-none absolute -bottom-2 -right-2 h-14 w-14 text-coral/15"
                     strokeWidth={1.5}
                   />
-                  {/* Sparkle accent — top-right */}
+                  {/* Sparkle accent — top-right, theme-aware */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute right-2.5 top-2.5 h-1 w-1 rounded-full bg-white/53 shadow-[0_0_8px_2px_rgba(255,255,255,0.7)]"
+                    className="pointer-events-none absolute right-2.5 top-2.5 h-1 w-1 rounded-full"
+                    style={{
+                      background: 'hsl(var(--shine-color) / 0.65)',
+                      boxShadow:  '0 0 8px 2px hsl(var(--shine-color) / 0.5)',
+                    }}
                   />
                   {/* Glass shine arc — top-left */}
                   <div
@@ -422,13 +485,13 @@ export function HeroBanner() {
                     >
                       40%
                     </span>
-                    <span className="ml-1 text-cream [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]">
+                    <span className="ml-1 text-dark-fg [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]">
                       OFF
                     </span>
                   </p>
 
                   {/* "This Week Only" — readable supporting line */}
-                  <p className="relative mt-1 text-[10.5px] font-semibold text-cream/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.75)]">
+                  <p className="relative mt-1 text-[10.5px] font-semibold text-dark-fg/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.75)]">
                     This Week Only
                   </p>
 

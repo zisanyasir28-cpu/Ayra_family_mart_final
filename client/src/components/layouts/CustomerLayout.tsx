@@ -54,16 +54,16 @@ function FloatingLeaves() {
     >
       {/* ── MONSTERA LEAF — large, left edge, animated sway ──────────────── */}
       <div
-        className="absolute -left-16 top-20 h-[280px] w-[240px] text-sage opacity-[0.07]"
+        className="absolute -left-16 top-20 h-[280px] w-[240px] text-sage opacity-[0.10]"
         style={{ animation: 'leaf-sway 9s ease-in-out infinite', animationDelay: '0s', willChange: 'transform' }}
       >
         <svg viewBox="0 0 200 230" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
           <path d="M100 225 C70 195,20 165,15 115 C10 65,50 30,80 18 C95 12,105 12,120 18 C150 30,190 65,185 115 C180 165,130 195,100 225Z"
             fill="currentColor" fillOpacity="0.1" />
           {/* Monstera characteristic holes */}
-          <path d="M64 84 C72 66,92 66,92 84 C92 102,72 102,64 84Z" fill="hsl(260,70%,8%)" stroke="none" />
-          <path d="M110 70 C118 52,140 54,140 72 C140 90,118 90,110 70Z" fill="hsl(260,70%,8%)" stroke="none" />
-          <path d="M40 132 C44 116,64 116,64 132 C64 148,44 148,40 132Z" fill="hsl(260,70%,8%)" stroke="none" />
+          <path d="M64 84 C72 66,92 66,92 84 C92 102,72 102,64 84Z" fill="hsl(var(--bg))" stroke="none" />
+          <path d="M110 70 C118 52,140 54,140 72 C140 90,118 90,110 70Z" fill="hsl(var(--bg))" stroke="none" />
+          <path d="M40 132 C44 116,64 116,64 132 C64 148,44 148,40 132Z" fill="hsl(var(--bg))" stroke="none" />
           {/* Veins */}
           <line x1="100" y1="225" x2="100" y2="18" strokeDasharray="4 5" opacity="0.4" />
           <path d="M100 100 Q130 80 155 88" opacity="0.35" />
@@ -75,7 +75,7 @@ function FloatingLeaves() {
 
       {/* ── PALM FROND — right edge, animated sway ───────────────────────── */}
       <div
-        className="absolute -right-10 top-36 h-[240px] w-[210px] text-sage opacity-[0.055]"
+        className="absolute -right-10 top-36 h-[240px] w-[210px] text-sage opacity-[0.085]"
         style={{ animation: 'leaf-sway 12s ease-in-out infinite', animationDelay: '2.4s', willChange: 'transform' }}
       >
         <svg viewBox="0 0 180 210" fill="none" stroke="currentColor" strokeWidth="0.9" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +91,7 @@ function FloatingLeaves() {
 
       {/* ── SMALL BOTANICAL LEAVES — mid-page ───────────────────────────── */}
       <div
-        className="absolute -left-4 top-[52%] h-[105px] w-[105px] text-sage opacity-[0.05]"
+        className="absolute -left-4 top-[52%] h-[105px] w-[105px] text-sage opacity-[0.085]"
         style={{ animation: 'leaf-sway 7s ease-in-out infinite', animationDelay: '1.4s', willChange: 'transform' }}
       >
         <svg viewBox="0 0 100 105" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
@@ -102,7 +102,7 @@ function FloatingLeaves() {
         </svg>
       </div>
       <div
-        className="absolute right-6 top-[65%] h-[85px] w-[85px] text-sage opacity-[0.04]"
+        className="absolute right-6 top-[65%] h-[85px] w-[85px] text-sage opacity-[0.07]"
         style={{ animation: 'leaf-sway 10s ease-in-out infinite', animationDelay: '3.2s', willChange: 'transform' }}
       >
         <svg viewBox="0 0 100 105" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
@@ -111,7 +111,7 @@ function FloatingLeaves() {
         </svg>
       </div>
       <div
-        className="absolute -right-14 bottom-28 h-[165px] w-[165px] text-sage opacity-[0.055]"
+        className="absolute -right-14 bottom-28 h-[165px] w-[165px] text-sage opacity-[0.09]"
         style={{ animation: 'leaf-sway 13s ease-in-out infinite', animationDelay: '0.9s', willChange: 'transform' }}
       >
         <svg viewBox="0 0 100 105" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
@@ -123,7 +123,7 @@ function FloatingLeaves() {
       </div>
 
       {/* ── WHEAT STALK — harvest/grain motif, mid-left ──────────────────── */}
-      <div className="absolute left-[5%] top-[56%] h-56 w-16 text-sage opacity-[0.048] rotate-[6deg]">
+      <div className="absolute left-[5%] top-[56%] h-56 w-16 text-sage opacity-[0.08] rotate-[6deg]">
         <svg viewBox="0 0 60 220" fill="none" stroke="currentColor" strokeWidth="0.9" xmlns="http://www.w3.org/2000/svg">
           <line x1="30" y1="215" x2="30" y2="12" strokeWidth="1.4" />
           <path d="M30 165 C18 157,8 148,14 140 C20 132,30 165,30 165Z" />
@@ -144,7 +144,7 @@ function FloatingLeaves() {
       </div>
 
       {/* ── SHOPPING CART WATERMARK — right side, superstore motif ──────── */}
-      <div className="absolute right-[4%] top-[38%] h-32 w-32 text-coral opacity-[0.038]">
+      <div className="absolute right-[4%] top-[38%] h-32 w-32 text-coral opacity-[0.07]">
         <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2" xmlns="http://www.w3.org/2000/svg">
           <path d="M6 16 L18 16 L28 62 L78 62 L90 28 L26 28" strokeLinecap="round" strokeLinejoin="round" />
           <line x1="30" y1="36" x2="78" y2="36" opacity="0.6" />
@@ -161,7 +161,7 @@ function FloatingLeaves() {
       </div>
 
       {/* ── ORGANIC BADGE WATERMARK — lower-left ─────────────────────────── */}
-      <div className="absolute left-[2%] top-[80%] h-40 w-40 text-sage opacity-[0.042] -rotate-[10deg]">
+      <div className="absolute left-[2%] top-[80%] h-40 w-40 text-sage opacity-[0.075] -rotate-[10deg]">
         <svg viewBox="0 0 140 140" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
           <circle cx="70" cy="70" r="62" strokeDasharray="3 5" />
           <circle cx="70" cy="70" r="54" />
@@ -181,7 +181,7 @@ function FloatingLeaves() {
       </div>
 
       {/* ── ORGANIC MANDALA RING — mid-page ──────────────────────────────── */}
-      <div className="absolute left-[4%] top-[40%] h-48 w-48 text-sage opacity-[0.04]">
+      <div className="absolute left-[4%] top-[40%] h-48 w-48 text-sage opacity-[0.07]">
         <svg viewBox="0 0 160 160" fill="none" stroke="currentColor" strokeWidth="0.8" xmlns="http://www.w3.org/2000/svg">
           <circle cx="80" cy="80" r="70" strokeDasharray="4 7" />
           <circle cx="80" cy="80" r="52" strokeDasharray="2 9" />
@@ -192,7 +192,7 @@ function FloatingLeaves() {
       </div>
 
       {/* ── BOTANICAL CLUSTER — lower-right ──────────────────────────────── */}
-      <div className="absolute right-[3%] top-[72%] h-36 w-36 rotate-[20deg] text-plum opacity-[0.045]">
+      <div className="absolute right-[3%] top-[72%] h-36 w-36 rotate-[20deg] text-plum opacity-[0.075]">
         <svg viewBox="0 0 120 120" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
           <path d="M60 105 C60 105 18 72 23 34 C28 8 60 4 60 4 C60 4 92 8 97 34 C102 72 60 105 60 105Z" />
           <path d="M60 105 C60 105 8 82 16 44 C23 16 54 14 60 4 C66 14 97 16 104 44 C112 82 60 105 60 105Z" opacity="0.45" />
@@ -1294,6 +1294,10 @@ export default function CustomerLayout() {
             >
               <Heart className="h-5 w-5" />
             </Link>
+            {/* Theme toggle — visible in header on sm+ for quick access */}
+            <div className="hidden sm:flex">
+              <ThemeToggle compact />
+            </div>
             <NotificationBell />
             <CartButton onClick={() => setCartOpen(true)} />
             <UserMenu />
