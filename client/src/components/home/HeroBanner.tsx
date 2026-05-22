@@ -247,7 +247,7 @@ export function HeroBanner() {
                 className="group rounded-sm bg-gradient-to-br from-coral/60 via-saffron/40 to-coral/20 p-[1.5px] transition-all duration-300 hover:from-coral/75 hover:via-saffron/60 hover:to-coral/35"
                 style={{
                   boxShadow:
-                    '0 0 14px -2px hsl(var(--coral)/0.55), 0 0 32px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
+                    '0 0 7px -8px hsl(var(--coral)/0.55), 0 0 8px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
                 }}
               >
                 {/* Inner glass surface — REAL glass (has something to blur) */}
