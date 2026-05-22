@@ -560,6 +560,44 @@
   50%     { opacity: 1;    }
 }
 
+/* ── Bokeh particle float paths (compositor-only: transform + opacity) ────── */
+@keyframes pfloat-A {
+  0%   { transform: translate(0px, 0px)    scale(0.4);  opacity: 0;    }
+  10%  { opacity: 0.78; }
+  50%  { transform: translate(16px, -28px) scale(1);    opacity: 0.68; }
+  90%  { opacity: 0.05; }
+  100% { transform: translate(26px, -54px) scale(0.3);  opacity: 0;    }
+}
+@keyframes pfloat-B {
+  0%   { transform: translate(0px, 0px)     scale(0.35); opacity: 0;    }
+  10%  { opacity: 0.72; }
+  50%  { transform: translate(-18px, -30px) scale(0.95); opacity: 0.62; }
+  90%  { opacity: 0.04; }
+  100% { transform: translate(-28px, -56px) scale(0.25); opacity: 0;    }
+}
+@keyframes pfloat-C {
+  0%   { transform: translate(0px, 0px)    scale(0.5);  opacity: 0;    }
+  8%   { opacity: 0.80; }
+  33%  { transform: translate(10px, -20px) scale(1.05); opacity: 0.75; }
+  66%  { transform: translate(-6px, -38px) scale(0.9);  opacity: 0.55; }
+  92%  { opacity: 0.03; }
+  100% { transform: translate(4px,  -58px) scale(0.2);  opacity: 0;    }
+}
+@keyframes pfloat-D {
+  0%   { transform: translate(0px, 0px)    scale(0.3);  opacity: 0;    }
+  12%  { opacity: 0.85; }
+  50%  { transform: translate(22px, -32px) scale(1.1);  opacity: 0.70; }
+  88%  { opacity: 0.06; }
+  100% { transform: translate(36px, -62px) scale(0.2);  opacity: 0;    }
+}
+@keyframes pfloat-E {
+  0%   { transform: translate(0px, 0px)     scale(0.45); opacity: 0;    }
+  10%  { opacity: 0.65; }
+  50%  { transform: translate(-8px, -25px)  scale(0.88); opacity: 0.58; }
+  90%  { opacity: 0.04; }
+  100% { transform: translate(-14px, -48px) scale(0.3);  opacity: 0;    }
+}
+
 /* ════════════════════════════════════════════════════════════════════════════
    Reduce-motion respect
    ──────────────────────────────────────────────────────────────────────────── */

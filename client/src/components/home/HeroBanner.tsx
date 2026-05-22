@@ -92,23 +92,31 @@ export function HeroBanner() {
         <rect x="1378" y="90"  width="22" height="50" />
       </svg>
 
-      {/* ── Floating sparkle particles ───────────────────────────────────────── */}
-      {([
-        { top: '12%', left: '8%',   dur: '2.8s', delay: '0s'   },
-        { top: '28%', left: '18%',  dur: '3.5s', delay: '0.7s' },
-        { top: '8%',  left: '45%',  dur: '2.2s', delay: '1.2s' },
-        { top: '55%', left: '5%',   dur: '4s',   delay: '0.3s' },
-        { top: '18%', right: '22%', dur: '3.1s', delay: '1.8s' },
-        { top: '42%', right: '12%', dur: '2.6s', delay: '0.9s' },
-        { top: '70%', right: '30%', dur: '3.8s', delay: '2.1s' },
-      ] as Array<{ top: string; left?: string; right?: string; dur: string; delay: string }>).map((s, i) => (
-        <div
-          key={i}
-          aria-hidden
-          className="animate-sparkle pointer-events-none absolute h-[3px] w-[3px] rounded-full bg-white/90 shadow-[0_0_6px_2px_rgba(255,255,255,0.5)]"
-          style={{ top: s.top, left: s.left, right: s.right, '--duration': s.dur, animationDelay: s.delay } as React.CSSProperties}
-        />
-      ))}
+      {/* ── Gradient bokeh floating particles ─────────────────────────────────── */}
+      {/* Particle 1 — amber, large, pfloat-A */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '14%', left: '7%', width: '18px', height: '18px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(42,92%,60%,0.88) 0%, hsla(42,92%,60%,0.38) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-A 8.2s ease-in-out infinite', animationDelay: '0s', willChange: 'transform' }} />
+      {/* Particle 2 — sage, medium, pfloat-B */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '32%', left: '13%', width: '13px', height: '13px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(158,64%,55%,0.85) 0%, hsla(158,64%,55%,0.35) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-B 9.5s ease-in-out infinite', animationDelay: '1.4s', willChange: 'transform' }} />
+      {/* Particle 3 — warm gold, small, pfloat-C */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '9%', left: '38%', width: '10px', height: '10px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(50,100%,66%,0.90) 0%, hsla(50,100%,66%,0.40) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-C 7.1s ease-in-out infinite', animationDelay: '2.6s', willChange: 'transform' }} />
+      {/* Particle 4 — plum, large, pfloat-D */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '58%', left: '4%', width: '20px', height: '20px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(262,84%,68%,0.80) 0%, hsla(262,84%,68%,0.32) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-D 10.3s ease-in-out infinite', animationDelay: '0.5s', willChange: 'transform' }} />
+      {/* Particle 5 — coral, medium, pfloat-E */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '22%', left: '55%', width: '14px', height: '14px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(38,92%,54%,0.86) 0%, hsla(38,92%,54%,0.36) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-E 8.8s ease-in-out infinite', animationDelay: '3.2s', willChange: 'transform' }} />
+      {/* Particle 6 — pink, small, pfloat-A */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '44%', right: '10%', width: '11px', height: '11px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(330,70%,68%,0.82) 0%, hsla(330,70%,68%,0.33) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-A 7.6s ease-in-out infinite', animationDelay: '1.9s', willChange: 'transform' }} />
+      {/* Particle 7 — amber, extra-large, pfloat-C */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '68%', right: '24%', width: '22px', height: '22px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(42,92%,60%,0.75) 0%, hsla(42,92%,60%,0.28) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-C 11.0s ease-in-out infinite', animationDelay: '0.3s', willChange: 'transform' }} />
+      {/* Particle 8 — sage, small, pfloat-D */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '15%', right: '38%', width: '9px', height: '9px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(158,64%,55%,0.88) 0%, hsla(158,64%,55%,0.38) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-D 6.9s ease-in-out infinite', animationDelay: '4.1s', willChange: 'transform' }} />
+      {/* Particle 9 — warm gold, medium, pfloat-B */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '78%', left: '28%', width: '15px', height: '15px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(50,100%,66%,0.83) 0%, hsla(50,100%,66%,0.33) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-B 9.2s ease-in-out infinite', animationDelay: '2.1s', willChange: 'transform' }} />
+      {/* Particle 10 — plum, small, pfloat-E */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '50%', right: '42%', width: '8px', height: '8px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(262,84%,68%,0.90) 0%, hsla(262,84%,68%,0.40) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-E 7.8s ease-in-out infinite', animationDelay: '3.7s', willChange: 'transform' }} />
+      {/* Particle 11 — coral, large, pfloat-A */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '36%', right: '6%', width: '17px', height: '17px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(38,92%,54%,0.78) 0%, hsla(38,92%,54%,0.30) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-A 10.5s ease-in-out infinite', animationDelay: '0.8s', willChange: 'transform' }} />
+      {/* Particle 12 — pink, medium, pfloat-C */}
+      <div aria-hidden className="pointer-events-none absolute" style={{ top: '6%', left: '22%', width: '12px', height: '12px', borderRadius: '50%', background: 'radial-gradient(circle, hsla(330,70%,68%,0.84) 0%, hsla(330,70%,68%,0.34) 42%, transparent 70%)', filter: 'blur(1.8px)', animation: 'pfloat-C 8.4s ease-in-out infinite', animationDelay: '1.1s', willChange: 'transform' }} />
 
       {/* ── Botanical leaf-cluster SVG watermark — upper-right ───────────────── */}
       <svg
