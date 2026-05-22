@@ -144,73 +144,88 @@ function FreshPlusArt() {
 
 // ─── Banner config ────────────────────────────────────────────────────────────
 interface Banner {
-  id:         string;
-  title:      string;
-  subtitle:   string;
-  bangla:     string;
-  extra:      string | null;
-  label:      string | null;
-  cta:        string;
-  to:         string;
-  image:      string;
-  /** Transparent gradient overlay on top of dark surface base */
-  colorWash:  string;
-  /** Used for box-shadow glow AND image drop-shadow halo */
-  glowColor:  string;
+  id:            string;
+  title:         string;
+  subtitle:      string;
+  bangla:        string;
+  extra:         string | null;
+  label:         string | null;
+  cta:           string;
+  to:            string;
+  image:         string;
+  /** Very subtle (<12%) transparent tint overlay on near-black base */
+  colorWash:     string;
+  /** Used for box-shadow neon bloom AND image drop-shadow halo */
+  glowColor:     string;
   /** CSS filter applied to the product photo for thematic colour cohesion */
-  imgFilter:  string;
-  topIcon:    LucideIcon | null;
-  Art:        () => JSX.Element;
+  imgFilter:     string;
+  /** Per-banner neon ring gradient — from/via/to classes */
+  ringGrad:      string;
+  /** Hover override classes for the neon ring */
+  ringGradHover: string;
+  /** Tailwind bg-color class for the concentrated right-side neon orb */
+  neonOrb:       string;
+  topIcon:       LucideIcon | null;
+  Art:           () => JSX.Element;
 }
 
 const BANNERS: Banner[] = [
   {
-    id:        'farm-fresh',
-    title:     'Farm Fresh',
-    subtitle:  'From Local Farms',
-    bangla:    'স্থানীয় খামার থেকে\nসরাসরি আপনার কাছে',
-    extra:     null,
-    label:     null,
-    cta:       'Shop Now',
-    to:        '/products?collection=fresh',
-    image:     'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=520&h=520&fit=crop&crop=center&q=85',
-    colorWash: 'bg-gradient-to-br from-sage/52 via-sage/24 to-transparent',
-    glowColor: 'hsl(var(--sage) / 0.62)',
-    imgFilter: 'saturate(1.35)',
-    topIcon:   null,
-    Art:       FarmFreshArt,
+    id:            'farm-fresh',
+    title:         'Farm Fresh',
+    subtitle:      'From Local Farms',
+    bangla:        'স্থানীয় খামার থেকে\nসরাসরি আপনার কাছে',
+    extra:         null,
+    label:         null,
+    cta:           'Shop Now',
+    to:            '/products?collection=fresh',
+    image:         'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=520&h=520&fit=crop&crop=center&q=85',
+    colorWash:     'bg-gradient-to-br from-sage/10 via-transparent to-transparent',
+    glowColor:     'hsl(var(--sage) / 0.65)',
+    imgFilter:     'saturate(1.5)',
+    ringGrad:      'from-sage/70 via-sage/35 to-sage/12',
+    ringGradHover: 'hover:from-sage/90 hover:via-sage/55 hover:to-sage/22',
+    neonOrb:       'bg-sage/40',
+    topIcon:       null,
+    Art:           FarmFreshArt,
   },
   {
-    id:        'bazar-deal',
-    title:     'Weekend',
-    subtitle:  'Bazar Deal',
-    bangla:    'সেরা দামে সেরা পণ্য',
-    extra:     'Up to 40% Off',
-    label:     null,
-    cta:       'Grab Now',
-    to:        '/products?onSale=true',
-    image:     'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=520&h=520&fit=crop&crop=center&q=85',
-    colorWash: 'bg-gradient-to-br from-blush/60 via-blush/27 to-transparent',
-    glowColor: 'hsl(var(--blush) / 0.68)',
-    imgFilter: 'saturate(1.25) hue-rotate(5deg)',
-    topIcon:   BadgePercent,
-    Art:       BazarDealArt,
+    id:            'bazar-deal',
+    title:         'Weekend',
+    subtitle:      'Bazar Deal',
+    bangla:        'সেরা দামে সেরা পণ্য',
+    extra:         'Up to 40% Off',
+    label:         null,
+    cta:           'Grab Now',
+    to:            '/products?onSale=true',
+    image:         'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=520&h=520&fit=crop&crop=center&q=85',
+    colorWash:     'bg-gradient-to-br from-blush/10 via-transparent to-transparent',
+    glowColor:     'hsl(var(--blush) / 0.72)',
+    imgFilter:     'saturate(1.4) hue-rotate(5deg)',
+    ringGrad:      'from-blush/70 via-blush/35 to-blush/12',
+    ringGradHover: 'hover:from-blush/90 hover:via-blush/55 hover:to-blush/22',
+    neonOrb:       'bg-blush/40',
+    topIcon:       BadgePercent,
+    Art:           BazarDealArt,
   },
   {
-    id:        'fresh-plus',
-    title:     'Extra Fresh',
-    subtitle:  'Extra Benefits',
-    bangla:    'সদস্যদের জন্য বিশেষ সুবিধা',
-    extra:     'Extra 15% Off',
-    label:     'Ayra Fresh+',
-    cta:       'Join Now',
-    to:        '/products?collection=fresh-plus',
-    image:     'https://images.unsplash.com/photo-1542838132-92c53300491e?w=520&h=520&fit=crop&crop=center&q=85',
-    colorWash: 'bg-gradient-to-br from-plum/65 via-plum/30 to-transparent',
-    glowColor: 'hsl(var(--plum) / 0.62)',
-    imgFilter: 'saturate(1.15) hue-rotate(-12deg)',
-    topIcon:   Sparkles,
-    Art:       FreshPlusArt,
+    id:            'fresh-plus',
+    title:         'Extra Fresh',
+    subtitle:      'Extra Benefits',
+    bangla:        'সদস্যদের জন্য বিশেষ সুবিধা',
+    extra:         'Extra 15% Off',
+    label:         'Ayra Fresh+',
+    cta:           'Join Now',
+    to:            '/products?collection=fresh-plus',
+    image:         'https://images.unsplash.com/photo-1542838132-92c53300491e?w=520&h=520&fit=crop&crop=center&q=85',
+    colorWash:     'bg-gradient-to-br from-plum/12 via-transparent to-transparent',
+    glowColor:     'hsl(var(--plum) / 0.68)',
+    imgFilter:     'saturate(1.3) hue-rotate(-12deg)',
+    ringGrad:      'from-plum/70 via-plum/35 to-plum/12',
+    ringGradHover: 'hover:from-plum/90 hover:via-plum/55 hover:to-plum/22',
+    neonOrb:       'bg-plum/40',
+    topIcon:       Sparkles,
+    Art:           FreshPlusArt,
   },
 ];
 
@@ -229,16 +244,18 @@ export function FeatureBanners() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ delay: i * 0.1, type: 'spring', stiffness: 200, damping: 22 }}
-            // Pearl-shimmer ring — reduced radius
-            className="group relative p-[1.5px] rounded-xl bg-gradient-to-br from-white/40 via-saffron/22 to-plum/15 transition-all duration-300 hover:from-white/55 hover:via-saffron/35 hover:to-plum/22 hover:-translate-y-1"
-            style={{ boxShadow: `0 20px 60px -20px ${b.glowColor}` }}
+            // Per-banner neon ring — near-black glass card style
+            className={`group relative p-[1.5px] rounded-xl bg-gradient-to-br ${b.ringGrad} ${b.ringGradHover} transition-all duration-300 hover:-translate-y-1`}
+            style={{
+              boxShadow: `0 0 16px -3px ${b.glowColor}, 0 0 44px -6px ${b.glowColor}, 0 22px 60px -12px ${b.glowColor}`,
+            }}
           >
             <Link
               to={b.to}
-              // Dark glass surface base — colour wash sits on top as a transparent overlay
-              className="relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface/82 p-6 active:scale-[0.98]"
+              // Near-pure dark base — colour atmosphere comes entirely from the neon orb
+              className="relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-bg p-6 active:scale-[0.98]"
             >
-              {/* ── Transparent colour wash — gives theme tint without solid fill ── */}
+              {/* ── Very subtle colour wash — light top-left tint only ── */}
               <div aria-hidden className={`pointer-events-none absolute inset-0 z-[0] ${b.colorWash}`} />
 
               {/* ── SVG watermark art ── */}
@@ -252,11 +269,16 @@ export function FeatureBanners() {
               {/* Glass shine diagonal */}
               <div aria-hidden className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.11)_0%,transparent_40%)]" />
 
-              {/* ── Radial glow halo behind the product photo ── */}
+              {/* ── Concentrated neon orb — right-centre atmospheric light source ── */}
+              {/* Primary orb: large soft glow from right edge */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -bottom-10 right-0 z-[3] h-[72%] w-[62%]"
-                style={{ background: `radial-gradient(ellipse at 55% 88%, ${b.glowColor} 0%, transparent 65%)` }}
+                className={`pointer-events-none absolute -right-16 top-1/2 z-[3] h-72 w-72 -translate-y-1/2 rounded-full ${b.neonOrb} blur-[72px]`}
+              />
+              {/* Secondary orb: tighter, near bottom-right, for depth */}
+              <div
+                aria-hidden
+                className={`pointer-events-none absolute -bottom-8 -right-6 z-[3] h-40 w-40 rounded-full ${b.neonOrb} opacity-60 blur-3xl`}
               />
 
               {/* Top-right icon chip */}
@@ -297,7 +319,7 @@ export function FeatureBanners() {
                 <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
 
-              {/* ── Product photo — themed filter + coloured aura ── */}
+              {/* ── Product photo — strong coloured drop-shadow for neon bloom ── */}
               <img
                 src={b.image}
                 alt=""
@@ -306,7 +328,7 @@ export function FeatureBanners() {
                 decoding="async"
                 className="pointer-events-none absolute -bottom-3 -right-3 z-[5] h-[88%] w-auto max-w-[58%] select-none object-contain object-bottom transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.07]"
                 style={{
-                  filter: `${b.imgFilter} drop-shadow(0 6px 20px ${b.glowColor}) drop-shadow(0 0 45px ${b.glowColor})`,
+                  filter: `${b.imgFilter} drop-shadow(0 8px 24px ${b.glowColor}) drop-shadow(0 0 55px ${b.glowColor})`,
                 }}
               />
             </Link>
