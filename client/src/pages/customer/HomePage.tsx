@@ -1,7 +1,6 @@
 import { HeroBanner }       from '../../components/home/HeroBanner';
 import { PromoStrip }       from '../../components/home/PromoStrip';
-import { CategoryStrip }    from '../../components/home/CategoryStrip';
-import { FeatureBanners }   from '../../components/home/FeatureBanners';
+import { BazarPanel }       from '../../components/home/BazarPanel';
 import { FlashDeals }       from '../../components/home/FlashDeals';
 import { FeaturedProducts } from '../../components/home/FeaturedProducts';
 import { WhyShopWithUs }    from '../../components/home/WhyShopWithUs';
@@ -30,9 +29,7 @@ export default function HomePage() {
         variant="outline"
       />
 
-      <CategoryStrip />
-
-      <FeatureBanners />
+      <BazarPanel />
 
       <WhyShopWithUs />
 
