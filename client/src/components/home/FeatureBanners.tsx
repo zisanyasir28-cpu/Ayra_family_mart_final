@@ -254,7 +254,7 @@ export function FeatureBanners() {
             <Link
               to={b.to}
               // Near-pure dark base — colour atmosphere comes entirely from the neon orb
-              className="relative flex h-full min-h-[230px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-bg p-6 active:scale-[0.98]"
+              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-bg p-6 active:scale-[0.98]"
             >
               {/* ── Very subtle colour wash — light top-left tint only ── */}
               <div aria-hidden className={`pointer-events-none absolute inset-0 z-[0] ${b.colorWash}`} />
@@ -270,10 +270,16 @@ export function FeatureBanners() {
               {/* Glass shine diagonal */}
               <div aria-hidden className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.11)_0%,transparent_40%)]" />
 
-              {/* ── Concentrated neon orb — single tight light source behind medallion ── */}
+              {/* ── Concentrated neon orb — sits BEHIND the medallion (bottom-right), not over text ── */}
               <div
                 aria-hidden
-                className={`pointer-events-none absolute -right-10 top-1/2 z-[3] h-48 w-48 -translate-y-1/2 rounded-full ${b.neonOrb} blur-[56px]`}
+                className={`pointer-events-none absolute -bottom-12 -right-12 z-[3] h-44 w-44 rounded-full ${b.neonOrb} blur-[60px]`}
+              />
+
+              {/* ── Text-area dark guarantee — gradient that keeps the LEFT half readable ── */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(to_right,hsl(var(--bg)/0.85)_0%,hsl(var(--bg)/0.55)_45%,transparent_70%)]"
               />
 
               {/* Top-right icon chip */}
@@ -285,24 +291,24 @@ export function FeatureBanners() {
 
               {/* Optional brand label */}
               {b.label && (
-                <p className="relative z-[6] font-display text-base font-extrabold leading-none text-cream">
+                <p className="relative z-[6] font-display text-base font-extrabold leading-none text-cream [text-shadow:0_2px_8px_rgba(0,0,0,0.75)]">
                   Ayra Fresh<span className="text-sage">+</span>
                 </p>
               )}
 
-              {/* Title block */}
-              <div className={`relative z-[6] max-w-[60%] ${b.label ? 'mt-2.5' : 'mt-0'}`}>
-                <p className="font-display text-[1.7rem] font-black leading-[1.05] text-cream sm:text-[1.95rem]">
+              {/* Title block — text-shadow safeguards readability against any colour bloom behind */}
+              <div className={`relative z-[6] max-w-[62%] ${b.label ? 'mt-2.5' : 'mt-0'}`}>
+                <p className="font-display text-[1.55rem] font-black leading-[1.05] text-cream sm:text-[1.8rem] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">
                   {b.title}
                 </p>
-                <p className="font-display text-[1.7rem] font-black leading-[1.05] text-cream sm:text-[1.95rem]">
+                <p className="font-display text-[1.55rem] font-black leading-[1.05] text-cream sm:text-[1.8rem] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">
                   {b.subtitle}
                 </p>
-                <p className="mt-2.5 font-bangla text-[11px] leading-snug text-cream/85 whitespace-pre-line">
+                <p className="mt-2.5 font-bangla text-[11px] leading-snug text-cream/95 whitespace-pre-line [text-shadow:0_1px_6px_rgba(0,0,0,0.7)]">
                   {b.bangla}
                 </p>
                 {b.extra && (
-                  <p className="mt-2 font-display text-base font-bold text-cream">
+                  <p className="mt-2 font-display text-base font-bold text-cream [text-shadow:0_2px_8px_rgba(0,0,0,0.75)]">
                     {b.extra}
                   </p>
                 )}
@@ -314,10 +320,10 @@ export function FeatureBanners() {
                 <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
 
-              {/* ── Magical circular image medallion ── */}
+              {/* ── Magical circular image medallion — sits in bottom-right corner, smaller so text breathes ── */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -bottom-6 -right-6 z-[5] h-[170px] w-[170px] sm:h-[180px] sm:w-[180px]"
+                className="pointer-events-none absolute -bottom-8 -right-8 z-[5] h-[140px] w-[140px] sm:h-[150px] sm:w-[150px]"
               >
                 {/* Outer halo — soft coloured bloom behind the disk */}
                 <div
