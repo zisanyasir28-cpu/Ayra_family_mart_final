@@ -9,27 +9,27 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import { fetchCategories } from '../../services/categories';
 
-// ─── Bilingual + watermark metadata (slug-keyed) ─────────────────────────────
+// ─── Metadata (slug-keyed) ────────────────────────────────────────────────────
 const META: Record<string, {
-  bangla:      string;
-  display:     string;
-  Watermark:   LucideIcon;
-  tint:        string;
-  bgFrom:      string;   // Tailwind bg-gradient from class for no-photo fallback
-  ringFrom:    string;   // border ring accent
+  bangla:    string;
+  display:   string;
+  Icon:      LucideIcon;
+  tint:      string;      // icon colour
+  chipBg:    string;      // floating chip ring tint
+  bgFrom:    string;      // no-photo fallback gradient
 }> = {
-  vegetables:      { bangla: 'তাজা সবজি',         display: 'Fresh Vegetables',  Watermark: LeafIcon,  tint: 'text-sage',    bgFrom: 'from-sage/30 via-sage/15',     ringFrom: 'from-sage/60'    },
-  fruits:          { bangla: 'ফল ও বাদাম',         display: 'Fruits & Nuts',     Watermark: Apple,     tint: 'text-coral',   bgFrom: 'from-coral/30 via-coral/15',   ringFrom: 'from-coral/60'   },
-  dairy:           { bangla: 'দুধ ও ডিম',          display: 'Dairy & Eggs',      Watermark: Milk,      tint: 'text-cream',   bgFrom: 'from-cream/25 via-cream/12',   ringFrom: 'from-cream/50'   },
-  beverages:       { bangla: 'পানীয়',             display: 'Beverages',          Watermark: Coffee,    tint: 'text-blush',   bgFrom: 'from-blush/30 via-blush/15',   ringFrom: 'from-blush/60'   },
-  snacks:          { bangla: 'স্ন্যাকস',           display: 'Snacks & Munchies', Watermark: Cookie,    tint: 'text-coral',   bgFrom: 'from-coral/28 via-saffron/12', ringFrom: 'from-coral/55'   },
-  rice:            { bangla: 'চাল ও শস্য',         display: 'Rice & Grains',     Watermark: Wheat,     tint: 'text-saffron', bgFrom: 'from-saffron/30 via-saffron/14', ringFrom: 'from-saffron/60' },
-  household:       { bangla: 'হাউসহোল্ড কেয়ার',  display: 'Household Care',    Watermark: Droplets,  tint: 'text-plum',    bgFrom: 'from-plum/30 via-plum/15',     ringFrom: 'from-plum/55'    },
-  'personal-care': { bangla: 'পার্সোনাল কেয়ার',  display: 'Personal Care',     Watermark: Sparkles,  tint: 'text-blush',   bgFrom: 'from-blush/28 via-blush/13',   ringFrom: 'from-blush/55'   },
-  meat:            { bangla: 'মাংস ও পোল্ট্রি',   display: 'Meat & Poultry',    Watermark: Beef,      tint: 'text-coral',   bgFrom: 'from-coral/28 via-coral/13',   ringFrom: 'from-coral/55'   },
-  fish:            { bangla: 'মাছ ও সামুদ্রিক',   display: 'Fish & Seafood',    Watermark: Fish,      tint: 'text-plum',    bgFrom: 'from-plum/28 via-plum/13',     ringFrom: 'from-plum/55'    },
-  bakery:          { bangla: 'বেকারি',            display: 'Bakery',             Watermark: Croissant, tint: 'text-coral',   bgFrom: 'from-coral/28 via-saffron/14', ringFrom: 'from-coral/55'   },
-  baby:            { bangla: 'শিশু পণ্য',          display: 'Baby & Kids',       Watermark: Baby,      tint: 'text-saffron', bgFrom: 'from-saffron/28 via-saffron/13', ringFrom: 'from-saffron/55' },
+  vegetables:      { bangla: 'তাজা সবজি',        display: 'Fresh Vegetables',  Icon: LeafIcon,  tint: 'text-sage',    chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--sage)/0.25)]',    bgFrom: 'from-sage/32 via-sage/16'    },
+  fruits:          { bangla: 'ফল ও বাদাম',        display: 'Fruits & Nuts',     Icon: Apple,     tint: 'text-coral',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--coral)/0.25)]',   bgFrom: 'from-coral/30 via-coral/15'  },
+  dairy:           { bangla: 'দুধ ও ডিম',         display: 'Dairy & Eggs',      Icon: Milk,      tint: 'text-cream',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.18)]',  bgFrom: 'from-cream/26 via-cream/12'  },
+  beverages:       { bangla: 'পানীয়',            display: 'Beverages',          Icon: Coffee,    tint: 'text-blush',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--blush)/0.25)]',  bgFrom: 'from-blush/30 via-blush/14'  },
+  snacks:          { bangla: 'স্ন্যাকস',          display: 'Snacks & Munchies', Icon: Cookie,    tint: 'text-coral',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--coral)/0.22)]',  bgFrom: 'from-coral/28 via-saffron/12'},
+  rice:            { bangla: 'চাল ও শস্য',        display: 'Rice & Grains',     Icon: Wheat,     tint: 'text-saffron', chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--saffron)/0.25)]', bgFrom: 'from-saffron/30 via-saffron/14'},
+  household:       { bangla: 'হাউসহোল্ড কেয়ার', display: 'Household Care',    Icon: Droplets,  tint: 'text-plum',    chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--plum)/0.28)]',   bgFrom: 'from-plum/30 via-plum/14'   },
+  'personal-care': { bangla: 'পার্সোনাল কেয়ার', display: 'Personal Care',     Icon: Sparkles,  tint: 'text-blush',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--blush)/0.22)]',  bgFrom: 'from-blush/28 via-blush/12' },
+  meat:            { bangla: 'মাংস ও পোল্ট্রি',  display: 'Meat & Poultry',    Icon: Beef,      tint: 'text-coral',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--coral)/0.22)]',  bgFrom: 'from-coral/26 via-coral/12' },
+  fish:            { bangla: 'মাছ ও সামুদ্রিক',  display: 'Fish & Seafood',    Icon: Fish,      tint: 'text-plum',    chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--plum)/0.25)]',   bgFrom: 'from-plum/26 via-plum/12'   },
+  bakery:          { bangla: 'বেকারি',           display: 'Bakery',             Icon: Croissant, tint: 'text-coral',   chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--coral)/0.22)]',  bgFrom: 'from-coral/26 via-saffron/12'},
+  baby:            { bangla: 'শিশু পণ্য',         display: 'Baby & Kids',       Icon: Baby,      tint: 'text-saffron', chipBg: 'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_hsl(var(--saffron)/0.22)]', bgFrom: 'from-saffron/26 via-saffron/12'},
 };
 
 function getMeta(slug: string) {
@@ -37,16 +37,16 @@ function getMeta(slug: string) {
     if (slug.includes(key)) return m;
   }
   return {
-    bangla:   'আরও পণ্য',
-    display:  'More',
-    Watermark: ShoppingBasket,
-    tint:     'text-cream',
-    bgFrom:   'from-surface-2 via-surface',
-    ringFrom: 'from-cream/40',
+    bangla:  'আরও পণ্য',
+    display: 'More',
+    Icon:    ShoppingBasket,
+    tint:    'text-cream',
+    chipBg:  'shadow-[0_4px_14px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.15)]',
+    bgFrom:  'from-surface-2 via-surface',
   };
 }
 
-// ─── Pearl-glass category tile ───────────────────────────────────────────────
+// ─── Category tile ────────────────────────────────────────────────────────────
 interface TileProps {
   id:       string;
   name:     string;
@@ -56,26 +56,21 @@ interface TileProps {
 }
 
 function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
-  const meta    = getMeta(slug);
-  const WM      = meta.Watermark;
+  const meta = getMeta(slug);
+  const Icon = meta.Icon;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-30px' }}
-      transition={{
-        delay:     Math.min(index * 0.05, 0.3),
-        type:      'spring',
-        stiffness: 220,
-        damping:   24,
-      }}
-      // Pearl-shimmer ring — richer gradient, subtle hover lift
-      className="group relative p-[1.5px] rounded-2xl bg-gradient-to-br from-white/35 via-saffron/18 to-plum/12 transition-all duration-300 hover:from-white/55 hover:via-saffron/32 hover:to-plum/22 hover:-translate-y-1 hover:shadow-[0_10px_28px_-8px_hsl(var(--saffron)/0.38)]"
+      transition={{ delay: Math.min(index * 0.05, 0.3), type: 'spring', stiffness: 220, damping: 24 }}
+      // Pearl-shimmer ring — reduced to rounded-xl
+      className="group relative p-[1.5px] rounded-xl bg-gradient-to-br from-white/35 via-saffron/18 to-plum/12 transition-all duration-300 hover:from-white/55 hover:via-saffron/32 hover:to-plum/22 hover:-translate-y-1 hover:shadow-[0_10px_26px_-8px_hsl(var(--saffron)/0.35)]"
     >
       <Link
         to={`/products?categoryId=${id}`}
-        className="relative block aspect-square overflow-hidden rounded-[calc(1rem-1.5px)] bg-surface active:scale-[0.97] transition-transform"
+        className="relative block aspect-square overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface active:scale-[0.97] transition-transform"
       >
         {/* ── Photo fill ── */}
         {imageUrl ? (
@@ -87,51 +82,43 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
             className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          /* ── No-photo fallback: coloured glass with large centred icon ── */
+          /* ── No-photo: coloured glass gradient + centred icon ── */
           <div className={`absolute inset-0 z-[1] bg-gradient-to-br ${meta.bgFrom} to-bg`}>
-            {/* Giant faint watermark fills the background */}
-            <WM
+            {/* Large very-faint background watermark */}
+            <Icon
               aria-hidden
-              className={`absolute inset-0 m-auto h-16 w-16 opacity-[0.14] ${meta.tint}`}
-              strokeWidth={1}
+              className={`absolute inset-0 m-auto h-[60%] w-[60%] opacity-[0.07] ${meta.tint}`}
+              strokeWidth={0.8}
             />
-            {/* Centred frosted icon circle */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-bg/35 backdrop-blur-sm ring-1 ring-white/20">
-                <WM className={`h-5 w-5 ${meta.tint}`} strokeWidth={1.8} />
-              </div>
-            </div>
           </div>
         )}
 
-        {/* Oversized decorative watermark — top-right, always visible */}
-        <WM
-          aria-hidden
-          className={`pointer-events-none absolute -right-3 -top-3 z-[3] h-14 w-14 opacity-[0.18] ${meta.tint}`}
-          strokeWidth={1.2}
-        />
-
-        {/* Tiny sparkle dot — top-left */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full bg-white/75 shadow-[0_0_8px_2px_rgba(255,255,255,0.6)]"
-        />
+        {/* Tiny sparkle — top-left */}
+        <div aria-hidden className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full bg-white/75 shadow-[0_0_8px_2px_rgba(255,255,255,0.6)]" />
 
         {/* Glass shine diagonal */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.15)_0%,transparent_44%)]"
-        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.14)_0%,transparent_44%)]" />
 
-        {/* Bottom gradient for label legibility */}
+        {/* Bottom label gradient */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[65%] bg-gradient-to-t from-bg/96 via-bg/60 to-transparent" />
 
+        {/* ── 3D floating icon chip — top-right ── */}
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute right-2 top-2 z-[6] flex h-[26px] w-[26px] items-center justify-center rounded-full bg-bg/78 ring-1 ring-white/22 ${meta.chipBg} transition-transform duration-300 group-hover:-translate-y-0.5`}
+        >
+          <Icon
+            className={`h-[13px] w-[13px] ${meta.tint} drop-shadow-[0_1px_3px_rgba(0,0,0,0.65)]`}
+            strokeWidth={2}
+          />
+        </div>
+
         {/* Labels */}
-        <div className="absolute inset-x-0 bottom-0 z-[5] px-2.5 pb-2 text-left">
-          <p className="text-[11px] font-bold leading-tight text-cream drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+        <div className="absolute inset-x-0 bottom-0 z-[5] px-2 pb-1.5 text-left">
+          <p className="text-[10.5px] font-bold leading-tight text-cream drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
             {meta.display || name}
           </p>
-          <p className="mt-0.5 font-bangla text-[10px] text-cream/80 drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+          <p className="mt-0.5 font-bangla text-[9.5px] text-cream/78 drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
             {meta.bangla}
           </p>
         </div>
@@ -143,8 +130,8 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
 // ─── Skeleton tile ────────────────────────────────────────────────────────────
 function SkeletonTile() {
   return (
-    <div className="p-[1.5px] rounded-2xl bg-gradient-to-br from-white/15 via-line/25 to-line/15">
-      <div className="relative aspect-square overflow-hidden rounded-[calc(1rem-1.5px)] bg-surface">
+    <div className="p-[1.5px] rounded-xl bg-gradient-to-br from-white/15 via-line/25 to-line/15">
+      <div className="relative aspect-square overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface">
         <div className="skeleton absolute inset-0" />
       </div>
     </div>
@@ -167,23 +154,22 @@ export function CategoryStrip() {
     <div>
       {/* Header */}
       <div className="mb-5 flex items-center justify-between gap-4 sm:mb-6">
-        <div>
-          <motion.h2
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5 }}
-            className="font-display text-xl font-black text-cream sm:text-2xl"
-          >
-            Shop By Category{' '}
-            <LeafIcon className="mb-1 inline h-5 w-5 text-sage sm:h-6 sm:w-6" aria-hidden />
-          </motion.h2>
-        </div>
+        <motion.h2
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5 }}
+          className="font-display text-xl font-black text-cream sm:text-2xl"
+        >
+          Shop By Category{' '}
+          <LeafIcon className="mb-1 inline h-5 w-5 text-sage sm:h-6 sm:w-6" aria-hidden />
+        </motion.h2>
+
         <Link
           to="/products"
           className="group hidden shrink-0 items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-cream/65 transition hover:text-saffron sm:inline-flex"
         >
-          View All Categories
+          View All
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
         </Link>
       </div>
