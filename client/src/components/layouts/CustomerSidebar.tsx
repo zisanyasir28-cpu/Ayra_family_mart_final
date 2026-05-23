@@ -66,7 +66,10 @@ export function CustomerSidebar() {
       </svg>
 
       {/* ── Nav ─────────────────────────────────────────────────────────── */}
-      <p className="relative mb-2 px-2 text-[10px] uppercase tracking-[0.22em] text-sage/55">
+      {/* All text is hardcoded white — sidebar is always-dark forest green
+          regardless of theme, so CSS theme tokens like --cream resolve wrong */}
+      <p className="relative mb-2 px-2 text-[10px] uppercase tracking-[0.22em]"
+         style={{ color: 'hsl(152 38% 58% / 0.65)' }}>
         Browse
       </p>
 
@@ -80,34 +83,41 @@ export function CustomerSidebar() {
               cn(
                 'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
                 isActive
-                  ? 'bg-[hsl(145_44%_19%)] font-bold text-cream shadow-[0_2px_14px_-4px_hsl(145_55%_8%)]'
-                  : 'text-cream/70 hover:bg-[hsl(145_50%_13%)] hover:text-cream',
+                  ? 'bg-[hsl(145_44%_19%)] font-bold shadow-[0_2px_14px_-4px_hsl(145_55%_8%)]'
+                  : 'hover:bg-[hsl(145_50%_13%)]',
               )
             }
+            style={({ isActive }) => ({
+              color: isActive ? 'hsl(0 0% 96%)' : 'hsl(0 0% 88% / 0.72)',
+            })}
           >
             {({ isActive }) => (
               <>
                 <span
                   className={cn(
                     'flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors',
-                    isActive
-                      ? 'bg-sage/30'
-                      : 'ring-1 ring-sage/25 group-hover:ring-sage/45',
+                    isActive ? 'bg-sage/30' : 'ring-1 ring-[hsl(145_40%_40%/0.5)] group-hover:ring-[hsl(145_40%_50%/0.6)]',
                   )}
                 >
                   <Icon
-                    className={cn('h-[14px] w-[14px]', isActive ? 'text-sage' : iconClass)}
+                    className="h-[14px] w-[14px]"
                     strokeWidth={1.8}
+                    color={isActive
+                      ? 'hsl(152 42% 60%)'
+                      : iconClass
+                        ? 'hsl(152 38% 55%)'
+                        : 'hsl(0 0% 78%)'}
                   />
                 </span>
                 <span className="flex-1 truncate">{label}</span>
                 {badge && (
-                  <span className="rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider text-bg">
+                  <span className="rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider"
+                        style={{ color: 'hsl(145 62% 8%)' }}>
                     {badge}
                   </span>
                 )}
                 {isActive && (
-                  <ChevronRight className="h-3.5 w-3.5 shrink-0 text-sage/70" strokeWidth={2.4} />
+                  <ChevronRight className="h-3.5 w-3.5 shrink-0 text-sage/80" strokeWidth={2.4} />
                 )}
               </>
             )}
@@ -158,22 +168,23 @@ export function CustomerSidebar() {
           {/* ── Content ── */}
           <div className="relative z-10 max-w-[62%]">
             <div className="mb-2 flex items-center gap-1.5">
-              <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25 text-sage">
+              <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25" style={{ color: 'hsl(152 42% 60%)' }}>
                 <Leaf className="h-3.5 w-3.5" />
               </span>
-              <span className="font-display text-[10px] font-bold uppercase tracking-[0.16em] text-sage">
+              <span className="font-display text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: 'hsl(152 42% 60%)' }}>
                 Ayra Fresh+
               </span>
             </div>
-            <p className="font-display text-[15px] font-extrabold leading-tight text-dark-fg">
+            <p className="font-display text-[15px] font-extrabold leading-tight" style={{ color: 'hsl(0 0% 96%)' }}>
               Extra 15% Off
             </p>
-            <p className="mt-0.5 text-[10px] text-dark-fg/55">On Fresh Produce</p>
+            <p className="mt-0.5 text-[10px]" style={{ color: 'hsl(0 0% 90% / 0.55)' }}>On Fresh Produce</p>
 
             {/* Join Now — saffron text link (matches reference) */}
             <NavLink
               to="/products?collection=fresh-plus"
-              className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold text-saffron transition hover:text-saffron/80"
+              className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold transition"
+              style={{ color: 'hsl(var(--saffron))' }}
             >
               Join Now
               <ArrowRight className="h-3 w-3" />
@@ -213,25 +224,29 @@ export function CustomerSidebar() {
 
           {/* Content */}
           <div className="relative z-10">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dark-fg/65">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em]"
+               style={{ color: 'hsl(0 0% 94% / 0.65)' }}>
               Need Help?
             </p>
-            <p className="mt-0.5 text-[10px] text-dark-fg/45">We&apos;re here for you</p>
+            <p className="mt-0.5 text-[10px]" style={{ color: 'hsl(0 0% 90% / 0.45)' }}>
+              We&apos;re here for you
+            </p>
 
             <div className="mt-3 flex items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-plum to-saffron shadow-[0_4px_14px_-2px_hsl(var(--saffron)/0.45)]">
-                <Headphones className="h-4 w-4 text-dark-fg" strokeWidth={2} />
+                <Headphones className="h-4 w-4" strokeWidth={2} style={{ color: 'hsl(0 0% 96%)' }} />
               </span>
-              <span className="font-display text-2xl font-black leading-none tabular-nums text-dark-fg">
+              <span className="font-display text-2xl font-black leading-none tabular-nums"
+                    style={{ color: 'hsl(0 0% 96%)' }}>
                 24/7
               </span>
             </div>
 
-            {/* Live Chat — solid deep-green button with leaf watermark */}
+            {/* Live Chat — solid medium-forest-green button with leaf watermark */}
             <button
               type="button"
               className="group relative mt-3 flex w-full overflow-hidden rounded-full transition hover:brightness-110"
-              style={{ backgroundColor: 'hsl(145 60% 11%)' }}
+              style={{ backgroundColor: 'hsl(145 52% 26%)' }}
             >
               {/* Leaf watermark inside button */}
               <svg
@@ -245,13 +260,14 @@ export function CustomerSidebar() {
                 {/* Small leaf tip */}
                 <path d="M104 4 C110 10, 112 20, 108 28 C104 36, 96 36, 94 28 C92 20, 96 10, 104 4Z" fill="currentColor" />
               </svg>
-              <span className="relative flex w-full items-center justify-between gap-1.5 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-dark-fg [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]">
+              <span className="relative flex w-full items-center justify-between gap-1.5 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]"
+                    style={{ color: 'hsl(0 0% 94%)' }}>
                 Live Chat
                 <span
                   className="grid h-6 w-6 place-items-center rounded-full transition group-hover:translate-x-0.5"
                   style={{ backgroundColor: 'hsl(145 44% 42%)' }}
                 >
-                  <ArrowRight className="h-3 w-3 text-bg" strokeWidth={2.4} />
+                  <ArrowRight className="h-3 w-3" strokeWidth={2.4} style={{ color: 'hsl(0 0% 96%)' }} />
                 </span>
               </span>
             </button>
