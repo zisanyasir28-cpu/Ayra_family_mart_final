@@ -166,6 +166,8 @@ interface Banner {
   ringGradHover: string;
   /** Tailwind bg-color class for the concentrated right-side neon orb */
   neonOrb:       string;
+  /** HSL triplet for the card's always-dark base bg — each banner has its own colour */
+  cardBgHsl:     string;
   topIcon:       LucideIcon | null;
   Art:           () => React.JSX.Element;
 }
@@ -187,6 +189,7 @@ const BANNERS: Banner[] = [
     ringGrad:      'from-sage/70 via-sage/35 to-sage/12',
     ringGradHover: 'hover:from-sage/90 hover:via-sage/55 hover:to-sage/22',
     neonOrb:       'bg-sage/40',
+    cardBgHsl:     '145 50% 12%',   /* dark forest green — matches surface-dark token */
     topIcon:       null,
     Art:           FarmFreshArt,
   },
@@ -206,6 +209,7 @@ const BANNERS: Banner[] = [
     ringGrad:      'from-blush/70 via-blush/35 to-blush/12',
     ringGradHover: 'hover:from-blush/90 hover:via-blush/55 hover:to-blush/22',
     neonOrb:       'bg-blush/40',
+    cardBgHsl:     '25 80% 14%',    /* dark amber/burnt orange — Bazar Deal accent */
     topIcon:       BadgePercent,
     Art:           BazarDealArt,
   },
@@ -225,6 +229,7 @@ const BANNERS: Banner[] = [
     ringGrad:      'from-plum/70 via-plum/35 to-plum/12',
     ringGradHover: 'hover:from-plum/90 hover:via-plum/55 hover:to-plum/22',
     neonOrb:       'bg-plum/40',
+    cardBgHsl:     '262 55% 14%',   /* dark purple/plum — Ayra Fresh+ accent */
     topIcon:       Sparkles,
     Art:           FreshPlusArt,
   },
@@ -253,8 +258,9 @@ export function FeatureBanners() {
           >
             <Link
               to={b.to}
-              // Near-pure dark base — colour atmosphere comes entirely from the neon orb
-              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface-dark p-6 active:scale-[0.98]"
+              // Per-banner always-dark base — each card keeps its accent hue in both light & dark themes
+              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] p-6 active:scale-[0.98]"
+              style={{ backgroundColor: `hsl(${b.cardBgHsl})` }}
             >
               {/* ── Very subtle colour wash — light top-left tint only ── */}
               <div aria-hidden className={`pointer-events-none absolute inset-0 z-[0] ${b.colorWash}`} />
@@ -292,12 +298,11 @@ export function FeatureBanners() {
                 className={`pointer-events-none absolute -bottom-12 -right-12 z-[3] h-44 w-44 rounded-full ${b.neonOrb} blur-[60px]`}
               />
 
-              {/* ── Text-area dark guarantee — gradient that keeps the LEFT half readable ── */}
-              {/* Uses literal surface-dark HSL (145 50% 12%) so it matches the card bg in both themes */}
+              {/* ── Text-area dark guarantee — gradient matching each card's own bg colour ── */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 z-[3]"
-                style={{ background: 'linear-gradient(to right, hsl(145 50% 12% / 0.92) 0%, hsl(145 50% 12% / 0.6) 45%, transparent 70%)' }}
+                style={{ background: `linear-gradient(to right, hsl(${b.cardBgHsl} / 0.92) 0%, hsl(${b.cardBgHsl} / 0.6) 45%, transparent 70%)` }}
               />
 
               {/* Top-right icon chip */}
@@ -363,8 +368,8 @@ export function FeatureBanners() {
                     boxShadow: `0 0 18px -2px ${b.glowColor}, inset 0 0 12px ${b.glowColor}`,
                   }}
                 >
-                  {/* Image disk */}
-                  <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-dark">
+                  {/* Image disk — bg matches card colour for seamless edge bleeding */}
+                  <div className="relative h-full w-full overflow-hidden rounded-full" style={{ backgroundColor: `hsl(${b.cardBgHsl})` }}>
                     <img
                       src={b.image}
                       alt=""

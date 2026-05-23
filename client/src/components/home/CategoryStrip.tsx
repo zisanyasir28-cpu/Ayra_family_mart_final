@@ -71,67 +71,68 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
     >
       <Link
         to={`/products?categoryId=${id}`}
-        className="relative block aspect-square overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface active:scale-[0.97] transition-transform"
+        className="relative flex flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface active:scale-[0.97] transition-transform"
       >
-        {/* Photo fill */}
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        {/* ── Square photo area ── */}
+        <div className="relative aspect-square overflow-hidden">
+
+          {/* Photo fill */}
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={name}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 z-[1] h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          ) : (
+            <div className={`absolute inset-0 z-[1] bg-gradient-to-br ${meta.bgFrom} to-bg`}>
+              <Icon
+                aria-hidden
+                className={`absolute inset-0 m-auto h-[60%] w-[60%] opacity-[0.07] ${meta.tint}`}
+                strokeWidth={0.8}
+              />
+            </div>
+          )}
+
+          {/* Tiny sparkle — top-left, theme-aware */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full"
+            style={{ background: 'hsl(var(--shine-color)/0.75)', boxShadow: '0 0 8px 2px hsl(var(--shine-color)/0.6)' }}
           />
-        ) : (
-          <div className={`absolute inset-0 z-[1] bg-gradient-to-br ${meta.bgFrom} to-bg`}>
+
+          {/* Glass shine diagonal — theme-aware */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-[3]"
+            style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.14) 0%, transparent 44%)' }}
+          />
+
+          {/* ── 3D floating icon chip ── */}
+          {/* Outer glow ring — halo effect */}
+          <div
+            aria-hidden
+            className={`pointer-events-none absolute right-1.5 top-1.5 z-[6] h-9 w-9 rounded-full opacity-60 blur-[6px] bg-gradient-to-br ${meta.chipGrad}`}
+          />
+          {/* Chip body */}
+          <div
+            aria-hidden
+            className={`pointer-events-none absolute right-2 top-2 z-[7] flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${meta.chipGrad} ring-1 ${meta.chipRing} shadow-[0_6px_18px_-3px_rgba(0,0,0,0.6),inset_0_1.5px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.2)] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-105`}
+          >
             <Icon
-              aria-hidden
-              className={`absolute inset-0 m-auto h-[60%] w-[60%] opacity-[0.07] ${meta.tint}`}
-              strokeWidth={0.8}
+              className={`h-[15px] w-[15px] ${meta.tint} drop-shadow-[0_1px_5px_rgba(0,0,0,0.7)]`}
+              strokeWidth={2.2}
             />
           </div>
-        )}
-
-        {/* Tiny sparkle — top-left, theme-aware */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full"
-          style={{ background: 'hsl(var(--shine-color)/0.75)', boxShadow: '0 0 8px 2px hsl(var(--shine-color)/0.6)' }}
-        />
-
-        {/* Glass shine diagonal — theme-aware */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-[3]"
-          style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.14) 0%, transparent 44%)' }}
-        />
-
-        {/* Bottom label gradient */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[65%] bg-gradient-to-t from-bg/96 via-bg/60 to-transparent" />
-
-        {/* ── 3D floating icon chip ──────────────────────────────────────── */}
-        {/* Outer glow ring — halo effect */}
-        <div
-          aria-hidden
-          className={`pointer-events-none absolute right-1.5 top-1.5 z-[6] h-9 w-9 rounded-full opacity-60 blur-[6px] bg-gradient-to-br ${meta.chipGrad}`}
-        />
-        {/* Chip body */}
-        <div
-          aria-hidden
-          className={`pointer-events-none absolute right-2 top-2 z-[7] flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${meta.chipGrad} ring-1 ${meta.chipRing} shadow-[0_6px_18px_-3px_rgba(0,0,0,0.6),inset_0_1.5px_0_rgba(255,255,255,0.28),inset_0_-1px_0_rgba(0,0,0,0.2)] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-105`}
-        >
-          <Icon
-            className={`h-[15px] w-[15px] ${meta.tint} drop-shadow-[0_1px_5px_rgba(0,0,0,0.7)]`}
-            strokeWidth={2.2}
-          />
         </div>
 
-        {/* Labels */}
-        <div className="absolute inset-x-0 bottom-0 z-[5] px-2 pb-1.5 text-left">
-          <p className="text-[10.5px] font-bold leading-tight text-cream drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+        {/* ── Labels below the photo — on surface bg (white in light / dark in dark) ── */}
+        <div className="px-2 pb-2.5 pt-2 text-center">
+          <p className="text-[10.5px] font-bold leading-tight text-foreground truncate">
             {meta.display || name}
           </p>
-          <p className="mt-0.5 font-bangla text-[9.5px] text-cream/78 drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]">
+          <p className="mt-0.5 font-bangla text-[9.5px] text-foreground/55 truncate">
             {meta.bangla}
           </p>
         </div>
