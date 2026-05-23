@@ -92,11 +92,19 @@ function CategoryTile({ id, name, slug, imageUrl, index }: TileProps) {
           </div>
         )}
 
-        {/* Tiny sparkle — top-left */}
-        <div aria-hidden className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full bg-white/75 shadow-[0_0_8px_2px_rgba(255,255,255,0.6)]" />
+        {/* Tiny sparkle — top-left, theme-aware */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-2 top-2 z-[3] h-1 w-1 rounded-full"
+          style={{ background: 'hsl(var(--shine-color)/0.75)', boxShadow: '0 0 8px 2px hsl(var(--shine-color)/0.6)' }}
+        />
 
-        {/* Glass shine diagonal */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.14)_0%,transparent_44%)]" />
+        {/* Glass shine diagonal — theme-aware */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-[3]"
+          style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.14) 0%, transparent 44%)' }}
+        />
 
         {/* Bottom label gradient */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[65%] bg-gradient-to-t from-bg/96 via-bg/60 to-transparent" />

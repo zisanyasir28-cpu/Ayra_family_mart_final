@@ -254,7 +254,7 @@ export function FeatureBanners() {
             <Link
               to={b.to}
               // Near-pure dark base — colour atmosphere comes entirely from the neon orb
-              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-bg p-6 active:scale-[0.98]"
+              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface-dark p-6 active:scale-[0.98]"
             >
               {/* ── Very subtle colour wash — light top-left tint only ── */}
               <div aria-hidden className={`pointer-events-none absolute inset-0 z-[0] ${b.colorWash}`} />
@@ -293,9 +293,11 @@ export function FeatureBanners() {
               />
 
               {/* ── Text-area dark guarantee — gradient that keeps the LEFT half readable ── */}
+              {/* Uses literal surface-dark HSL (145 50% 12%) so it matches the card bg in both themes */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 z-[3] bg-[linear-gradient(to_right,hsl(var(--bg)/0.85)_0%,hsl(var(--bg)/0.55)_45%,transparent_70%)]"
+                className="pointer-events-none absolute inset-0 z-[3]"
+                style={{ background: 'linear-gradient(to right, hsl(145 50% 12% / 0.92) 0%, hsl(145 50% 12% / 0.6) 45%, transparent 70%)' }}
               />
 
               {/* Top-right icon chip */}
@@ -315,24 +317,24 @@ export function FeatureBanners() {
 
               {/* Optional brand label */}
               {b.label && (
-                <p className="relative z-[6] font-display text-base font-extrabold leading-none text-cream [text-shadow:0_2px_8px_rgba(0,0,0,0.75)]">
+                <p className="relative z-[6] font-display text-base font-extrabold leading-none text-dark-fg [text-shadow:0_2px_8px_rgba(0,0,0,0.75)]">
                   Ayra Fresh<span className="text-sage">+</span>
                 </p>
               )}
 
               {/* Title block — text-shadow safeguards readability against any colour bloom behind */}
               <div className={`relative z-[6] max-w-[62%] ${b.label ? 'mt-2.5' : 'mt-0'}`}>
-                <p className="font-display text-[1.55rem] font-black leading-[1.05] text-cream sm:text-[1.8rem] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">
+                <p className="font-display text-[1.55rem] font-black leading-[1.05] text-dark-fg sm:text-[1.8rem] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">
                   {b.title}
                 </p>
-                <p className="font-display text-[1.55rem] font-black leading-[1.05] text-cream sm:text-[1.8rem] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">
+                <p className="font-display text-[1.55rem] font-black leading-[1.05] text-dark-fg sm:text-[1.8rem] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]">
                   {b.subtitle}
                 </p>
-                <p className="mt-2.5 font-bangla text-[11px] leading-snug text-cream/95 whitespace-pre-line [text-shadow:0_1px_6px_rgba(0,0,0,0.7)]">
+                <p className="mt-2.5 font-bangla text-[11px] leading-snug text-dark-fg/95 whitespace-pre-line [text-shadow:0_1px_6px_rgba(0,0,0,0.7)]">
                   {b.bangla}
                 </p>
                 {b.extra && (
-                  <p className="mt-2 font-display text-base font-bold text-cream [text-shadow:0_2px_8px_rgba(0,0,0,0.75)]">
+                  <p className="mt-2 font-display text-base font-bold text-dark-fg [text-shadow:0_2px_8px_rgba(0,0,0,0.75)]">
                     {b.extra}
                   </p>
                 )}
@@ -362,7 +364,7 @@ export function FeatureBanners() {
                   }}
                 >
                   {/* Image disk */}
-                  <div className="relative h-full w-full overflow-hidden rounded-full bg-bg">
+                  <div className="relative h-full w-full overflow-hidden rounded-full bg-surface-dark">
                     <img
                       src={b.image}
                       alt=""

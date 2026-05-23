@@ -558,6 +558,14 @@
   opacity: 0.88;
 }
 
+/* ── Light-mode gradient overrides ───────────────────────────────────────────
+   Components that need a gradient in dark mode but solid color in light mode
+   add .light-solid to their className. The gradient utilities stay on the
+   element; this rule strips background-image so background-color shows. */
+:root.light .light-solid {
+  background-image: none;
+}
+
 @keyframes leaf-drift {
   0%   { transform: translate(0px, 0px)   rotate(0deg);  opacity: 0.65; }
   25%  { transform: translate(10px,-16px) rotate(8deg);  opacity: 0.95; }

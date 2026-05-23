@@ -60,7 +60,7 @@ export function CustomerSidebar() {
               cn(
                 'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
                 isActive
-                  ? 'bg-gradient-to-r from-saffron to-blush text-bg font-bold shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
+                  ? 'light-solid bg-gradient-to-r from-saffron to-blush text-bg font-bold shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
                   : 'text-cream/75 hover:bg-saffron/10 hover:text-saffron',
               )
             }
@@ -94,11 +94,11 @@ export function CustomerSidebar() {
 
       {/* Ayra Fresh+ promo card — glass-gradient ring + background art */}
       <div className="relative mx-1 mt-6 rounded-2xl bg-gradient-to-br from-saffron/35 via-sage/25 to-saffron/25 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--sage)/0.4)]">
-        <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-sage/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-sage/25 via-surface-dark to-surface-dark p-4 backdrop-blur-xl">
 
           {/* ── Background art layer ── */}
-          {/* Glass shine — diagonal, theme-aware */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit]" style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.10) 0%, transparent 55%)' }} />
+          {/* Glass shine — diagonal, white (always-dark card) */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
           {/* Sage glow orb — top-right ambient light source */}
           <div aria-hidden className="pointer-events-none absolute -right-8 -top-6 h-28 w-28 rounded-full bg-sage/30 blur-3xl" />
           {/* Saffron warm accent orb */}
@@ -123,10 +123,10 @@ export function CustomerSidebar() {
                 Ayra Fresh+
               </span>
             </div>
-            <p className="font-display text-[15px] font-extrabold leading-tight text-cream">
+            <p className="font-display text-[15px] font-extrabold leading-tight text-dark-fg">
               Extra 15% Off
             </p>
-            <p className="mt-0.5 text-[10px] text-cream/55">On Fresh Produce</p>
+            <p className="mt-0.5 text-[10px] text-dark-fg/55">On Fresh Produce</p>
             <NavLink
               to="/products?collection=fresh-plus"
               className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-sage px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-bg shadow-[0_4px_14px_-2px_hsl(var(--sage)/0.5)] transition hover:bg-sage/90 hover:shadow-[0_6px_18px_-2px_hsl(var(--sage)/0.7)]"
@@ -150,11 +150,11 @@ export function CustomerSidebar() {
 
       {/* Need Help? — 24/7 Live chat CTA, glass-gradient ring + background art */}
       <div className="mx-1 mt-3 rounded-2xl bg-gradient-to-br from-saffron/40 via-plum/30 to-saffron/35 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--plum)/0.4)]">
-        <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-plum/20 via-bg/70 to-bg/85 p-4 backdrop-blur-xl">
+        <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-plum/25 via-surface-dark to-surface-dark p-4 backdrop-blur-xl">
 
           {/* ── Background art layer ── */}
-          {/* Glass shine — theme-aware */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit]" style={{ background: 'linear-gradient(135deg, hsl(var(--shine-color)/0.10) 0%, transparent 55%)' }} />
+          {/* Glass shine — white (always-dark card) */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
           {/* Plum glow orb — top-left ambient */}
           <div aria-hidden className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 rounded-full bg-plum/35 blur-3xl" />
           {/* Saffron warm accent orb — bottom-right */}
@@ -173,17 +173,17 @@ export function CustomerSidebar() {
 
           {/* ── Content (z-10) ── */}
           <div className="relative z-10">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-cream/65">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-dark-fg/65">
               Need Help?
             </p>
-            <p className="mt-0.5 text-[10px] text-cream/45">We&apos;re here for you</p>
+            <p className="mt-0.5 text-[10px] text-dark-fg/45">We&apos;re here for you</p>
 
             <div className="mt-3 flex items-center gap-3">
               {/* Gradient headphone avatar — purple → pink */}
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-plum to-saffron shadow-[0_4px_14px_-2px_hsl(var(--saffron)/0.45)]">
-                <Headphones className="h-4 w-4 text-bg" strokeWidth={2} />
+                <Headphones className="h-4 w-4 text-dark-fg" strokeWidth={2} />
               </span>
-              <span className="font-display text-2xl font-black leading-none tabular-nums text-cream">
+              <span className="font-display text-2xl font-black leading-none tabular-nums text-dark-fg">
                 24/7
               </span>
             </div>
@@ -193,7 +193,7 @@ export function CustomerSidebar() {
               type="button"
               className="group relative mt-3 flex w-full rounded-full bg-gradient-to-r from-saffron/60 via-plum/40 to-saffron/60 p-[1px] transition hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.55)]"
             >
-              <span className="flex w-full items-center justify-between gap-1.5 rounded-full bg-bg/60 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-cream [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] backdrop-blur-md transition group-hover:bg-bg/40">
+              <span className="flex w-full items-center justify-between gap-1.5 rounded-full bg-surface-dark/60 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-dark-fg [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] backdrop-blur-md transition group-hover:bg-surface-dark/40">
                 Live Chat
                 <span className="grid h-6 w-6 place-items-center rounded-full bg-saffron text-bg transition group-hover:translate-x-0.5">
                   <ArrowRight className="h-3 w-3" strokeWidth={2.4} />

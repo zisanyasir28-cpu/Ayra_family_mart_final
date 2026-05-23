@@ -128,7 +128,10 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface/80 to-transparent" />
 
           {discountPct > 0 && (
-            <div className="absolute left-2 top-2 rounded-full bg-saffron px-2 py-0.5 text-[10px] font-extrabold text-bg shadow-[0_2px_8px_-2px_hsl(var(--saffron)/0.55)] sm:left-2.5 sm:top-2.5 sm:px-2.5 sm:text-[11px]">
+            <div
+              className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] font-extrabold sm:left-2.5 sm:top-2.5 sm:px-2.5 sm:text-[11px]"
+              style={{ background: 'hsl(330 81% 60%)', color: '#fff', boxShadow: '0 2px 8px -2px hsl(330 81% 60% / 0.55)' }}
+            >
               −{discountPct}%
             </div>
           )}

@@ -314,7 +314,7 @@ export function HeroBanner() {
               {/* Shop Now — pink → orange gradient pill with double-glow */}
               <Link
                 to="/products"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-saffron via-saffron to-blush px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6),0_2px_8px_-2px_hsl(var(--blush)/0.4)] transition-all hover:shadow-[0_12px_36px_-6px_hsl(var(--saffron)/0.8),0_4px_14px_-2px_hsl(var(--blush)/0.5)] active:scale-95"
+                className="group inline-flex items-center gap-2.5 rounded-full light-solid bg-gradient-to-r from-saffron via-saffron to-blush px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6),0_2px_8px_-2px_hsl(var(--blush)/0.4)] transition-all hover:shadow-[0_12px_36px_-6px_hsl(var(--saffron)/0.8),0_4px_14px_-2px_hsl(var(--blush)/0.5)] active:scale-95"
               >
                 Shop Now
                 <ArrowIcon
@@ -347,7 +347,7 @@ export function HeroBanner() {
                   key={label}
                   className="flex items-center gap-2.5 rounded-sm border border-line/100 bg-surface/2 px-3 py-2.5 backdrop-blur-ms"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full backdrop-blur-xxl bg-saffron7 din dey na korun 5 s text-saffron">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-saffron/10 text-saffron">
                     <Icon className="h-4 w-4" strokeWidth={1.8} />
                   </span>
                   <div className="min-w-0">
