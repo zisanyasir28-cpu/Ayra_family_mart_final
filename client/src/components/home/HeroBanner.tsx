@@ -311,15 +311,39 @@ export function HeroBanner() {
               transition={{ duration: 0.45, delay: 0.38 }}
               className="mt-8 flex flex-wrap items-center gap-4"
             >
-              {/* Shop Now — pink → orange gradient pill with double-glow */}
+              {/* Shop Now — deep forest green pill with botanical leaf watermark */}
               <Link
                 to="/products"
-                className="group inline-flex items-center gap-2.5 rounded-full light-solid bg-gradient-to-r from-saffron via-saffron to-blush px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6),0_2px_8px_-2px_hsl(var(--blush)/0.4)] transition-all hover:shadow-[0_12px_36px_-6px_hsl(var(--saffron)/0.8),0_4px_14px_-2px_hsl(var(--blush)/0.5)] active:scale-95"
+                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] transition-all hover:brightness-110 active:scale-95"
+                style={{
+                  backgroundColor: 'hsl(145 58% 19%)',
+                  color: 'hsl(0 0% 96%)',
+                  boxShadow: '0 8px 28px -8px hsl(145 60% 8% / 0.7), 0 2px 8px -2px hsl(145 55% 12% / 0.4)',
+                }}
               >
-                Shop Now
+                {/* Botanical leaf watermarks inside button */}
+                <svg
+                  aria-hidden
+                  className="pointer-events-none absolute right-0 top-0 h-full w-28 select-none"
+                  viewBox="0 0 112 48"
+                  fill="currentColor"
+                  style={{ color: 'hsl(145 48% 34%)', opacity: 0.6 }}
+                >
+                  {/* Leaf 1 — large sweeping from bottom-left to top-right */}
+                  <path d="M 0 48 C 20 26, 72 2, 106 6 C 112 22, 82 42, 46 48 Z" />
+                  {/* Leaf 2 — narrower, offset above */}
+                  <path d="M 22 48 C 40 28, 80 8, 110 14 C 108 30, 80 44, 50 48 Z" />
+                  {/* Leaf tip accent — small right-edge */}
+                  <path d="M 68 0 C 85 2, 108 10, 112 20 C 110 28, 90 22, 72 10 Z" />
+                </svg>
+
+                {/* Text above watermark */}
+                <span className="relative" style={{ textShadow: '0 1px 5px rgba(0,0,0,0.35)' }}>
+                  Shop Now
+                </span>
                 <ArrowIcon
                   size={14}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className="relative transition-transform duration-300 group-hover:translate-x-1"
                 />
               </Link>
 
