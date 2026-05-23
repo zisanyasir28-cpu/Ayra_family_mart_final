@@ -4,6 +4,7 @@ import {
   Package, Heart, Headphones, ArrowRight, ChevronRight, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useThemeStore } from '../../store/themeStore';
 
 // ─── Desktop persistent left sidebar (lg+) ────────────────────────────────────
 
@@ -28,48 +29,51 @@ const NAV_ITEMS: SidebarItem[] = [
   { icon: Heart,    label: 'Wishlist',       to: '/wishlist'                                     },
 ];
 
-// Always-dark deep forest green — same in light and dark mode
-const SIDEBAR_BG  = 'hsl(145 62% 8%)';
-const SIDEBAR_BDR = 'hsl(145 42% 17% / 0.55)';
+// Light-mode sidebar palette (always-dark forest green)
+const LIGHT_BG  = 'hsl(145 62% 8%)';
+const LIGHT_BDR = 'hsl(145 42% 17% / 0.55)';
 
 export function CustomerSidebar() {
+  // Read resolved theme — gate all light-mode hardcoded colors behind isLight
+  const isLight = useThemeStore(s => s.resolved === 'light');
+
   return (
     <aside
       aria-label="Primary navigation"
-      className="sticky top-[8.25rem] hidden h-[calc(100vh-8.25rem)] w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative"
-      style={{ backgroundColor: SIDEBAR_BG, borderRightColor: SIDEBAR_BDR }}
+      className={cn(
+        'sticky top-[8.25rem] hidden h-[calc(100vh-8.25rem)] w-64 shrink-0',
+        'flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative',
+        // Dark mode: original translucent purple surface
+        !isLight && 'bg-surface/30 backdrop-blur-xl border-line/40',
+      )}
+      style={isLight ? { backgroundColor: LIGHT_BG, borderRightColor: LIGHT_BDR } : undefined}
     >
-      {/* ── Botanical background watermark ───────────────────────────────── */}
-      <svg
-        aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full select-none"
-        viewBox="0 0 256 600"
-        fill="none"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ color: 'hsl(145 55% 55%)', opacity: 0.07 }}
-      >
-        {/* Large tropical stem/frond — right side, top → bottom-right */}
-        <path
-          d="M210 -20 C228 30, 264 90, 248 155 C232 220, 186 248, 172 310 C158 372, 178 435, 212 480"
-          stroke="currentColor" strokeWidth="54" fill="none" strokeLinecap="round"
-        />
-        {/* Secondary frond — right, lower */}
-        <path
-          d="M278 260 C260 315, 248 380, 260 438 C272 496, 294 524, 282 572"
-          stroke="currentColor" strokeWidth="38" fill="none" strokeLinecap="round"
-        />
-        {/* Small accent — left side */}
-        <path
-          d="M-18 370 C24 388, 68 426, 56 480 C44 534, 8 554, 36 596"
-          stroke="currentColor" strokeWidth="30" fill="none" strokeLinecap="round"
-        />
-      </svg>
+      {/* ── Botanical watermark — light mode only ────────────────────────── */}
+      {isLight && (
+        <svg
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full select-none"
+          viewBox="0 0 256 600"
+          fill="none"
+          preserveAspectRatio="xMidYMid slice"
+          style={{ color: 'hsl(145 55% 55%)', opacity: 0.07 }}
+        >
+          <path d="M210 -20 C228 30, 264 90, 248 155 C232 220, 186 248, 172 310 C158 372, 178 435, 212 480"
+            stroke="currentColor" strokeWidth="54" fill="none" strokeLinecap="round" />
+          <path d="M278 260 C260 315, 248 380, 260 438 C272 496, 294 524, 282 572"
+            stroke="currentColor" strokeWidth="38" fill="none" strokeLinecap="round" />
+          <path d="M-18 370 C24 388, 68 426, 56 480 C44 534, 8 554, 36 596"
+            stroke="currentColor" strokeWidth="30" fill="none" strokeLinecap="round" />
+        </svg>
+      )}
 
       {/* ── Nav ─────────────────────────────────────────────────────────── */}
-      {/* All text is hardcoded white — sidebar is always-dark forest green
-          regardless of theme, so CSS theme tokens like --cream resolve wrong */}
-      <p className="relative mb-2 px-2 text-[10px] uppercase tracking-[0.22em]"
-         style={{ color: 'hsl(152 38% 58% / 0.65)' }}>
+      <p
+        className="relative mb-2 px-2 text-[10px] uppercase tracking-[0.22em]"
+        style={{ color: isLight ? 'hsl(152 38% 58% / 0.65)' : undefined }}
+        // Dark mode falls back to inherited cream/45 via CSS token
+        {...(!isLight && { className: 'relative mb-2 px-2 text-[10px] uppercase tracking-[0.22em] text-cream/45' })}
+      >
         Browse
       </p>
 
@@ -83,41 +87,68 @@ export function CustomerSidebar() {
               cn(
                 'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
                 isActive
-                  ? 'bg-[hsl(145_44%_19%)] font-bold shadow-[0_2px_14px_-4px_hsl(145_55%_8%)]'
-                  : 'hover:bg-[hsl(145_50%_13%)]',
+                  ? cn(
+                      'font-bold',
+                      isLight
+                        ? 'bg-[hsl(145_44%_19%)] shadow-[0_2px_14px_-4px_hsl(145_55%_8%)]'
+                        : 'bg-saffron/15 shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]',
+                    )
+                  : cn(
+                      isLight
+                        ? 'hover:bg-[hsl(145_50%_13%)]'
+                        : 'text-cream/75 hover:bg-saffron/10 hover:text-saffron',
+                    ),
               )
             }
-            style={({ isActive }) => ({
-              color: isActive ? 'hsl(0 0% 96%)' : 'hsl(0 0% 88% / 0.72)',
-            })}
+            style={({ isActive }) =>
+              isLight
+                ? { color: isActive ? 'hsl(0 0% 96%)' : 'hsl(0 0% 88% / 0.72)' }
+                : undefined
+            }
           >
             {({ isActive }) => (
               <>
                 <span
                   className={cn(
                     'flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors',
-                    isActive ? 'bg-sage/30' : 'ring-1 ring-[hsl(145_40%_40%/0.5)] group-hover:ring-[hsl(145_40%_50%/0.6)]',
+                    isActive
+                      ? 'bg-sage/30'
+                      : cn(
+                          'ring-1',
+                          isLight
+                            ? 'ring-[hsl(145_40%_40%/0.5)] group-hover:ring-[hsl(145_40%_50%/0.6)]'
+                            : 'ring-line/40 group-hover:ring-saffron/40',
+                        ),
                   )}
                 >
                   <Icon
-                    className="h-[14px] w-[14px]"
+                    className={cn('h-[14px] w-[14px]', !isLight && !isActive && iconClass)}
                     strokeWidth={1.8}
-                    color={isActive
-                      ? 'hsl(152 42% 60%)'
-                      : iconClass
-                        ? 'hsl(152 38% 55%)'
-                        : 'hsl(0 0% 78%)'}
+                    color={
+                      isLight
+                        ? isActive
+                          ? 'hsl(152 42% 60%)'
+                          : iconClass
+                            ? 'hsl(152 38% 55%)'
+                            : 'hsl(0 0% 78%)'
+                        : undefined
+                    }
                   />
                 </span>
                 <span className="flex-1 truncate">{label}</span>
                 {badge && (
-                  <span className="rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider"
-                        style={{ color: 'hsl(145 62% 8%)' }}>
+                  <span
+                    className="rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider"
+                    style={isLight ? { color: 'hsl(145 62% 8%)' } : { color: 'hsl(var(--bg))' }}
+                  >
                     {badge}
                   </span>
                 )}
                 {isActive && (
-                  <ChevronRight className="h-3.5 w-3.5 shrink-0 text-sage/80" strokeWidth={2.4} />
+                  <ChevronRight
+                    className={cn('h-3.5 w-3.5 shrink-0', isLight ? 'text-sage/80' : 'opacity-90')}
+                    strokeWidth={2.4}
+                  />
                 )}
               </>
             )}
@@ -131,8 +162,11 @@ export function CustomerSidebar() {
         style={{ background: 'linear-gradient(135deg, hsl(var(--saffron)/0.45), hsl(var(--sage)/0.32), hsl(var(--saffron)/0.28))' }}
       >
         <div
-          className="relative overflow-hidden rounded-[calc(1rem-1.5px)] p-4"
-          style={{ backgroundColor: 'hsl(145 58% 10%)' }}
+          className={cn(
+            'relative overflow-hidden rounded-[calc(1rem-1.5px)] p-4',
+            !isLight && 'bg-gradient-to-br from-sage/25 via-surface-dark to-surface-dark backdrop-blur-xl',
+          )}
+          style={isLight ? { backgroundColor: 'hsl(145 58% 10%)' } : undefined}
         >
           {/* Glass shine */}
           <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
@@ -141,46 +175,48 @@ export function CustomerSidebar() {
           {/* Saffron accent orb */}
           <div aria-hidden className="pointer-events-none absolute right-4 bottom-10 h-16 w-16 rounded-full bg-saffron/15 blur-2xl" />
 
-          {/* ── Long tropical leaf watermark ── */}
-          <svg
-            aria-hidden
-            className="pointer-events-none absolute -bottom-2 -right-4 h-44 w-24 select-none"
-            viewBox="0 0 60 180"
-            style={{ color: 'hsl(152 45% 58%)', opacity: 0.18 }}
-          >
-            {/* Filled elongated leaf shape */}
-            <path
-              d="M30 0 C50 22, 60 70, 55 112 C50 154, 40 170, 30 180 C20 170, 10 154, 5 112 C0 70, 10 22, 30 0Z"
-              fill="currentColor"
-            />
-            {/* Midrib vein */}
-            <path d="M30 0 L30 180" stroke="hsl(145 55% 8%)" strokeWidth="1.4" fill="none" />
-            {/* Left veins */}
-            <path d="M30 38 Q16 50, 11 62" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
-            <path d="M30 68 Q13 82, 9  96" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
-            <path d="M30 98 Q16 112, 13 126" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
-            {/* Right veins */}
-            <path d="M30 38 Q44 50, 49 62" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
-            <path d="M30 68 Q47 82, 51 96" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
-            <path d="M30 98 Q44 112, 47 126" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
-          </svg>
+          {/* Long tropical leaf — light mode only */}
+          {isLight && (
+            <svg
+              aria-hidden
+              className="pointer-events-none absolute -bottom-2 -right-4 h-44 w-24 select-none"
+              viewBox="0 0 60 180"
+              style={{ color: 'hsl(152 45% 58%)', opacity: 0.18 }}
+            >
+              <path d="M30 0 C50 22, 60 70, 55 112 C50 154, 40 170, 30 180 C20 170, 10 154, 5 112 C0 70, 10 22, 30 0Z" fill="currentColor" />
+              <path d="M30 0 L30 180" stroke="hsl(145 55% 8%)" strokeWidth="1.4" fill="none" />
+              <path d="M30 38 Q16 50, 11 62" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
+              <path d="M30 68 Q13 82, 9  96" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
+              <path d="M30 98 Q16 112, 13 126" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
+              <path d="M30 38 Q44 50, 49 62" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
+              <path d="M30 68 Q47 82, 51 96" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
+              <path d="M30 98 Q44 112, 47 126" stroke="hsl(145 55% 8%)" strokeWidth="0.7" fill="none" />
+            </svg>
+          )}
 
-          {/* ── Content ── */}
+          {/* Content */}
           <div className="relative z-10 max-w-[62%]">
             <div className="mb-2 flex items-center gap-1.5">
-              <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25" style={{ color: 'hsl(152 42% 60%)' }}>
+              <span className="grid h-6 w-6 place-items-center rounded-full bg-sage/25 text-sage">
                 <Leaf className="h-3.5 w-3.5" />
               </span>
-              <span className="font-display text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: 'hsl(152 42% 60%)' }}>
+              <span className="font-display text-[10px] font-bold uppercase tracking-[0.16em] text-sage">
                 Ayra Fresh+
               </span>
             </div>
-            <p className="font-display text-[15px] font-extrabold leading-tight" style={{ color: 'hsl(0 0% 96%)' }}>
+            <p
+              className="font-display text-[15px] font-extrabold leading-tight text-dark-fg"
+              style={isLight ? { color: 'hsl(0 0% 96%)' } : undefined}
+            >
               Extra 15% Off
             </p>
-            <p className="mt-0.5 text-[10px]" style={{ color: 'hsl(0 0% 90% / 0.55)' }}>On Fresh Produce</p>
+            <p
+              className="mt-0.5 text-[10px] text-dark-fg/55"
+              style={isLight ? { color: 'hsl(0 0% 90% / 0.55)' } : undefined}
+            >
+              On Fresh Produce
+            </p>
 
-            {/* Join Now — saffron text link (matches reference) */}
             <NavLink
               to="/products?collection=fresh-plus"
               className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold transition"
@@ -194,10 +230,7 @@ export function CustomerSidebar() {
           {/* Produce basket photo */}
           <img
             src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=200&h=200&fit=crop&crop=center&q=85"
-            alt=""
-            aria-hidden
-            loading="lazy"
-            decoding="async"
+            alt="" aria-hidden loading="lazy" decoding="async"
             className="pointer-events-none absolute -bottom-3 -right-3 z-10 h-24 w-24 select-none rounded-2xl object-cover opacity-90"
           />
         </div>
@@ -206,71 +239,76 @@ export function CustomerSidebar() {
       {/* ── Need Help? card ──────────────────────────────────────────────── */}
       <div className="mx-1 mt-3 rounded-2xl bg-gradient-to-br from-saffron/40 via-plum/30 to-saffron/35 p-[1.5px] shadow-[0_8px_24px_-10px_hsl(var(--plum)/0.4)]">
         <div className="relative overflow-hidden rounded-[calc(1rem-1.5px)] bg-gradient-to-br from-plum/25 via-surface-dark to-surface-dark p-4">
-
-          {/* Background art */}
           <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] bg-[linear-gradient(135deg,hsl(0_0%_100%/0.10)_0%,transparent_55%)]" />
           <div aria-hidden className="pointer-events-none absolute -left-6 -top-6 h-28 w-28 rounded-full bg-plum/35 blur-3xl" />
           <div aria-hidden className="pointer-events-none absolute -right-4 -bottom-4 h-20 w-20 rounded-full bg-saffron/20 blur-2xl" />
-          <svg
-            aria-hidden
-            className="pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.10]"
-            viewBox="0 0 200 160"
-            fill="none"
-          >
+          <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.10]" viewBox="0 0 200 160" fill="none">
             <circle cx="185" cy="15" r="55" stroke="hsl(var(--plum))"    strokeWidth="1.5" />
             <circle cx="185" cy="15" r="75" stroke="hsl(var(--saffron))" strokeWidth="0.8" />
             <circle cx="10"  cy="145" r="35" stroke="hsl(var(--saffron))" strokeWidth="0.8" />
           </svg>
 
-          {/* Content */}
           <div className="relative z-10">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em]"
-               style={{ color: 'hsl(0 0% 94% / 0.65)' }}>
+            <p
+              className="text-[10px] font-bold uppercase tracking-[0.16em] text-dark-fg/65"
+              style={isLight ? { color: 'hsl(0 0% 94% / 0.65)' } : undefined}
+            >
               Need Help?
             </p>
-            <p className="mt-0.5 text-[10px]" style={{ color: 'hsl(0 0% 90% / 0.45)' }}>
+            <p
+              className="mt-0.5 text-[10px] text-dark-fg/45"
+              style={isLight ? { color: 'hsl(0 0% 90% / 0.45)' } : undefined}
+            >
               We&apos;re here for you
             </p>
 
             <div className="mt-3 flex items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-plum to-saffron shadow-[0_4px_14px_-2px_hsl(var(--saffron)/0.45)]">
-                <Headphones className="h-4 w-4" strokeWidth={2} style={{ color: 'hsl(0 0% 96%)' }} />
+                <Headphones className="h-4 w-4 text-dark-fg" strokeWidth={2} />
               </span>
-              <span className="font-display text-2xl font-black leading-none tabular-nums"
-                    style={{ color: 'hsl(0 0% 96%)' }}>
+              <span
+                className="font-display text-2xl font-black leading-none tabular-nums text-dark-fg"
+                style={isLight ? { color: 'hsl(0 0% 96%)' } : undefined}
+              >
                 24/7
               </span>
             </div>
 
-            {/* Live Chat — solid medium-forest-green button with leaf watermark */}
-            <button
-              type="button"
-              className="group relative mt-3 flex w-full overflow-hidden rounded-full transition hover:brightness-110"
-              style={{ backgroundColor: 'hsl(145 52% 26%)' }}
-            >
-              {/* Leaf watermark inside button */}
-              <svg
-                aria-hidden
-                className="pointer-events-none absolute inset-0 h-full w-full select-none"
-                viewBox="0 0 160 36"
-                style={{ color: 'hsl(145 55% 55%)', opacity: 0.18 }}
+            {/* Live Chat button — light: solid forest green | dark: glass pill */}
+            {isLight ? (
+              <button
+                type="button"
+                className="group relative mt-3 flex w-full overflow-hidden rounded-full transition hover:brightness-110"
+                style={{ backgroundColor: 'hsl(145 52% 26%)' }}
               >
-                <path d="M72 -4 C84 2, 92 14, 86 26 C80 38, 64 38, 58 26 C52 14, 60 2, 72 -4Z" fill="currentColor" />
-                <path d="M130 -2 C140 4, 146 16, 140 27 C134 38, 120 37, 116 27 C112 16, 118 4, 130 -2Z" fill="currentColor" />
-                {/* Small leaf tip */}
-                <path d="M104 4 C110 10, 112 20, 108 28 C104 36, 96 36, 94 28 C92 20, 96 10, 104 4Z" fill="currentColor" />
-              </svg>
-              <span className="relative flex w-full items-center justify-between gap-1.5 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]"
-                    style={{ color: 'hsl(0 0% 94%)' }}>
-                Live Chat
-                <span
-                  className="grid h-6 w-6 place-items-center rounded-full transition group-hover:translate-x-0.5"
-                  style={{ backgroundColor: 'hsl(145 44% 42%)' }}
-                >
-                  <ArrowRight className="h-3 w-3" strokeWidth={2.4} style={{ color: 'hsl(0 0% 96%)' }} />
+                <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full select-none"
+                  viewBox="0 0 160 36" style={{ color: 'hsl(145 55% 55%)', opacity: 0.18 }}>
+                  <path d="M72 -4 C84 2, 92 14, 86 26 C80 38, 64 38, 58 26 C52 14, 60 2, 72 -4Z" fill="currentColor" />
+                  <path d="M130 -2 C140 4, 146 16, 140 27 C134 38, 120 37, 116 27 C112 16, 118 4, 130 -2Z" fill="currentColor" />
+                  <path d="M104 4 C110 10, 112 20, 108 28 C104 36, 96 36, 94 28 C92 20, 96 10, 104 4Z" fill="currentColor" />
+                </svg>
+                <span className="relative flex w-full items-center justify-between gap-1.5 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] [text-shadow:0_1px_4px_rgba(0,0,0,0.4)]"
+                  style={{ color: 'hsl(0 0% 94%)' }}>
+                  Live Chat
+                  <span className="grid h-6 w-6 place-items-center rounded-full transition group-hover:translate-x-0.5"
+                    style={{ backgroundColor: 'hsl(145 44% 42%)' }}>
+                    <ArrowRight className="h-3 w-3" strokeWidth={2.4} style={{ color: 'hsl(0 0% 96%)' }} />
+                  </span>
                 </span>
-              </span>
-            </button>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="group relative mt-3 flex w-full rounded-full bg-gradient-to-r from-saffron/60 via-plum/40 to-saffron/60 p-[1px] transition hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.55)]"
+              >
+                <span className="flex w-full items-center justify-between gap-1.5 rounded-full bg-surface-dark/60 pl-3.5 pr-1 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-dark-fg [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] backdrop-blur-md transition group-hover:bg-surface-dark/40">
+                  Live Chat
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-saffron text-bg transition group-hover:translate-x-0.5">
+                    <ArrowRight className="h-3 w-3" strokeWidth={2.4} />
+                  </span>
+                </span>
+              </button>
+            )}
           </div>
         </div>
       </div>

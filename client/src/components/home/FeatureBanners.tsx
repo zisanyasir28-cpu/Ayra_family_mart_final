@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles, BadgePercent } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useThemeStore } from '../../store/themeStore';
 
 // ─── SVG Watermark Art ───────────────────────────────────────────────────────
 // Inline SVG art — sits at z-[1] behind photo and text
@@ -238,6 +239,7 @@ const BANNERS: Banner[] = [
 // ─── FeatureBanners (content only — no section wrapper) ──────────────────────
 
 export function FeatureBanners() {
+  const isLight = useThemeStore(s => s.resolved === 'light');
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {BANNERS.map((b, i) => {
@@ -258,9 +260,9 @@ export function FeatureBanners() {
           >
             <Link
               to={b.to}
-              // Per-banner always-dark base — each card keeps its accent hue in both light & dark themes
-              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] p-6 active:scale-[0.98]"
-              style={{ backgroundColor: `hsl(${b.cardBgHsl})` }}
+              // bg-surface-dark = dark purple in dark mode; light mode gets per-banner hue via inline style
+              className="relative flex h-full min-h-[270px] flex-col overflow-hidden rounded-[calc(0.75rem-1.5px)] bg-surface-dark p-6 active:scale-[0.98]"
+              style={isLight ? { backgroundColor: `hsl(${b.cardBgHsl})` } : undefined}
             >
               {/* ── Very subtle colour wash — light top-left tint only ── */}
               <div aria-hidden className={`pointer-events-none absolute inset-0 z-[0] ${b.colorWash}`} />
@@ -369,7 +371,10 @@ export function FeatureBanners() {
                   }}
                 >
                   {/* Image disk — bg matches card colour for seamless edge bleeding */}
-                  <div className="relative h-full w-full overflow-hidden rounded-full" style={{ backgroundColor: `hsl(${b.cardBgHsl})` }}>
+                  <div
+                    className="relative h-full w-full overflow-hidden rounded-full bg-surface-dark"
+                    style={isLight ? { backgroundColor: `hsl(${b.cardBgHsl})` } : undefined}
+                  >
                     <img
                       src={b.image}
                       alt=""

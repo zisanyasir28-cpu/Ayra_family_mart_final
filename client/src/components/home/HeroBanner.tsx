@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { motion, MotionConfig } from 'motion/react';
 import { Play, ShieldCheck, Zap, RotateCcw, Leaf, BadgePercent } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { cn } from '../../lib/utils';
+import { useThemeStore } from '../../store/themeStore';
 
 // ─── Trust strip items ────────────────────────────────────────────────────────
 const trustItems: Array<{ icon: LucideIcon; label: string; sublabel: string }> = [
@@ -68,6 +70,7 @@ function ArrowIcon({ size = 14, className = '' }: { size?: number; className?: s
 // ─── HeroBanner ──────────────────────────────────────────────────────────────
 
 export function HeroBanner() {
+  const isLight = useThemeStore(s => s.resolved === 'light');
   return (
     <section className="relative overflow-hidden  pt-8 pb-12 sm:pt-10 sm:pb-16 md:pb-20">
 
@@ -311,42 +314,41 @@ export function HeroBanner() {
               transition={{ duration: 0.45, delay: 0.38 }}
               className="mt-8 flex flex-wrap items-center gap-4"
             >
-              {/* Shop Now — 3D deep-forest-green pill with rough botanical watermark */}
+              {/* Shop Now — forest-green 3D pill (light) / saffron gradient pill (dark) */}
               <Link
                 to="/products"
-                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:translate-y-[3px]"
-                style={{
-                  /* top-lit convex gradient — lighter top, darker bottom */
+                className={cn(
+                  'group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
+                  isLight
+                    ? 'active:translate-y-[3px]'
+                    : 'bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
+                )}
+                style={isLight ? {
                   background: 'linear-gradient(175deg, hsl(145 50% 28%) 0%, hsl(145 64% 14%) 100%)',
                   color: 'hsl(0 0% 96%)',
                   boxShadow: [
-                    /* inner top highlight rim */
                     'inset 0 1.5px 0 hsl(145 38% 48% / 0.28)',
-                    /* inner bottom dark edge */
                     'inset 0 -2px 0 hsl(145 68% 7% / 0.5)',
-                    /* 3D depth thickness layer */
                     '0 5px 0 hsl(145 66% 10%)',
-                    /* outer elevation shadow */
                     '0 10px 26px -6px hsl(145 60% 5% / 0.65)',
                   ].join(', '),
                   textShadow: '0 1px 5px rgba(0,0,0,0.5)',
-                }}
+                } : undefined}
               >
-                {/* Rough organic botanical watermark — dark deep shapes */}
-                <svg
-                  aria-hidden
-                  className="pointer-events-none absolute right-0 top-0 h-full w-32 select-none"
-                  viewBox="0 0 128 48"
-                  fill="currentColor"
-                  style={{ color: 'hsl(145 62% 10%)', opacity: 0.65 }}
-                >
-                  {/* Rough leaf 1 — large, irregular angular edges */}
-                  <path d="M 0 48 L 12 40 C 28 28, 58 10, 88 5 C 104 3, 118 6, 124 14 C 128 20, 122 30, 106 36 C 82 44, 46 48, 18 48 Z" />
-                  {/* Rough leaf 2 — overlapping, more angular */}
-                  <path d="M 30 48 L 48 36 L 72 22 C 90 14, 112 12, 126 20 L 128 28 C 116 36, 88 44, 60 48 Z" />
-                  {/* Rough small leaf tip — top edge */}
-                  <path d="M 74 0 L 92 2 C 108 5, 124 12, 128 22 L 120 24 C 110 16, 94 8, 74 0 Z" />
-                </svg>
+                {/* Rough organic botanical watermark — only in light mode */}
+                {isLight && (
+                  <svg
+                    aria-hidden
+                    className="pointer-events-none absolute right-0 top-0 h-full w-32 select-none"
+                    viewBox="0 0 128 48"
+                    fill="currentColor"
+                    style={{ color: 'hsl(145 62% 10%)', opacity: 0.65 }}
+                  >
+                    <path d="M 0 48 L 12 40 C 28 28, 58 10, 88 5 C 104 3, 118 6, 124 14 C 128 20, 122 30, 106 36 C 82 44, 46 48, 18 48 Z" />
+                    <path d="M 30 48 L 48 36 L 72 22 C 90 14, 112 12, 126 20 L 128 28 C 116 36, 88 44, 60 48 Z" />
+                    <path d="M 74 0 L 92 2 C 108 5, 124 12, 128 22 L 120 24 C 110 16, 94 8, 74 0 Z" />
+                  </svg>
+                )}
 
                 <span className="relative">Shop Now</span>
                 <ArrowIcon
