@@ -311,36 +311,44 @@ export function HeroBanner() {
               transition={{ duration: 0.45, delay: 0.38 }}
               className="mt-8 flex flex-wrap items-center gap-4"
             >
-              {/* Shop Now — deep forest green pill with botanical leaf watermark */}
+              {/* Shop Now — 3D deep-forest-green pill with rough botanical watermark */}
               <Link
                 to="/products"
-                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] transition-all hover:brightness-110 active:scale-95"
+                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:translate-y-[3px]"
                 style={{
-                  backgroundColor: 'hsl(145 58% 19%)',
+                  /* top-lit convex gradient — lighter top, darker bottom */
+                  background: 'linear-gradient(175deg, hsl(145 50% 28%) 0%, hsl(145 64% 14%) 100%)',
                   color: 'hsl(0 0% 96%)',
-                  boxShadow: '0 8px 28px -8px hsl(145 60% 8% / 0.7), 0 2px 8px -2px hsl(145 55% 12% / 0.4)',
+                  boxShadow: [
+                    /* inner top highlight rim */
+                    'inset 0 1.5px 0 hsl(145 38% 48% / 0.28)',
+                    /* inner bottom dark edge */
+                    'inset 0 -2px 0 hsl(145 68% 7% / 0.5)',
+                    /* 3D depth thickness layer */
+                    '0 5px 0 hsl(145 66% 10%)',
+                    /* outer elevation shadow */
+                    '0 10px 26px -6px hsl(145 60% 5% / 0.65)',
+                  ].join(', '),
+                  textShadow: '0 1px 5px rgba(0,0,0,0.5)',
                 }}
               >
-                {/* Botanical leaf watermarks inside button */}
+                {/* Rough organic botanical watermark — dark deep shapes */}
                 <svg
                   aria-hidden
-                  className="pointer-events-none absolute right-0 top-0 h-full w-28 select-none"
-                  viewBox="0 0 112 48"
+                  className="pointer-events-none absolute right-0 top-0 h-full w-32 select-none"
+                  viewBox="0 0 128 48"
                   fill="currentColor"
-                  style={{ color: 'hsl(145 48% 34%)', opacity: 0.6 }}
+                  style={{ color: 'hsl(145 62% 10%)', opacity: 0.65 }}
                 >
-                  {/* Leaf 1 — large sweeping from bottom-left to top-right */}
-                  <path d="M 0 48 C 20 26, 72 2, 106 6 C 112 22, 82 42, 46 48 Z" />
-                  {/* Leaf 2 — narrower, offset above */}
-                  <path d="M 22 48 C 40 28, 80 8, 110 14 C 108 30, 80 44, 50 48 Z" />
-                  {/* Leaf tip accent — small right-edge */}
-                  <path d="M 68 0 C 85 2, 108 10, 112 20 C 110 28, 90 22, 72 10 Z" />
+                  {/* Rough leaf 1 — large, irregular angular edges */}
+                  <path d="M 0 48 L 12 40 C 28 28, 58 10, 88 5 C 104 3, 118 6, 124 14 C 128 20, 122 30, 106 36 C 82 44, 46 48, 18 48 Z" />
+                  {/* Rough leaf 2 — overlapping, more angular */}
+                  <path d="M 30 48 L 48 36 L 72 22 C 90 14, 112 12, 126 20 L 128 28 C 116 36, 88 44, 60 48 Z" />
+                  {/* Rough small leaf tip — top edge */}
+                  <path d="M 74 0 L 92 2 C 108 5, 124 12, 128 22 L 120 24 C 110 16, 94 8, 74 0 Z" />
                 </svg>
 
-                {/* Text above watermark */}
-                <span className="relative" style={{ textShadow: '0 1px 5px rgba(0,0,0,0.35)' }}>
-                  Shop Now
-                </span>
+                <span className="relative">Shop Now</span>
                 <ArrowIcon
                   size={14}
                   className="relative transition-transform duration-300 group-hover:translate-x-1"
