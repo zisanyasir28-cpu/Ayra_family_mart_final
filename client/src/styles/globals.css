@@ -1,4 +1,4 @@
-/* ════════════════════════════════════════════════════════════════════════════
+﻿/* ════════════════════════════════════════════════════════════════════════════
    Ayra · Tailwind v4 entry — palette + theme tokens
    ──────────────────────────────────────────────────────────────────────────── */
 
@@ -212,7 +212,7 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   /* Light mode — warm cream sky fading to soft sage earth (farm-fresh vibe) */

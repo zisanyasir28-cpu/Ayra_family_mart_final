@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+﻿import { NavLink } from 'react-router-dom';
 import {
   Home, Grid2x2, Tag, Star, Sparkles, Award, Leaf,
   Package, Heart, Headphones, ArrowRight, ChevronRight, type LucideIcon,
@@ -48,7 +48,7 @@ export function CustomerSidebar() {
     <aside
       aria-label="Primary navigation"
       className={cn(
-        'sticky top-[8.25rem] hidden h-[calc(100vh-8.25rem)] w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative',
+        'sticky top-[6.5rem] hidden h-[calc(100vh-6.5rem)] w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative',
         // Dark mode: glass backdrop; light mode: bg + border via inline style below
         !isLight && 'border-line/40 bg-surface/30 backdrop-blur-xl',
       )}
