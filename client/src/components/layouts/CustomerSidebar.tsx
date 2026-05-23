@@ -48,7 +48,7 @@ export function CustomerSidebar() {
     <aside
       aria-label="Primary navigation"
       className={cn(
-        'sticky top-[8.25rem] hidden h-[calc(100vh-8.25rem)] w-64 shrink-0 flex-col gap-1 overflow-x-hidden overflow-y-auto border-r px-4 py-6 lg:flex relative',
+        'sticky top-[8.25rem] hidden h-[calc(100vh-8.25rem)] w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative',
         // Dark mode: glass backdrop; light mode: bg + border via inline style below
         !isLight && 'border-line/40 bg-surface/30 backdrop-blur-xl',
       )}
@@ -58,8 +58,9 @@ export function CustomerSidebar() {
       {isLight && (
         <svg
           aria-hidden
-          className="pointer-events-none absolute inset-0 h-full w-full select-none overflow-hidden"
+          className="pointer-events-none absolute inset-0 h-full w-full select-none"
           viewBox="0 0 256 600"
+          overflow="hidden"
           fill="none"
           preserveAspectRatio="xMidYMid slice"
           style={{ color: 'hsl(145 55% 55%)', opacity: 0.07 }}
