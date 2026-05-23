@@ -48,11 +48,15 @@ export function CustomerSidebar() {
     <aside
       aria-label="Primary navigation"
       className={cn(
-        'sticky top-[6.5rem] hidden h-[calc(100vh-6.5rem)] w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative',
+        'fixed z-20 hidden w-64 shrink-0 flex-col gap-1 overflow-y-auto border-r px-4 py-6 lg:flex relative',
         // Dark mode: glass backdrop; light mode: bg + border via inline style below
         !isLight && 'border-line/40 bg-surface/30 backdrop-blur-xl',
       )}
-      style={isLight ? { backgroundColor: LIGHT_BG, borderRightColor: LIGHT_BDR } : undefined}
+      style={{
+        top: 'var(--sidebar-top, 6.5rem)',
+        height: 'calc(100vh - var(--sidebar-top, 6.5rem))',
+        ...(isLight ? { backgroundColor: LIGHT_BG, borderRightColor: LIGHT_BDR } : {}),
+      }}
     >
       {/* ── Botanical background watermark — light mode only ────────────── */}
       {isLight && (
