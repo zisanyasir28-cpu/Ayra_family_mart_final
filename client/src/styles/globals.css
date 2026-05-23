@@ -212,7 +212,7 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
-    overflow-x: clip;
+    overflow-x: hidden;
   }
 
   /* Light mode — warm cream sky fading to soft sage earth (farm-fresh vibe) */

@@ -1233,7 +1233,6 @@ export default function CustomerLayout() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [cartOpen,   setCartOpen]   = useState(false);
   const [scrolled,   setScrolled]   = useState(false);
-  const headerRef = useRef<HTMLElement>(null);
 
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
@@ -1247,22 +1246,6 @@ export default function CustomerLayout() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    function updateSidebarTop() {
-      if (headerRef.current) {
-        const bottom = Math.max(0, headerRef.current.getBoundingClientRect().bottom);
-        document.documentElement.style.setProperty('--sidebar-top', `${bottom}px`);
-      }
-    }
-    updateSidebarTop();
-    window.addEventListener('scroll', updateSidebarTop, { passive: true });
-    window.addEventListener('resize', updateSidebarTop, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', updateSidebarTop);
-      window.removeEventListener('resize', updateSidebarTop);
-    };
-  }, []);
-
   return (
     <div className="flex min-h-screen flex-col bg-bg">
       <CursorFollower />
@@ -1272,7 +1255,6 @@ export default function CustomerLayout() {
 
       {/* Sticky header — purple glass with pink glow on scroll */}
       <header
-        ref={headerRef}
         className={cn(
           'sticky top-0 z-30 transition-all duration-300',
           scrolled
@@ -1335,7 +1317,7 @@ export default function CustomerLayout() {
 
       <div className="flex flex-1">
         <CustomerSidebar />
-        <main className="min-w-0 flex-1 pb-16 lg:pb-0 lg:ml-64">
+        <main className="min-w-0 flex-1 pb-16 lg:pb-0">
           <Outlet />
         </main>
       </div>
