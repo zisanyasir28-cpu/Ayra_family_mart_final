@@ -395,68 +395,89 @@ export function HeroBanner() {
             </motion.div>
           </div>
 
-          {/* ── Right: Illustration + floating cards ─────────────────────── */}
+          {/* ── Right: Farm portal (light) / Neon ring (dark) + floating cards ── */}
           <div className="relative mx-auto flex w-full max-w-[460px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
 
-            {/* Neon ring wrapper — circular container */}
-            <div className="relative flex h-[320px] w-[320px] items-center justify-center sm:h-[420px] sm:w-[420px]">
-
-              {/* Outer ambient glow */}
-              <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-saffron/10 blur-[80px]" />
-
-              {/* SVG neon ring — stroke colors via CSS vars so they flip per theme */}
-              <svg
-                aria-hidden
-                className="pointer-events-none absolute inset-0 h-full w-full"
-                viewBox="0 0 400 400"
-                fill="none"
-              >
-                <defs>
-                  <filter id="neon-glow-ring">
-                    <feGaussianBlur stdDeviation="6" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-                {/* Outer faint ring */}
-                <circle cx="200" cy="200" r="188" stroke="hsl(var(--saffron) / 0.2)" strokeWidth="2" filter="url(#neon-glow-ring)" />
-                {/* Main bright ring */}
-                <circle cx="200" cy="200" r="176" stroke="hsl(var(--saffron) / 0.9)" strokeWidth="2.5" filter="url(#neon-glow-ring)" />
-                {/* Inner purple accent ring */}
-                <circle cx="200" cy="200" r="164" stroke="hsl(var(--plum) / 0.3)" strokeWidth="1.5" />
-                {/* Gold accent ring — warm in light mode (sunrise feel), subtle in dark */}
-                <circle cx="200" cy="200" r="158" stroke="hsl(var(--coral) / 0.4)" strokeWidth="1.2" />
-              </svg>
-
-              {/* Illustration inside ring — circular photo */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.88 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.18,
-                  type: 'spring',
-                  stiffness: 120,
-                  damping: 18,
-                }}
-                className="relative z-10 h-[252px] w-[252px] overflow-hidden rounded-full border border-saffron/20 bg-surface shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.5)] sm:h-[336px] sm:w-[336px]"
-              >
+            {isLight ? (
+              /* ── LIGHT MODE: magical farm-portal scene ───────────────────── */
+              <div className="relative flex h-[320px] w-[320px] items-end justify-center overflow-hidden rounded-[2.5rem] sm:h-[420px] sm:w-[420px]">
+                {/* Farm landscape — fills the portal frame */}
                 <img
-                  src="https://images.unsplash.com/photo-1543168256-418811576931?w=672&h=672&fit=crop&crop=center&q=85"
-                  alt="Fresh groceries & daily essentials"
-                  className="h-full w-full object-cover"
+                  aria-hidden
+                  src="/hero-bg.png"
+                  alt=""
                   loading="eager"
                   decoding="async"
+                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-center"
                 />
-                {/* Vignette — blends edge with dark bg */}
+                {/* Left-edge cream blend — seamless merge into page bg */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent"
+                  className="pointer-events-none absolute inset-0 z-[1]"
+                  style={{ background: 'linear-gradient(to right, hsl(var(--bg)) 0%, transparent 34%)' }}
                 />
-              </motion.div>
-            </div>
+                {/* Grocery bag — sits on the wooden platform */}
+                <motion.img
+                  src="/hero-bag.png"
+                  alt="Fresh groceries — Ayra Family Mart"
+                  loading="eager"
+                  decoding="async"
+                  className="relative z-[2] w-[86%] select-none object-contain sm:w-[82%]"
+                  style={{
+                    filter: 'drop-shadow(0 18px 38px rgba(6, 44, 6, 0.28))',
+                    mixBlendMode: 'multiply',
+                  }}
+                  initial={{ opacity: 0, y: 38, scale: 0.88 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.75, delay: 0.18, type: 'spring', stiffness: 90, damping: 18 }}
+                />
+              </div>
+            ) : (
+              /* ── DARK MODE: neon ring — unchanged ────────────────────────── */
+              <div className="relative flex h-[320px] w-[320px] items-center justify-center sm:h-[420px] sm:w-[420px]">
+                {/* Outer ambient glow */}
+                <div aria-hidden className="pointer-events-none absolute inset-0 rounded-full bg-saffron/10 blur-[80px]" />
+
+                {/* SVG neon ring */}
+                <svg
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 h-full w-full"
+                  viewBox="0 0 400 400"
+                  fill="none"
+                >
+                  <defs>
+                    <filter id="neon-glow-ring">
+                      <feGaussianBlur stdDeviation="6" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <circle cx="200" cy="200" r="188" stroke="hsl(var(--saffron) / 0.2)" strokeWidth="2" filter="url(#neon-glow-ring)" />
+                  <circle cx="200" cy="200" r="176" stroke="hsl(var(--saffron) / 0.9)" strokeWidth="2.5" filter="url(#neon-glow-ring)" />
+                  <circle cx="200" cy="200" r="164" stroke="hsl(var(--plum) / 0.3)" strokeWidth="1.5" />
+                  <circle cx="200" cy="200" r="158" stroke="hsl(var(--coral) / 0.4)" strokeWidth="1.2" />
+                </svg>
+
+                {/* Circular photo */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.88 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.18, type: 'spring', stiffness: 120, damping: 18 }}
+                  className="relative z-10 h-[252px] w-[252px] overflow-hidden rounded-full border border-saffron/20 bg-surface shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.5)] sm:h-[336px] sm:w-[336px]"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1543168256-418811576931?w=672&h=672&fit=crop&crop=center&q=85"
+                    alt="Fresh groceries & daily essentials"
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent" />
+                </motion.div>
+              </div>
+            )}
 
             {/* Floating offer card — magical neon-glass medallion (top-right) */}
             <motion.div
