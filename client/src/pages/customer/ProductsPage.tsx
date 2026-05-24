@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'motion/react';
@@ -138,6 +138,7 @@ const EMPTY_FILTERS: FilterState = { categoryId: '', minPrice: '', maxPrice: '',
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const topRef = useRef<HTMLDivElement>(null);
 
   // Derive all state from URL
   const page       = parseInt(searchParams.get('page')       ?? '1', 10);
@@ -179,6 +180,11 @@ export default function ProductsPage() {
     });
   }, [setSearchParams]);
 
+  // Scroll to top of product section whenever the page number changes
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [page]);
+
   // Data
   const { data: categories = [] } = useQuery({
     queryKey: ['categories'],
@@ -211,7 +217,7 @@ export default function ProductsPage() {
   const hasActiveFilters = !!categoryId || !!minPrice || !!maxPrice || inStock || !!search;
 
   return (
-    <div className="container py-8">
+    <div ref={topRef} className="container py-8">
 
       {/* Top bar — mobile filter trigger + result count + sort */}
       <div className="mb-5 flex items-center justify-between gap-3">

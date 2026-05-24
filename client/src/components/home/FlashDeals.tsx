@@ -6,6 +6,7 @@ import { Zap, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
 import { ProductCard, ProductCardSkeleton } from '../product/ProductCard';
 import { useCountdown } from '../../hooks/useCountdown';
+import { demoFlashDeals } from '../../lib/demoProducts';
 
 // ─── Animated flip digit ──────────────────────────────────────────────────────
 
@@ -76,9 +77,17 @@ export function FlashDeals() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['products', 'flash-deals'],
-    queryFn:  () => fetchProducts({ limit: 16, sortBy: 'newest' }),
+    queryFn:  async () => {
+      try {
+        const res = await fetchProducts({ limit: 60, sortBy: 'newest' });
+        const deals = res.data.filter((p) => p.activeCampaign !== null);
+        if (deals.length === 0) throw new Error('no-deals');
+        return deals;
+      } catch {
+        return demoFlashDeals;
+      }
+    },
     staleTime: 1000 * 60 * 2,
-    select:   (d) => d.data.filter((p) => p.activeCampaign !== null),
   });
 
   const products = data ?? [];
