@@ -45,17 +45,21 @@ export async function fetchProducts(
     return { data: res.data.data, meta: res.data.meta };
   } catch {
     // Fallback to demo data when API unavailable / empty
-    const limit = params.limit ?? 12;
+    const limit  = params.limit ?? 12;
+    const page   = params.page  ?? 1;
+    const total  = demoProducts.length;
+    const totalPages = Math.ceil(total / limit);
+    const offset = (page - 1) * limit;
     return {
-      data: demoProducts.slice(0, limit),
+      data: demoProducts.slice(offset, offset + limit),
       meta: {
         pagination: {
-          page: params.page ?? 1,
+          page,
           limit,
-          total: demoProducts.length,
-          totalPages: Math.ceil(demoProducts.length / limit),
-          hasNextPage: false,
-          hasPrevPage: false,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
         },
       },
     };
