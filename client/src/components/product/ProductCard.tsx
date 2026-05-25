@@ -99,8 +99,13 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
         */}
         <Link
           to={`/products/${product.slug}`}
-          className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)] bg-white"
+          className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)] bg-gradient-to-br from-[hsl(var(--plum)/0.18)] via-surface to-bg"
         >
+          {/* Ambient glow — product floats above it */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="h-40 w-40 rounded-full bg-saffron/10 blur-3xl" />
+          </div>
+
           {firstImage && !imgError ? (
             <>
               <img
@@ -133,7 +138,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           )}
 
           {/* Subtle bottom vignette to blend image into card body */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white/60 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-surface/80 to-transparent" />
 
           {discountPct > 0 && (
             <div

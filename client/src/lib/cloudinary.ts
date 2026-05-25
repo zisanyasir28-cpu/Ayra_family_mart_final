@@ -19,7 +19,7 @@ import { Cloudinary }          from '@cloudinary/url-gen';
 import { quality, format }     from '@cloudinary/url-gen/actions/delivery';
 import { limitFit, pad }       from '@cloudinary/url-gen/actions/resize';
 import { sharpen, improve }    from '@cloudinary/url-gen/actions/adjust';
-import { trim }                from '@cloudinary/url-gen/actions/reshape';
+import { backgroundRemoval }   from '@cloudinary/url-gen/actions/effect';
 import { auto as autoQuality } from '@cloudinary/url-gen/qualifiers/quality';
 import { auto as autoFormat }  from '@cloudinary/url-gen/qualifiers/format';
 import { color }               from '@cloudinary/url-gen/qualifiers/background';
@@ -127,30 +127,28 @@ export const hero = (id: string): string =>
 // ─── Demo product URL builder (used by demoProducts.ts) ───────────────────────
 //
 // Full brand-quality transform chain — every step is type-safe via SDK:
-//   e_trim:20      → color-based background removal (tolerance 20)
-//   e_sharpen:80   → crisp product edges
-//   e_improve:50   → colour + contrast enhancement
-//   c_pad,600×720  → pad to exact 5:6 card ratio, no cropping ever
-//   b_white        → padding filled with white
-//   q_auto/f_auto  → WebP/AVIF at auto quality
+//   e_background_removal → AI background removal (Cloudinary add-on, transparent result)
+//   e_sharpen:80         → crisp product edges
+//   e_improve:50         → colour + contrast enhancement
+//   c_pad,600×720        → pad to exact 5:6 card ratio, no cropping (transparent bg)
+//   q_40/f_auto          → WebP/AVIF at quality 40 — compact file, alpha preserved
 //
 export function buildDemoProductUrl(publicId: string): string {
   if (!CLOUD_NAME) {
     // No env var (GitHub Pages / CI) — fall back to the hardcoded cloud name
-    return `https://res.cloudinary.com/dzhj5tgyv/image/upload/e_trim:20/e_sharpen:80/e_improve:50/c_pad,w_600,h_720,b_white/q_auto/f_auto/${publicId}`;
+    return `https://res.cloudinary.com/dzhj5tgyv/image/upload/e_background_removal/e_sharpen:80/e_improve:50/c_pad,w_600,h_720/q_40/f_auto/${publicId}`;
   }
   return cld
     .image(publicId)
-    .reshape(trim().colorSimilarity(20))   // e_trim:20
+    .effect(backgroundRemoval())           // e_background_removal (AI add-on)
     .adjust(sharpen(80))                   // e_sharpen:80
     .adjust(improve().blend(50))           // e_improve:50
     .resize(
       pad()
         .width(600)
-        .height(720)
-        .background(color('white')),       // c_pad,w_600,h_720,b_white
+        .height(720),                      // c_pad,w_600,h_720 — transparent padding
     )
-    .delivery(quality(autoQuality()))      // q_auto
-    .delivery(format(autoFormat()))        // f_auto
+    .delivery(quality(40))                 // q_40
+    .delivery(format(autoFormat()))        // f_auto (WebP/AVIF, alpha-capable)
     .toURL();
 }
