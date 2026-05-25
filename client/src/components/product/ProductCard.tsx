@@ -90,9 +90,16 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
         <div aria-hidden className="pointer-events-none absolute -top-6 -left-6 h-20 w-20 rounded-full bg-plum/8 blur-2xl" />
 
         {/* ── Image ───────────────────────────────────────────────────── */}
+        {/*
+          Light near-white bg matches the b_white Cloudinary padding so the
+          product never looks cut-out on a dark surface. object-contain ensures
+          the full product is always visible — no zooming or cropping.
+          Cloudinary already pads every image to 5:6 (600×720) so object-contain
+          fills the 5:6 container perfectly with zero letterboxing.
+        */}
         <Link
           to={`/products/${product.slug}`}
-          className="relative block aspect-[5/6] overflow-hidden bg-surface-2"
+          className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)] bg-white"
         >
           {firstImage && !imgError ? (
             <>
@@ -103,10 +110,10 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
                 decoding="async"
                 onError={() => setImgError(true)}
                 className={cn(
-                  'absolute inset-0 h-full w-full object-cover transition-[transform,opacity] duration-500 ease-editorial',
+                  'absolute inset-0 h-full w-full object-contain p-2 transition-[transform,opacity] duration-500 ease-editorial',
                   secondImage
-                    ? 'group-hover:scale-[1.04] group-hover:opacity-0'
-                    : 'group-hover:scale-[1.04]',
+                    ? 'group-hover:scale-[1.05] group-hover:opacity-0'
+                    : 'group-hover:scale-[1.05]',
                 )}
               />
               {secondImage && (
@@ -115,7 +122,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
                   alt={secondImage.altText ?? product.name}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 h-full w-full scale-[1.04] object-cover opacity-0 transition-[transform,opacity] duration-500 ease-editorial group-hover:scale-100 group-hover:opacity-100"
+                  className="absolute inset-0 h-full w-full scale-[1.05] object-contain p-2 opacity-0 transition-[transform,opacity] duration-500 ease-editorial group-hover:scale-100 group-hover:opacity-100"
                 />
               )}
             </>
@@ -125,7 +132,8 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
             </div>
           )}
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-surface/80 to-transparent" />
+          {/* Subtle bottom vignette to blend image into card body */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white/60 to-transparent" />
 
           {discountPct > 0 && (
             <div
@@ -271,7 +279,7 @@ export function ProductCardSkeleton({ className }: { className?: string }) {
   return (
     <div className={cn('p-[1.5px] rounded-3xl bg-gradient-to-br from-white/15 via-line/25 to-line/15', className)}>
       <div className="flex flex-col rounded-[calc(1.5rem-1.5px)] bg-surface">
-        <div className="aspect-[5/6] skeleton rounded-t-[calc(1.5rem-1.5px)]" />
+        <div className="aspect-[5/6] bg-[hsl(0_0%_91%)] animate-pulse rounded-t-[calc(1.5rem-1.5px)]" />
         <div className="flex flex-col gap-1.5 px-2.5 pb-2.5 pt-2 sm:px-3 sm:pb-3 sm:pt-2.5">
           <div className="h-2 w-14 skeleton rounded" />
           <div className="h-4 w-3/4 skeleton rounded" />
