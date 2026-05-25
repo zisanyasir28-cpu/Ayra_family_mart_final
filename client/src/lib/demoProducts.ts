@@ -1,4 +1,5 @@
 import type { ApiProduct, ApiCategory } from '../types/api';
+import { buildDemoProductUrl } from './cloudinary';
 
 /**
  * Demo products + categories for situations where the backend API is
@@ -90,17 +91,10 @@ function p(opts: {
   } as unknown as ApiProduct;
 }
 
-// Cloudinary optimized URL builder
-// Transform chain (applied left → right by Cloudinary):
-//   e_trim:20          — remove solid/near-white background (tolerance 20)
-//   e_sharpen:80       — crisp product edges for brand-quality presentation
-//   e_improve:50       — enhance colour & contrast
-//   c_pad,w_600,h_720  — pad to exactly 5:6 (card aspect ratio) — no cropping ever
-//   b_white            — padding filled with white so bg always looks clean
-//   q_auto:best        — highest quality compression
-//   f_auto             — serve WebP / AVIF automatically
-const CDN = 'https://res.cloudinary.com/dzhj5tgyv/image/upload/e_trim:20/e_sharpen:80/e_improve:50/c_pad,w_600,h_720,b_white/q_auto:best/f_auto';
-const cld = (publicId: string) => `${CDN}/${publicId}`;
+// Cloudinary URL builder — uses the SDK (buildDemoProductUrl) which applies:
+//   e_trim:20 → e_sharpen:80 → e_improve:50 → c_pad,w_600,h_720,b_white → q_auto → f_auto
+// All transforms are type-safe via @cloudinary/url-gen.
+const cld = (publicId: string) => buildDemoProductUrl(publicId);
 
 // ─── Demo product catalogue ──────────────────────────────────────────────────
 // Personal Care comes FIRST so it shows on page 1

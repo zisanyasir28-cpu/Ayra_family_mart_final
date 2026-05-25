@@ -100,13 +100,14 @@ export default function ProductDetailPage() {
       <div className="grid gap-6 md:grid-cols-2 md:gap-10">
         {/* ── Image Gallery ───────────────────────────────────────────── */}
         <div className="md:sticky md:top-24 md:self-start">
-          {/* Main image */}
-          <div className="relative aspect-square overflow-hidden rounded-3xl bg-surface-2 ring-1 ring-line/50 shadow-[0_0_48px_-16px_hsl(var(--saffron)/0.2)]">
+          {/* Main image — white bg matches Cloudinary b_white padding; object-contain
+               shows the full product without any cropping */}
+          <div className="relative aspect-square overflow-hidden rounded-3xl bg-white ring-1 ring-line/20 shadow-[0_0_48px_-16px_hsl(var(--saffron)/0.2)]">
             {images[activeImg]?.url ? (
               <img
                 src={detailImg(images[activeImg].url)}
                 alt={images[activeImg].altText ?? product.name}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain p-4"
                 loading="eager"
               />
             ) : (
@@ -140,14 +141,14 @@ export default function ProductDetailPage() {
                   key={img.id}
                   onClick={() => setActiveImg(i)}
                   className={cn(
-                    'shrink-0 snap-start overflow-hidden rounded-xl ring-2 transition',
+                    'shrink-0 snap-start overflow-hidden rounded-xl ring-2 transition bg-white',
                     activeImg === i ? 'ring-saffron' : 'ring-line hover:ring-cream/30',
                   )}
                 >
                   <img
                     src={detailImg(img.url)}
                     alt=""
-                    className="h-16 w-16 object-cover"
+                    className="h-16 w-16 object-contain p-1"
                     loading="lazy"
                   />
                 </button>

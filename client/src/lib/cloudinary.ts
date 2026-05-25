@@ -1,38 +1,88 @@
-// ─── Cloudinary URL Optimizer ─────────────────────────────────────────────────
+// ─── Cloudinary URL Builder — @cloudinary/url-gen SDK ─────────────────────────
 //
-// Builds (or rewrites) a Cloudinary image URL with width/quality/format
-// transforms. Works with:
-//   • a raw publicId         → `products/burger-king`
-//   • a plain Cloudinary URL → `https://res.cloudinary.com/<cloud>/image/upload/v123/...`
+// All URLs are constructed via the official Cloudinary URL-gen SDK:
+//   https://cloudinary.com/documentation/javascript_integration
 //
-// Pre-transformed URLs (those with baked-in transform params directly after
-// /upload/, e.g. our demo CDN URLs) are returned as-is to avoid conflicting
-// double-transform chains.
+// No manual string construction — every transform is typed and composable.
 //
-// Non-Cloudinary URLs are returned unchanged (graceful for Unsplash, etc.).
+// Three URL categories handled:
+//   1. Pre-transformed Cloudinary URLs (demo CDN — transforms already baked in)
+//      → returned as-is; re-processing would double-stack transforms.
+//   2. Plain Cloudinary URLs (e.g. /upload/v123/publicId stored in DB)
+//      → publicId extracted, URL rebuilt via SDK.
+//   3. External URLs (Unsplash, S3, etc.)
+//      → returned unchanged.
+//   4. Raw publicIds (no protocol)
+//      → URL built via SDK directly.
+
+import { Cloudinary }          from '@cloudinary/url-gen';
+import { quality, format }     from '@cloudinary/url-gen/actions/delivery';
+import { limitFit, pad }       from '@cloudinary/url-gen/actions/resize';
+import { sharpen, improve }    from '@cloudinary/url-gen/actions/adjust';
+import { trim }                from '@cloudinary/url-gen/actions/reshape';
+import { auto as autoQuality } from '@cloudinary/url-gen/qualifiers/quality';
+import { auto as autoFormat }  from '@cloudinary/url-gen/qualifiers/format';
+import { color }               from '@cloudinary/url-gen/qualifiers/background';
 
 const CLOUD_NAME = import.meta.env['VITE_CLOUDINARY_CLOUD_NAME'] ?? '';
 
-interface OptimizeOpts {
-  width?:   number;
-  quality?: 'auto' | number;
-  format?:  'auto' | 'webp' | 'avif' | 'jpg' | 'png';
-}
+// Disable Cloudinary's SDK analytics tracking param (?_a=...)
+const cld = new Cloudinary({
+  cloud: { cloudName: CLOUD_NAME },
+  url:   { analytics: false },
+});
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Returns true when the string directly after /upload/ is a Cloudinary
- * transformation segment (contains _ : or ,) rather than a version string
- * (v\d+) or a plain public_id. We skip double-processing these URLs because
- * their full transform chain is already baked in.
+ * True when the string directly after /upload/ is a Cloudinary transform
+ * segment (contains _ : or ,) rather than a version string (v\d+) or plain id.
+ * These URLs already have their full transform chain baked in and must NOT
+ * be re-processed.
  */
 function isPreTransformed(url: string): boolean {
-  const uploadIdx = url.indexOf('/upload/');
-  if (uploadIdx === -1) return false;
-  const afterUpload  = url.slice(uploadIdx + 8); // skip '/upload/'
-  const firstSegment = afterUpload.split('/')[0] ?? '';
-  // Transform params always contain _ or : or ,; version strings are v\d+
-  return /[_:,]/.test(firstSegment) && !/^v\d+/.test(firstSegment);
+  const idx   = url.indexOf('/upload/');
+  if (idx === -1) return false;
+  const first = url.slice(idx + 8).split('/')[0] ?? '';
+  return /[_:,]/.test(first) && !/^v\d+/.test(first);
 }
+
+/** Extracts publicId from a plain Cloudinary URL (with optional version). */
+function extractPublicId(url: string): string | null {
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(\?.*)?$/);
+  return match?.[1] ?? null;
+}
+
+// ─── Internal builder ─────────────────────────────────────────────────────────
+
+interface OptimizeOpts {
+  width?:   number;
+  height?:  number;
+  /** 'limit' (default) = c_limit  |  'pad' = c_pad */
+  crop?:    'limit' | 'pad';
+  bgColor?: string;  // only used when crop = 'pad'
+}
+
+function buildSdkUrl(publicId: string, opts: OptimizeOpts = {}): string {
+  if (!CLOUD_NAME) return publicId;
+  const { width = 600, height, crop = 'limit', bgColor = 'white' } = opts;
+
+  let img = cld.image(publicId)
+    .delivery(quality(autoQuality()))
+    .delivery(format(autoFormat()));
+
+  if (crop === 'pad') {
+    const r = pad().width(width).background(color(bgColor));
+    img = img.resize(height ? r.height(height) : r);
+  } else {
+    const r = limitFit().width(width);
+    img = img.resize(height ? r.height(height) : r);
+  }
+
+  return img.toURL();
+}
+
+// ─── Public API ───────────────────────────────────────────────────────────────
 
 export function getOptimizedImageUrl(
   publicIdOrUrl: string,
@@ -40,30 +90,67 @@ export function getOptimizedImageUrl(
 ): string {
   if (!publicIdOrUrl) return publicIdOrUrl;
 
-  const { width = 600, quality = 'auto', format = 'auto' } = opts;
-  const transforms = `w_${width},q_${quality},f_${format},c_limit`;
-
   // Full Cloudinary URL ──────────────────────────────────────────────────────
   if (publicIdOrUrl.includes('res.cloudinary.com') && publicIdOrUrl.includes('/upload/')) {
-    // Already has its own transform chain → return unchanged to avoid conflict
-    if (isPreTransformed(publicIdOrUrl)) return publicIdOrUrl;
-    // Plain URL (e.g. /upload/v123/path) → splice transforms
-    return publicIdOrUrl.replace('/upload/', `/upload/${transforms}/`);
+    if (isPreTransformed(publicIdOrUrl)) return publicIdOrUrl; // baked transforms → untouched
+    const pid = extractPublicId(publicIdOrUrl);
+    return pid ? buildSdkUrl(pid, opts) : publicIdOrUrl;
   }
 
-  // External CDN (Unsplash, etc.) → return as-is ────────────────────────────
+  // External URL (Unsplash, etc.) ───────────────────────────────────────────
   if (publicIdOrUrl.startsWith('http://') || publicIdOrUrl.startsWith('https://')) {
     return publicIdOrUrl;
   }
 
-  // Raw publicId → build full URL ───────────────────────────────────────────
-  if (!CLOUD_NAME) return publicIdOrUrl;
-  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transforms}/${publicIdOrUrl}`;
+  // Raw publicId ────────────────────────────────────────────────────────────
+  return buildSdkUrl(publicIdOrUrl, opts);
 }
 
-// ─── Size presets ─────────────────────────────────────────────────────────────
+// ─── Size presets (used by ProductCard, ProductDetailPage, etc.) ──────────────
 
-export const thumb  = (id: string): string => getOptimizedImageUrl(id, { width: 200 });
-export const card   = (id: string): string => getOptimizedImageUrl(id, { width: 400 });
-export const detail = (id: string): string => getOptimizedImageUrl(id, { width: 900 });
-export const hero   = (id: string): string => getOptimizedImageUrl(id, { width: 1600 });
+/** 200 px c_limit — order line thumbnails, wishlist chips */
+export const thumb = (id: string): string =>
+  getOptimizedImageUrl(id, { width: 200 });
+
+/** 400 px c_limit — product grid cards */
+export const card = (id: string): string =>
+  getOptimizedImageUrl(id, { width: 400 });
+
+/** 900 px c_limit — product detail page */
+export const detail = (id: string): string =>
+  getOptimizedImageUrl(id, { width: 900 });
+
+/** 1 600 px c_limit — hero banners */
+export const hero = (id: string): string =>
+  getOptimizedImageUrl(id, { width: 1600 });
+
+// ─── Demo product URL builder (used by demoProducts.ts) ───────────────────────
+//
+// Full brand-quality transform chain — every step is type-safe via SDK:
+//   e_trim:20      → color-based background removal (tolerance 20)
+//   e_sharpen:80   → crisp product edges
+//   e_improve:50   → colour + contrast enhancement
+//   c_pad,600×720  → pad to exact 5:6 card ratio, no cropping ever
+//   b_white        → padding filled with white
+//   q_auto/f_auto  → WebP/AVIF at auto quality
+//
+export function buildDemoProductUrl(publicId: string): string {
+  if (!CLOUD_NAME) {
+    // No env var (GitHub Pages / CI) — fall back to the hardcoded cloud name
+    return `https://res.cloudinary.com/dzhj5tgyv/image/upload/e_trim:20/e_sharpen:80/e_improve:50/c_pad,w_600,h_720,b_white/q_auto/f_auto/${publicId}`;
+  }
+  return cld
+    .image(publicId)
+    .reshape(trim().colorSimilarity(20))   // e_trim:20
+    .adjust(sharpen(80))                   // e_sharpen:80
+    .adjust(improve().blend(50))           // e_improve:50
+    .resize(
+      pad()
+        .width(600)
+        .height(720)
+        .background(color('white')),       // c_pad,w_600,h_720,b_white
+    )
+    .delivery(quality(autoQuality()))      // q_auto
+    .delivery(format(autoFormat()))        // f_auto
+    .toURL();
+}

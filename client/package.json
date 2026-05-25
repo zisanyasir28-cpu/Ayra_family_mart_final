@@ -14,6 +14,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@cloudinary/url-gen": "^1.22.0",
     "@hookform/resolvers": "^3.10.0",
     "@sentry/react": "^10.53.1",
     "@superstore/shared": "*",
