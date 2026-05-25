@@ -101,11 +101,6 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           to={`/products/${product.slug}`}
           className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)] bg-gradient-to-br from-[hsl(var(--plum)/0.18)] via-surface to-bg"
         >
-          {/* Ambient glow — product floats above it */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="h-40 w-40 rounded-full bg-saffron/10 blur-3xl" />
-          </div>
-
           {firstImage && !imgError ? (
             <>
               <img
