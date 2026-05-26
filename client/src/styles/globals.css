@@ -215,14 +215,31 @@
     overflow-x: hidden;
   }
 
-  /* Light mode — warm cream sky fading to soft sage earth (farm-fresh vibe) */
+  /* Light mode — painterly farm-landscape background.
+     Six radial light-pools sampled from hero-bg-light.avif palette:
+       ① hsl(42/48)  — golden morning sun / warm produce glow
+       ② hsl(200)    — mountain-mist blue / distant hill horizon
+       ③ hsl(140)    — sage herb pool / lush leafy-greens left edge
+       ④ hsl(25)     — warm earth accent / spice & produce tones
+       ⑤ hsl(158)    — fresh emerald pool / farm-fresh foliage
+       ⑥ hsl(35)     — harvest amber / golden produce lower-right
+     Stacked over a warm ivory → sage linear base canvas.              */
   :root.light body {
-    background: linear-gradient(
-      180deg,
-      hsl(45 60% 97%) 0%,
-      hsl(45 50% 96%) 30%,
-      hsl(140 40% 92%) 100%
-    );
+    background:
+      /* ① Golden morning-sun pool — upper-right (produce warmth) */
+      radial-gradient(ellipse 58% 38% at 90% 3%,   hsl(42 92% 84% / 0.50) 0%, transparent 65%),
+      /* ② Mountain-mist blue — top-centre horizon (distant hills) */
+      radial-gradient(ellipse 70% 24% at 50% 0%,   hsl(200 45% 90% / 0.34) 0%, transparent 56%),
+      /* ③ Sage herb pool — left edge (leafy greens in hero image) */
+      radial-gradient(ellipse 44% 52% at 0%  52%,  hsl(140 55% 83% / 0.42) 0%, transparent 62%),
+      /* ④ Warm earth accent — right-mid (produce & spice tones)  */
+      radial-gradient(ellipse 30% 36% at 97% 46%,  hsl(25  72% 87% / 0.28) 0%, transparent 55%),
+      /* ⑤ Fresh emerald pool — lower-left (farm-fresh foliage)   */
+      radial-gradient(ellipse 36% 28% at 5%  90%,  hsl(158 62% 81% / 0.34) 0%, transparent 57%),
+      /* ⑥ Harvest amber — lower-right (golden produce / earth)   */
+      radial-gradient(ellipse 40% 32% at 95% 86%,  hsl(35  88% 83% / 0.36) 0%, transparent 60%),
+      /* Base canvas — warm ivory → soft sage                       */
+      linear-gradient(172deg, hsl(48 72% 97%) 0%, hsl(43 58% 95%) 42%, hsl(138 38% 93%) 100%);
     background-attachment: fixed;
   }
   ::selection {
@@ -556,6 +573,18 @@
 }
 :root.light .butterfly {
   opacity: 0.88;
+}
+
+/* Light-mode artistic scene layer — same CSS-toggle pattern as .butterfly.
+   Wraps the colour orbs, mountain silhouette, sunburst, topo rings, and
+   rice-paddy wave rows inside FloatingLeaves. Hidden in dark, fade-in in light. */
+.light-scene {
+  opacity: 0;
+  transition: opacity 0.65s ease;
+  will-change: opacity;
+}
+:root.light .light-scene {
+  opacity: 1;
 }
 
 /* ── Light-mode gradient overrides ───────────────────────────────────────────

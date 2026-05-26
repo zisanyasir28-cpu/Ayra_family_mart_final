@@ -200,6 +200,191 @@ function FloatingLeaves() {
           <path d="M60 42 Q76 32 87 38" /><path d="M60 54 Q44 44 33 50" /><path d="M60 66 Q79 56 90 62" />
         </svg>
       </div>
+
+      {/* ══ LIGHT-MODE ARTISTIC SCENE ═══════════════════════════════════════
+          Controlled by .light-scene CSS toggle in globals.css:
+            opacity:0 (dark)  →  opacity:1 (light, 0.65s ease fade-in)
+          No JS hook needed — pure CSS theme-switch.
+
+          Palette sampled from hero-bg-light.avif (Ayra bag + produce + mountains):
+            ① hsl(42/48)  — golden morning sun / warm produce glow
+            ② hsl(140/158)— sage herb / fresh emerald green
+            ③ hsl(200)    — mountain-mist blue / distant hills
+            ④ hsl(35)     — harvest amber / warm earth
+            ⑤ hsl(25)     — spiced terra / produce tones
+
+          Elements (bottom to top in z-order):
+            · Five atmospheric colour-pool orbs  — painterly depth
+            · Mountain-horizon 3-layer silhouette — foot of page
+            · Rice-paddy sine-wave rows          — Bengali field motif
+            · Topographic contour rings (×2)     — mountain-map motif
+            · Sunburst                           — upper-right corner   */}
+      <div className="light-scene absolute inset-0">
+
+        {/* ── Five atmospheric colour-pool orbs ───────────────────────────
+            Large, heavily-blurred radials layered to create a living,
+            painterly depth — coloured light through morning farm mist.  */}
+
+        {/* ① Golden morning sun — upper-right corner bleed */}
+        <div
+          aria-hidden
+          className="absolute -right-32 -top-32 h-[560px] w-[560px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, hsl(42 92% 80% / 0.44) 0%, hsl(48 86% 88% / 0.18) 50%, transparent 72%)',
+            filter: 'blur(72px)',
+          }}
+        />
+        {/* ② Sage herb pool — left-mid edge */}
+        <div
+          aria-hidden
+          className="absolute -left-36 top-[30%] h-[480px] w-[480px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, hsl(140 55% 76% / 0.36) 0%, hsl(158 58% 84% / 0.14) 52%, transparent 72%)',
+            filter: 'blur(82px)',
+          }}
+        />
+        {/* ③ Mountain-mist blue — top-centre horizon */}
+        <div
+          aria-hidden
+          className="absolute left-[20%] -top-28 h-[420px] w-[580px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, hsl(200 45% 85% / 0.26) 0%, transparent 65%)',
+            filter: 'blur(96px)',
+          }}
+        />
+        {/* ④ Harvest amber — lower-right corner bleed */}
+        <div
+          aria-hidden
+          className="absolute -right-24 bottom-0 h-[430px] w-[430px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, hsl(35 88% 78% / 0.32) 0%, transparent 66%)',
+            filter: 'blur(86px)',
+          }}
+        />
+        {/* ⑤ Fresh emerald — lower-left corner bleed */}
+        <div
+          aria-hidden
+          className="absolute -left-20 bottom-0 h-[370px] w-[370px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, hsl(158 62% 74% / 0.28) 0%, transparent 66%)',
+            filter: 'blur(90px)',
+          }}
+        />
+
+        {/* ── Mountain-horizon silhouette ──────────────────────────────────
+            Three-layer landscape echoing the mountain backdrop in the hero.
+            Distant peaks (cool blue) → rolling hills (sage green)
+            → foreground field edge (emerald). A quiet horizon line
+            anchoring the bottom of every page.                          */}
+        <svg
+          aria-hidden
+          className="absolute bottom-0 left-0 w-full"
+          viewBox="0 0 1400 240"
+          preserveAspectRatio="xMidYMax slice"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Distant mountain range — cool blue-grey */}
+          <path
+            d="M0 240 L0 150 C60 138,120 112,200 134 C255 110,315 78,395 118 C450 72,515 88,588 116 C648 52,715 68,788 112 C850 58,916 74,990 108 C1055 64,1122 80,1198 122 C1252 96,1316 110,1400 122 L1400 240 Z"
+            fill="hsl(205 40% 72%)"
+            opacity="0.055"
+          />
+          {/* Mid rolling hills — sage green */}
+          <path
+            d="M0 240 L0 178 C100 162,220 146,360 172 C460 155,565 138,696 168 C808 150,930 142,1055 168 C1152 155,1278 148,1400 162 L1400 240 Z"
+            fill="hsl(140 46% 66%)"
+            opacity="0.065"
+          />
+          {/* Foreground field edge — fresh emerald */}
+          <path
+            d="M0 240 L0 210 Q170 200,340 208 Q510 196,680 206 Q855 196,1030 204 Q1200 196,1400 204 L1400 240 Z"
+            fill="hsl(158 56% 60%)"
+            opacity="0.058"
+          />
+        </svg>
+
+        {/* ── Rice-paddy sine-wave rows — Bengali agricultural motif ───────
+            Six rows of smooth C-curves spaced 18 px apart, overlapping
+            the mountain silhouette in the lower viewport.
+            Evokes the regimented paddy rows of Bangladesh's farmland
+            when viewed from a gentle hillside — same landscape as the hero. */}
+        <svg
+          aria-hidden
+          className="absolute bottom-[7%] left-0 w-full opacity-[0.042]"
+          viewBox="0 0 1400 108"
+          preserveAspectRatio="xMidYMid meet"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {[0, 18, 36, 54, 72, 90].map((y, i) => (
+            <path
+              key={i}
+              d={`M0,${y} C117,${y - 6} 233,${y + 6} 350,${y} C467,${y - 6} 583,${y + 6} 700,${y} C817,${y - 6} 933,${y + 6} 1050,${y} C1167,${y - 6} 1283,${y + 6} 1400,${y}`}
+              fill="none"
+              stroke="hsl(140 52% 36%)"
+              strokeWidth={i < 2 ? 0.7 : 0.5}
+              opacity={0.9 - i * 0.1}
+            />
+          ))}
+        </svg>
+
+        {/* ── Topographic contour rings — cartographic mountain motif ─────
+            Concentric ellipses read like a topo-map of a mountain peak.
+            Two clusters placed at mid-right and lower-left for page rhythm.
+            Echoes the mountain topography visible in hero-bg-light.avif. */}
+        <div
+          aria-hidden
+          className="absolute right-[5%] top-[20%] h-[200px] w-[200px] opacity-[0.055]"
+        >
+          <svg viewBox="0 0 180 180" fill="none" stroke="hsl(140 50% 30%)" strokeWidth="0.85" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="90" cy="90" rx="82" ry="60" />
+            <ellipse cx="90" cy="90" rx="65" ry="48" />
+            <ellipse cx="90" cy="90" rx="48" ry="36" />
+            <ellipse cx="90" cy="90" rx="31" ry="23" />
+            <ellipse cx="90" cy="90" rx="15" ry="11" />
+            <ellipse cx="90" cy="90" rx="5"  ry="4"  fill="hsl(140 50% 30%)" opacity="0.35" />
+          </svg>
+        </div>
+        <div
+          aria-hidden
+          className="absolute left-[9%] top-[60%] h-[148px] w-[148px] rotate-[22deg] opacity-[0.048]"
+        >
+          <svg viewBox="0 0 140 140" fill="none" stroke="hsl(35 75% 36%)" strokeWidth="0.9" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="70" cy="70" rx="62" ry="44" />
+            <ellipse cx="70" cy="70" rx="47" ry="33" />
+            <ellipse cx="70" cy="70" rx="32" ry="22" />
+            <ellipse cx="70" cy="70" rx="17" ry="12" />
+            <ellipse cx="70" cy="70" rx="6"  ry="4"  fill="hsl(35 75% 36%)" opacity="0.32" />
+          </svg>
+        </div>
+
+        {/* ── Sunburst — upper-right corner ────────────────────────────────
+            16 rotating SVG rays + 3 concentric glow circles.
+            Element bleeds off the top-right corner so only the
+            lower-left quadrant shows — a rising sun cresting the horizon.
+            Amber/gold palette matches morning produce market warmth.     */}
+        <svg
+          aria-hidden
+          className="absolute -right-10 -top-10 h-[280px] w-[280px]"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {[0,22.5,45,67.5,90,112.5,135,157.5,180,202.5,225,247.5,270,292.5,315,337.5].map((deg, i) => (
+            <line
+              key={i}
+              x1={100} y1={i % 4 === 0 ? 44 : 50}
+              x2={100} y2={i % 4 === 0 ? 20 : 28}
+              stroke="hsl(42 88% 58%)"
+              strokeWidth={i % 2 === 0 ? 1.8 : 1.2}
+              opacity={i % 4 === 0 ? 0.42 : 0.26}
+              transform={`rotate(${deg} 100 100)`}
+            />
+          ))}
+          <circle cx={100} cy={100} r={50} fill="hsl(48 95% 78%)" opacity={0.10} />
+          <circle cx={100} cy={100} r={34} fill="hsl(42 92% 72%)" opacity={0.14} />
+          <circle cx={100} cy={100} r={20} fill="hsl(38 95% 65%)" opacity={0.18} />
+        </svg>
+
+      </div>
     </div>
   );
 }

@@ -390,7 +390,7 @@ export function HeroBanner() {
               <Link
                 to="/products"
                 className={cn(
-                  'group relative inline-flex items-center overflow-hidden rounded-full font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
+                  'group relative inline-flex items-center overflow-hidden rounded-lg font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
                   isLight
                     ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm active:translate-y-[3px]'
                     : 'gap-2.5 px-7 py-3.5 text-sm bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
@@ -400,8 +400,8 @@ export function HeroBanner() {
                   color: 'hsl(0 0% 96%)',
                   boxShadow: [
                     'inset 0 1.5px 0 hsl(145 38% 48% / 0.28)',
-                    'inset 0 -2px 0 hsl(145 68% 7% / 0.5)',
-                    '0 5px 0 hsl(145 66% 10%)',
+                    'inset 0 0.6px 0 hsl(145 68% 7% / 0.5)',
+                    '0 1px 0 hsl(145 66% 10%)',
                     '0 10px 26px -6px hsl(145 60% 5% / 0.65)',
                   ].join(', '),
                   textShadow: '0 1px 5px rgba(0,0,0,0.5)',
@@ -473,7 +473,7 @@ export function HeroBanner() {
           </div>
 
           {/* ── Right: Farm photo (light) / Neon ring (dark) + floating cards ── */}
-          <div className="relative mx-auto flex w-full max-w-[460px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
+          <div className="relative mx-auto flex w-full max-w-[46px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
 
             {isLight ? (
               /* ── LIGHT MODE right column ────────────────────────────────────
