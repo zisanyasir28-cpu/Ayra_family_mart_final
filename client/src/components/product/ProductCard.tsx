@@ -47,8 +47,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
     }
   }
 
-  const firstImage  = product.images[0];
-  const secondImage = product.images[1] ?? null;
+  const firstImage = product.images[0];
 
   const compare = product.comparePriceInPaisa ?? product.priceInPaisa;
   const hasDiscount =
@@ -101,31 +100,18 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           to={`/products/${product.slug}`}
           className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)] bg-gradient-to-br from-[hsl(var(--plum)/0.18)] via-surface to-bg"
         >
+          {/* Subtle ground glow — small, bottom-anchored, won't spill into sides */}
+          <div aria-hidden className="pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 h-16 w-28 rounded-full bg-saffron/6 blur-2xl" />
+
           {firstImage && !imgError ? (
-            <>
-              <img
-                src={cardImg(firstImage.url)}
-                alt={firstImage.altText ?? product.name}
-                loading="lazy"
-                decoding="async"
-                onError={() => setImgError(true)}
-                className={cn(
-                  'absolute inset-0 h-full w-full object-contain p-2 transition-[transform,opacity] duration-500 ease-editorial',
-                  secondImage
-                    ? 'group-hover:scale-[1.05] group-hover:opacity-0'
-                    : 'group-hover:scale-[1.05]',
-                )}
-              />
-              {secondImage && (
-                <img
-                  src={cardImg(secondImage.url)}
-                  alt={secondImage.altText ?? product.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 h-full w-full scale-[1.05] object-contain p-2 opacity-0 transition-[transform,opacity] duration-500 ease-editorial group-hover:scale-100 group-hover:opacity-100"
-                />
-              )}
-            </>
+            <img
+              src={cardImg(firstImage.url)}
+              alt={firstImage.altText ?? product.name}
+              loading="lazy"
+              decoding="async"
+              onError={() => setImgError(true)}
+              className="absolute inset-0 h-full w-full object-contain p-2 transition-transform duration-500 ease-editorial group-hover:scale-[1.05]"
+            />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-5xl opacity-30">
               🛒

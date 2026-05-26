@@ -103,6 +103,8 @@ export default function ProductDetailPage() {
           {/* Main image — white bg matches Cloudinary b_white padding; object-contain
                shows the full product without any cropping */}
           <div className="relative aspect-square overflow-hidden rounded-3xl bg-gradient-to-br from-[hsl(var(--plum)/0.18)] via-surface to-bg ring-1 ring-line/20 shadow-[0_0_48px_-16px_hsl(var(--saffron)/0.2)]">
+            {/* Subtle ground glow */}
+            <div aria-hidden className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 h-20 w-40 rounded-full bg-saffron/6 blur-2xl" />
             {images[activeImg]?.url ? (
               <img
                 src={detailImg(images[activeImg].url)}
