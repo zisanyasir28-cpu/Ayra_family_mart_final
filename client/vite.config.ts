@@ -6,9 +6,13 @@ import path from 'path';
 
 const REPO_NAME = 'Ayra_family_mart_final';
 
-export default defineConfig(({ command }) => ({
-  // In production (GitHub Pages) serve under /Ayra_family_mart_final/
-  base: command === 'build' ? `/${REPO_NAME}/` : '/',
+export default defineConfig(() => {
+  // GitHub Pages preview builds set VITE_BASE_PATH=/Ayra_family_mart_final/
+  // Vercel (production) leaves it unset → base is always '/'
+  const base = process.env.VITE_BASE_PATH ?? '/';
+
+  return {
+    base,
   plugins: [
     react(),
     VitePWA({
@@ -22,8 +26,8 @@ export default defineConfig(({ command }) => ({
         background_color: '#0a0a0a',
         display:          'standalone',
         orientation:      'portrait',
-        scope:            command === 'build' ? `/${REPO_NAME}/` : '/',
-        start_url:        command === 'build' ? `/${REPO_NAME}/` : '/',
+        scope:            base,
+        start_url:        base,
         icons: [
           { src: 'icons/icon-192.png',          sizes: '192x192', type: 'image/png' },
           { src: 'icons/icon-512.png',          sizes: '512x512', type: 'image/png' },
@@ -102,4 +106,5 @@ export default defineConfig(({ command }) => ({
       deps: { inline: [/^react/, /^@testing-library/] },
     },
   },
-}));
+  };
+});
