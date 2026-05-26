@@ -386,45 +386,40 @@ export function HeroBanner() {
                   : 'mt-8 flex-wrap items-center gap-4',
               )}
             >
-              {/* Shop Now — glossy 3D gel capsule (light) / saffron pill (dark) */}
+              {/* Shop Now — forest-green 3D pill (light) / saffron gradient pill (dark) */}
               <Link
                 to="/products"
                 className={cn(
-                  'group relative inline-flex items-center overflow-hidden rounded-full transition-all duration-200 active:scale-[0.96]',
+                  'group relative inline-flex items-center overflow-hidden rounded-full font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
                   isLight
-                    ? 'gap-2 px-5 py-2.5 text-sm font-semibold sm:gap-2.5 sm:px-8 sm:py-[14px] sm:text-base hover:brightness-105 active:translate-y-px'
-                    : 'gap-2.5 px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] hover:brightness-105 bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
+                    ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm active:translate-y-[3px]'
+                    : 'gap-2.5 px-7 py-3.5 text-sm bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
                 )}
                 style={isLight ? {
-                  /* Radial gradient — bright center, very dark edges = 3D convex look */
-                  background: [
-                    'radial-gradient(ellipse at 50% 32%,',
-                    '  hsl(145 55% 38%) 0%,',
-                    '  hsl(145 64% 22%) 50%,',
-                    '  hsl(145 72% 10%) 100%)',
-                  ].join(''),
-                  color: 'white',
+                  background: 'linear-gradient(175deg, hsl(145 50% 28%) 0%, hsl(145 64% 14%) 100%)',
+                  color: 'hsl(0 0% 96%)',
                   boxShadow: [
-                    '0 8px 24px hsl(145 68% 5% / 0.55)',   /* deep drop shadow */
-                    '0 2px 6px  hsl(145 68% 5% / 0.30)',   /* near shadow      */
-                    'inset 0 -5px 12px hsl(145 70% 4% / 0.42)', /* bottom depth */
-                    'inset 0 1px 2px rgba(255,255,255,0.16)',    /* rim light     */
+                    'inset 0 1.5px 0 hsl(145 38% 48% / 0.28)',
+                    'inset 0 -2px 0 hsl(145 68% 7% / 0.5)',
+                    '0 5px 0 hsl(145 66% 10%)',
+                    '0 10px 26px -6px hsl(145 60% 5% / 0.65)',
                   ].join(', '),
-                  textShadow: '0 1px 5px rgba(0,0,0,0.55)',
+                  textShadow: '0 1px 5px rgba(0,0,0,0.5)',
                 } : undefined}
               >
-                {/* Specular highlight — the glossy top-shine of the gel capsule */}
+                {/* Rough organic botanical watermark — only in light mode */}
                 {isLight && (
-                  <span
+                  <svg
                     aria-hidden
-                    className="pointer-events-none absolute select-none"
-                    style={{
-                      inset: '3px 10% auto 10%',   /* inset from sides, starts 3px from top */
-                      height: '46%',
-                      borderRadius: '50%',
-                      background: 'linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.24) 48%, transparent 100%)',
-                    }}
-                  />
+                    className="pointer-events-none absolute right-0 top-0 h-full w-32 select-none"
+                    viewBox="0 0 128 48"
+                    fill="currentColor"
+                    style={{ color: 'hsl(145 62% 10%)', opacity: 0.65 }}
+                  >
+                    <path d="M 0 48 L 12 40 C 28 28, 58 10, 88 5 C 104 3, 118 6, 124 14 C 128 20, 122 30, 106 36 C 82 44, 46 48, 18 48 Z" />
+                    <path d="M 30 48 L 48 36 L 72 22 C 90 14, 112 12, 126 20 L 128 28 C 116 36, 88 44, 60 48 Z" />
+                    <path d="M 74 0 L 92 2 C 108 5, 124 12, 128 22 L 120 24 C 110 16, 94 8, 74 0 Z" />
+                  </svg>
                 )}
 
                 <span className="relative">Shop Now</span>
