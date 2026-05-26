@@ -470,12 +470,14 @@ export function HeroBanner() {
 
             {isLight ? (
               /* ── LIGHT MODE right column ────────────────────────────────────
-                 The photograph is an absolute section-background at ALL sizes —
-                 this column is a transparent spacer only.
-                 Mobile: 0 intrinsic height (section height = left column content).
-                 Desktop (lg+): min-h gives the two-column row vertical presence
-                 and keeps the floating overlay cards properly anchored. */
-              <div className="flex-1 w-full lg:min-h-[500px] xl:min-h-[560px]" />
+                 Transparent spacer — the photograph lives in the section bg.
+                 xs  (<640px):  no min-h — row height = left column.
+                                Special Offer card (top-2) anchors to row top ✓
+                                Super Saver pill hidden on xs (col too narrow).
+                 sm  (640-1023): min-h-[350px] — pill at bottom-6 = 326px from
+                                 top (≈69% down the hero) ✓
+                 lg+ (≥1024px): min-h-[500/560px] — full desktop height ✓       */
+              <div className="w-full sm:min-h-[350px] lg:min-h-[500px] xl:min-h-[560px]" />
             ) : (
               /* ── DARK MODE: neon ring — unchanged ────────────────────────── */
               <div className="relative flex h-[320px] w-[320px] items-center justify-center sm:h-[420px] sm:w-[420px]">
@@ -606,21 +608,24 @@ export function HeroBanner() {
               </div>
             </motion.div>
 
-            {/* Floating saver pill — bottom-left */}
+            {/* Floating saver pill — bottom-left (hidden on xs: col too narrow) */}
             <motion.div
               initial={{ opacity: 0, x: -16, y: 12 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.65 }}
-              className="absolute -left-3 bottom-6 z-20 flex items-center gap-2.5 rounded-full border border-sage/45 bg-surface/50 px-4 py-2 shadow-[0_8px_10px_-15px_hsl(var(--sage)/0.25)] backdrop-blur-xl sm:left-0"
+              className={cn(
+                'absolute -left-3 bottom-6 z-20 flex items-center gap-2.5 rounded-full border border-sage/45 bg-surface/50 px-4 py-2 shadow-[0_8px_10px_-15px_hsl(var(--sage)/0.25)] backdrop-blur-xl sm:left-0',
+                isLight && 'hidden sm:flex',
+              )}
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sage/20 shadow-lg text-base select-none">
                 🎉
               </span>
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-sage">
+                <p className="whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-sage">
                   Super Saver Pack
                 </p>
-                <p className="text-xs font-black text-cream">
+                <p className="whitespace-nowrap text-xs font-black text-cream">
                   Save <span className="text-coral">৳350</span>
                 </p>
               </div>
