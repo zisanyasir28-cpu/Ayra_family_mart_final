@@ -237,18 +237,85 @@ export function HeroBanner() {
         <path d="M60 78 Q41 68 30 74" />
       </svg>
 
-      <div className="container relative">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
+      {/* ── LIGHT MODE hero photograph ────────────────────────────────────────  */}
+      {/*                                                                        */}
+      {/* MOBILE (<lg): background-size:100% auto                               */}
+      {/*   Image = full viewport width, height AUTO (natural ratio, no zoom).  */}
+      {/*   Anchored bottom-65% so the bag (center-right) shows.               */}
+      {/*   Section is taller than the image — cream fills the rest.            */}
+      {/*                                                                        */}
+      {/* DESKTOP (lg+): object-cover + objectPosition:65%                      */}
+      {/*   Image fills the full section, bag always in frame. Looks perfect.   */}
+      {isLight && (
+        <>
+          {/* ── Mobile: natural-proportion image, no zoom ─────────────────── */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0 lg:hidden"
+            style={{
+              backgroundImage:    'url(/hero-bg-light.avif)',
+              backgroundSize:     '100% auto',
+              backgroundPosition: '65% center',
+              backgroundRepeat:   'no-repeat',
+            }}
+          />
+          {/* Mobile gradient: left-side cream → transparent right (text area safe, image shows right) */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0 lg:hidden"
+            style={{
+              background:
+                'linear-gradient(to right, hsl(var(--bg)) 0%, hsl(var(--bg)/0.88) 35%, hsl(var(--bg)/0.42) 58%, transparent 78%)',
+            }}
+          />
+
+          {/* ── Desktop: full-cover, bag in frame ────────────────────────── */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0 hidden lg:block"
+          >
+            <img
+              src="/hero-bg-light.avif"
+              alt=""
+              loading="eager"
+              decoding="async"
+              className="h-full w-full select-none object-cover"
+              style={{ objectPosition: '65% center' }}
+            />
+          </div>
+          {/* Desktop gradient: left cream → transparent (text readable, bag visible) */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0 hidden lg:block"
+            style={{
+              background:
+                'linear-gradient(to right, hsl(var(--bg)/0.82) 0%, hsl(var(--bg)/0.55) 30%, hsl(var(--bg)/0.18) 55%, transparent 72%)',
+            }}
+          />
+        </>
+      )}
+
+      <div className="container relative z-[1]">
+        <div className={cn(
+          'lg:flex-row lg:items-center lg:gap-16',
+          isLight ? 'flex flex-row items-start gap-2 sm:gap-8' : 'flex flex-col gap-10',
+        )}>
 
           {/* ── Left: Content ────────────────────────────────────────────── */}
-          <div className="flex-1 lg:max-w-[54%]">
+          <div className={cn(
+            'lg:flex-1 lg:max-w-[54%] lg:w-auto lg:shrink',
+            isLight ? 'w-[58%] shrink-0' : 'flex-1',
+          )}>
 
             {/* Social-proof badge */}
             <motion.div
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45 }}
-              className="mb-6 inline-flex items-center gap-3 rounded-full border border-saffron/25 bg-saffron/10 px-4 py-2"
+              className={cn(
+                'inline-flex items-center gap-3 rounded-full border border-saffron/25 bg-saffron/10 px-4 py-2',
+                isLight ? 'mb-2 sm:mb-6' : 'mb-6',
+              )}
             >
               <div className="flex -space-x-2">
                 {AVATARS.map((emoji, i) => (
@@ -273,14 +340,14 @@ export function HeroBanner() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="font-display font-black leading-[1.05] tracking-tight text-cream"
-              style={{ fontSize: 'clamp(2.4rem, 5.5vw, 4.5rem)' }}
+              style={{ fontSize: isLight ? 'clamp(1.45rem, 4.5vw, 4.5rem)' : 'clamp(2.4rem, 5.5vw, 4.5rem)' }}
             >
               Fresh Choices,
               <br />
               Better Life{' '}
               <span
                 className="font-script text-saffron"
-                style={{ fontSize: 'clamp(2.7rem, 6.2vw, 5rem)' }}
+                style={{ fontSize: isLight ? 'clamp(1.65rem, 5vw, 5rem)' : 'clamp(2.7rem, 6.2vw, 5rem)' }}
               >
                 Everyday!
               </span>
@@ -291,7 +358,7 @@ export function HeroBanner() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="mt-3 font-bangla text-sm text-cream/50"
+              className={cn('mt-3 font-bangla text-sm text-cream/50', isLight && 'hidden sm:block')}
             >
               তাজা পণ্য, সুস্থ পরিবার, সুন্দর জীবন ❤️
             </motion.p>
@@ -301,7 +368,7 @@ export function HeroBanner() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.28 }}
-              className="mt-4 max-w-lg text-base leading-relaxed text-cream/65 sm:text-lg"
+              className={cn('mt-4 max-w-lg text-base leading-relaxed text-cream/65 sm:text-lg', isLight && 'hidden sm:block')}
             >
               Farm fresh produce, authentic groceries &amp; daily essentials —
               delivered to your door.
@@ -312,7 +379,7 @@ export function HeroBanner() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.38 }}
-              className="mt-8 flex flex-wrap items-center gap-4"
+              className={cn('flex flex-wrap items-center gap-4', isLight ? 'mt-3 sm:mt-8' : 'mt-8')}
             >
               {/* Shop Now — forest-green 3D pill (light) / saffron gradient pill (dark) */}
               <Link
@@ -357,10 +424,13 @@ export function HeroBanner() {
                 />
               </Link>
 
-              {/* Explore Deals — glass pill with gradient ring border */}
+              {/* Explore Deals — glass pill with gradient ring border (hidden on mobile in light mode) */}
               <Link
                 to="/products?onSale=true"
-                className="group relative inline-flex rounded-full bg-gradient-to-r from-saffron/70 via-plum/40 to-blush/70 p-[1.5px] shadow-[0_4px_18px_-4px_hsl(var(--saffron)/0.3)] transition-all hover:shadow-[0_6px_22px_-2px_hsl(var(--saffron)/0.55)] active:scale-95"
+                className={cn(
+                  'group relative inline-flex rounded-full bg-gradient-to-r from-saffron/70 via-plum/40 to-blush/70 p-[1.5px] shadow-[0_4px_18px_-4px_hsl(var(--saffron)/0.3)] transition-all hover:shadow-[0_6px_22px_-2px_hsl(var(--saffron)/0.55)] active:scale-95',
+                  isLight && 'hidden sm:inline-flex',
+                )}
               >
                 <span className="inline-flex items-center gap-2.5 rounded-full bg-bg/40 px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-cream/85 backdrop-blur-md transition-colors group-hover:bg-bg/20 group-hover:text-cream">
                   <Play className="h-3.5 w-3.5 fill-current" />
@@ -374,7 +444,7 @@ export function HeroBanner() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.52 }}
-              className="mt-10 grid grid-cols-2 gap-2.5 sm:grid-cols-4"
+              className={cn('grid grid-cols-2 gap-2.5 sm:grid-cols-4', isLight ? 'mt-4 hidden sm:grid sm:mt-10' : 'mt-10')}
             >
               {trustItems.map(({ icon: Icon, label, sublabel }) => (
                 <div
@@ -395,43 +465,17 @@ export function HeroBanner() {
             </motion.div>
           </div>
 
-          {/* ── Right: Farm portal (light) / Neon ring (dark) + floating cards ── */}
+          {/* ── Right: Farm photo (light) / Neon ring (dark) + floating cards ── */}
           <div className="relative mx-auto flex w-full max-w-[460px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
 
             {isLight ? (
-              /* ── LIGHT MODE: magical farm-portal scene ───────────────────── */
-              <div className="relative flex h-[320px] w-[320px] items-end justify-center overflow-hidden rounded-[2.5rem] sm:h-[420px] sm:w-[420px]">
-                {/* Farm landscape — fills the portal frame */}
-                <img
-                  aria-hidden
-                  src="/hero-bg.png"
-                  alt=""
-                  loading="eager"
-                  decoding="async"
-                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-center"
-                />
-                {/* Left-edge cream blend — seamless merge into page bg */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 z-[1]"
-                  style={{ background: 'linear-gradient(to right, hsl(var(--bg)) 0%, transparent 34%)' }}
-                />
-                {/* Grocery bag — sits on the wooden platform */}
-                <motion.img
-                  src="/hero-bag.png"
-                  alt="Fresh groceries — Ayra Family Mart"
-                  loading="eager"
-                  decoding="async"
-                  className="relative z-[2] w-[86%] select-none object-contain sm:w-[82%]"
-                  style={{
-                    filter: 'drop-shadow(0 18px 38px rgba(6, 44, 6, 0.28))',
-                    mixBlendMode: 'multiply',
-                  }}
-                  initial={{ opacity: 0, y: 38, scale: 0.88 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.75, delay: 0.18, type: 'spring', stiffness: 90, damping: 18 }}
-                />
-              </div>
+              /* ── LIGHT MODE right column ────────────────────────────────────
+                 The photograph is an absolute section-background at ALL sizes —
+                 this column is a transparent spacer only.
+                 Mobile: 0 intrinsic height (section height = left column content).
+                 Desktop (lg+): min-h gives the two-column row vertical presence
+                 and keeps the floating overlay cards properly anchored. */
+              <div className="flex-1 w-full lg:min-h-[500px] xl:min-h-[560px]" />
             ) : (
               /* ── DARK MODE: neon ring — unchanged ────────────────────────── */
               <div className="relative flex h-[320px] w-[320px] items-center justify-center sm:h-[420px] sm:w-[420px]">
