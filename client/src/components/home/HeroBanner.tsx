@@ -379,16 +379,21 @@ export function HeroBanner() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.38 }}
-              className={cn('flex flex-wrap items-center gap-4', isLight ? 'mt-3 sm:mt-8' : 'mt-8')}
+              className={cn(
+                'flex',
+                isLight
+                  ? 'mt-3 sm:mt-8 flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4'
+                  : 'mt-8 flex-wrap items-center gap-4',
+              )}
             >
               {/* Shop Now — forest-green 3D pill (light) / saffron gradient pill (dark) */}
               <Link
                 to="/products"
                 className={cn(
-                  'group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
+                  'group relative inline-flex items-center overflow-hidden rounded-full font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
                   isLight
-                    ? 'active:translate-y-[3px]'
-                    : 'bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
+                    ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm active:translate-y-[3px]'
+                    : 'gap-2.5 px-7 py-3.5 text-sm bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
                 )}
                 style={isLight ? {
                   background: 'linear-gradient(175deg, hsl(145 50% 28%) 0%, hsl(145 64% 14%) 100%)',
@@ -424,16 +429,18 @@ export function HeroBanner() {
                 />
               </Link>
 
-              {/* Explore Deals — glass pill with gradient ring border (hidden on mobile in light mode) */}
+              {/* Explore Deals — glass pill with gradient ring border */}
               <Link
                 to="/products?onSale=true"
-                className={cn(
-                  'group relative inline-flex rounded-full bg-gradient-to-r from-saffron/70 via-plum/40 to-blush/70 p-[1.5px] shadow-[0_4px_18px_-4px_hsl(var(--saffron)/0.3)] transition-all hover:shadow-[0_6px_22px_-2px_hsl(var(--saffron)/0.55)] active:scale-95',
-                  isLight && 'hidden sm:inline-flex',
-                )}
+                className="group relative inline-flex rounded-full bg-gradient-to-r from-saffron/70 via-plum/40 to-blush/70 p-[1.5px] shadow-[0_4px_18px_-4px_hsl(var(--saffron)/0.3)] transition-all hover:shadow-[0_6px_22px_-2px_hsl(var(--saffron)/0.55)] active:scale-95"
               >
-                <span className="inline-flex items-center gap-2.5 rounded-full bg-bg/40 px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] text-cream/85 backdrop-blur-md transition-colors group-hover:bg-bg/20 group-hover:text-cream">
-                  <Play className="h-3.5 w-3.5 fill-current" />
+                <span className={cn(
+                  'inline-flex items-center rounded-full bg-bg/40 font-bold uppercase tracking-[0.16em] text-cream/85 backdrop-blur-md transition-colors group-hover:bg-bg/20 group-hover:text-cream',
+                  isLight
+                    ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm'
+                    : 'gap-2.5 px-7 py-3.5 text-sm',
+                )}>
+                  <Play className="h-3 w-3 shrink-0 fill-current sm:h-3.5 sm:w-3.5" />
                   Explore Deals
                 </span>
               </Link>
