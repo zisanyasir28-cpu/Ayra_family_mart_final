@@ -386,40 +386,45 @@ export function HeroBanner() {
                   : 'mt-8 flex-wrap items-center gap-4',
               )}
             >
-              {/* Shop Now — forest-green 3D pill (light) / saffron gradient pill (dark) */}
+              {/* Shop Now — matte grain tablet (light) / saffron gradient pill (dark) */}
               <Link
                 to="/products"
                 className={cn(
-                  'group relative inline-flex items-center overflow-hidden rounded-full font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
+                  'group relative inline-flex items-center overflow-hidden font-bold uppercase tracking-[0.16em] transition-all duration-150 active:scale-[0.97]',
                   isLight
-                    ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm active:translate-y-[3px]'
-                    : 'gap-2.5 px-7 py-3.5 text-sm bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
+                    ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm hover:brightness-110 active:translate-y-px'
+                    : 'rounded-full gap-2.5 px-7 py-3.5 text-sm hover:brightness-105 bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
                 )}
                 style={isLight ? {
-                  background: 'linear-gradient(175deg, hsl(145 50% 28%) 0%, hsl(145 64% 14%) 100%)',
-                  color: 'hsl(0 0% 96%)',
-                  boxShadow: [
-                    'inset 0 1.5px 0 hsl(145 38% 48% / 0.28)',
-                    'inset 0 -2px 0 hsl(145 68% 7% / 0.5)',
-                    '0 5px 0 hsl(145 66% 10%)',
-                    '0 10px 26px -6px hsl(145 60% 5% / 0.65)',
-                  ].join(', '),
-                  textShadow: '0 1px 5px rgba(0,0,0,0.5)',
+                  /* Matte forest-green — flat gradient, no gloss */
+                  background: 'linear-gradient(170deg, hsl(145 38% 26%) 0%, hsl(145 50% 18%) 100%)',
+                  color: 'hsl(0 0% 97%)',
+                  /* Tablet shape: flat top corners, pronounced bottom curve */
+                  borderRadius: '10px 10px 26px 26px',
+                  /* Single matte shadow — no 3D stacking */
+                  boxShadow: '0 4px 14px hsl(145 60% 6% / 0.42), inset 0 1px 0 hsl(145 38% 40% / 0.22)',
+                  textShadow: '0 1px 4px rgba(0,0,0,0.45)',
                 } : undefined}
               >
-                {/* Rough organic botanical watermark — only in light mode */}
+                {/* Grainy matte texture overlay — light mode only */}
                 {isLight && (
-                  <svg
+                  <span
                     aria-hidden
-                    className="pointer-events-none absolute right-0 top-0 h-full w-32 select-none"
-                    viewBox="0 0 128 48"
-                    fill="currentColor"
-                    style={{ color: 'hsl(145 62% 10%)', opacity: 0.65 }}
-                  >
-                    <path d="M 0 48 L 12 40 C 28 28, 58 10, 88 5 C 104 3, 118 6, 124 14 C 128 20, 122 30, 106 36 C 82 44, 46 48, 18 48 Z" />
-                    <path d="M 30 48 L 48 36 L 72 22 C 90 14, 112 12, 126 20 L 128 28 C 116 36, 88 44, 60 48 Z" />
-                    <path d="M 74 0 L 92 2 C 108 5, 124 12, 128 22 L 120 24 C 110 16, 94 8, 74 0 Z" />
-                  </svg>
+                    className="pointer-events-none absolute inset-0 select-none"
+                    style={{
+                      borderRadius: 'inherit',
+                      /* Repeating dot pattern simulates film grain */
+                      backgroundImage: [
+                        'radial-gradient(circle, rgba(255,255,255,0.22) 1px, transparent 1px)',
+                        'radial-gradient(circle, rgba(0,0,0,0.20) 1px, transparent 1px)',
+                        'radial-gradient(circle, rgba(255,255,255,0.14) 0.5px, transparent 0.5px)',
+                      ].join(', '),
+                      backgroundSize: '5px 5px, 7px 7px, 3px 3px',
+                      backgroundPosition: '0 0, 2.5px 2.5px, 1px 1px',
+                      opacity: 0.38,
+                      mixBlendMode: 'overlay',
+                    }}
+                  />
                 )}
 
                 <span className="relative">Shop Now</span>
