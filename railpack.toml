@@ -1,0 +1,9 @@
+[deploy]
+cmd = "node server/dist/index.js"
+
+[phases.build]
+cmds = [
+  "npm run build --workspace=shared",
+  "npx prisma generate --schema=server/prisma/schema.prisma",
+  "npm run build --workspace=server"
+]

@@ -1,5 +1,0 @@
-[deploy]
-cmd = "node dist/index.js"
-
-[phases.build]
-cmds = ["npm run build"]
