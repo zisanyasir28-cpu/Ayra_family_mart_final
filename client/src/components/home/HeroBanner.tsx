@@ -386,43 +386,43 @@ export function HeroBanner() {
                   : 'mt-8 flex-wrap items-center gap-4',
               )}
             >
-              {/* Shop Now — matte grain tablet (light) / saffron gradient pill (dark) */}
+              {/* Shop Now — glossy 3D gel capsule (light) / saffron pill (dark) */}
               <Link
                 to="/products"
                 className={cn(
-                  'group relative inline-flex items-center overflow-hidden font-bold uppercase tracking-[0.16em] transition-all duration-150 active:scale-[0.97]',
+                  'group relative inline-flex items-center overflow-hidden rounded-full transition-all duration-200 active:scale-[0.96]',
                   isLight
-                    ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm hover:brightness-110 active:translate-y-px'
-                    : 'rounded-full gap-2.5 px-7 py-3.5 text-sm hover:brightness-105 bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
+                    ? 'gap-2 px-5 py-2.5 text-sm font-semibold sm:gap-2.5 sm:px-8 sm:py-[14px] sm:text-base hover:brightness-105 active:translate-y-px'
+                    : 'gap-2.5 px-7 py-3.5 text-sm font-bold uppercase tracking-[0.16em] hover:brightness-105 bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
                 )}
                 style={isLight ? {
-                  /* Matte forest-green — flat gradient, no gloss */
-                  background: 'linear-gradient(170deg, hsl(145 38% 26%) 0%, hsl(145 50% 18%) 100%)',
-                  color: 'hsl(0 0% 97%)',
-                  /* Tablet shape: flat top corners, pronounced bottom curve */
-                  borderRadius: '10px 10px 26px 26px',
-                  /* Single matte shadow — no 3D stacking */
-                  boxShadow: '0 4px 14px hsl(145 60% 6% / 0.42), inset 0 1px 0 hsl(145 38% 40% / 0.22)',
-                  textShadow: '0 1px 4px rgba(0,0,0,0.45)',
+                  /* Radial gradient — bright center, very dark edges = 3D convex look */
+                  background: [
+                    'radial-gradient(ellipse at 50% 32%,',
+                    '  hsl(145 55% 38%) 0%,',
+                    '  hsl(145 64% 22%) 50%,',
+                    '  hsl(145 72% 10%) 100%)',
+                  ].join(''),
+                  color: 'white',
+                  boxShadow: [
+                    '0 8px 24px hsl(145 68% 5% / 0.55)',   /* deep drop shadow */
+                    '0 2px 6px  hsl(145 68% 5% / 0.30)',   /* near shadow      */
+                    'inset 0 -5px 12px hsl(145 70% 4% / 0.42)', /* bottom depth */
+                    'inset 0 1px 2px rgba(255,255,255,0.16)',    /* rim light     */
+                  ].join(', '),
+                  textShadow: '0 1px 5px rgba(0,0,0,0.55)',
                 } : undefined}
               >
-                {/* Grainy matte texture overlay — light mode only */}
+                {/* Specular highlight — the glossy top-shine of the gel capsule */}
                 {isLight && (
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 select-none"
+                    className="pointer-events-none absolute select-none"
                     style={{
-                      borderRadius: 'inherit',
-                      /* Repeating dot pattern simulates film grain */
-                      backgroundImage: [
-                        'radial-gradient(circle, rgba(255,255,255,0.22) 1px, transparent 1px)',
-                        'radial-gradient(circle, rgba(0,0,0,0.20) 1px, transparent 1px)',
-                        'radial-gradient(circle, rgba(255,255,255,0.14) 0.5px, transparent 0.5px)',
-                      ].join(', '),
-                      backgroundSize: '5px 5px, 7px 7px, 3px 3px',
-                      backgroundPosition: '0 0, 2.5px 2.5px, 1px 1px',
-                      opacity: 0.38,
-                      mixBlendMode: 'overlay',
+                      inset: '3px 10% auto 10%',   /* inset from sides, starts 3px from top */
+                      height: '46%',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.24) 48%, transparent 100%)',
                     }}
                   />
                 )}
