@@ -49,7 +49,7 @@ export const updateProductSchema = createProductSchema.partial();
 // productQuerySchema uses BDT (taka) for price filters — controller converts to paisa
 export const productQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
-  limit: z.coerce.number().int().positive().max(48).default(12),
+  limit: z.coerce.number().int().positive().max(100).default(12),
   categoryId: z.string().uuid().optional(),
   brandId: z.string().uuid().optional(),
   search: z.string().max(255).optional(),

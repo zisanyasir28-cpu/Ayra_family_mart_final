@@ -29,6 +29,13 @@ const app = express();
 const _ENV_PORT = parseInt(process.env['PORT'] ?? '5000', 10);
 const PORT = _ENV_PORT === 5173 ? 5000 : _ENV_PORT;
 
+// ─── Proxy trust ─────────────────────────────────────────────────────────────
+// Railway (and most PaaS/load-balancers) sit in front of the Node process and
+// forward the real client IP via X-Forwarded-For.  Express must be told to
+// trust that header so express-rate-limit (and req.ip) see the real IP instead
+// of throwing ERR_ERL_UNEXPECTED_X_FORWARDED_FOR and rejecting every request.
+app.set('trust proxy', 1);
+
 // ─── Allowed origins ─────────────────────────────────────────────────────────
 // In production, only CLIENT_URL + ADMIN_URL are allowed. In dev, also accept
 // the Vite default port to keep the local DX smooth.
