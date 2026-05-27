@@ -108,26 +108,13 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
 
         {/* ── Image ───────────────────────────────────────────────────── */}
         {/*
-          Light: warm cream gradient keeps product shots airy and fresh.
-          Dark:  plum gradient anchors the image in brand depth.
-          Cloudinary pads every image to 5:6 (600×720) — object-contain fills
-          the container perfectly with zero letterboxing.
+          Transparent-bg brand images (PNG) show cleanly against the card
+          surface — no gradient, no glow, no vignette bleeding through.
         */}
         <Link
           to={`/products/${product.slug}`}
-          className={cn(
-            'relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)] bg-gradient-to-br',
-            isLight
-              ? 'from-[hsl(48_65%_96%)] via-white to-[hsl(48_50%_97%)]'
-              : 'from-[hsl(var(--plum)/0.18)] via-surface to-bg',
-          )}
+          className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)]"
         >
-          {/* Subtle ground glow — small, bottom-anchored, won't spill into sides */}
-          <div aria-hidden className={cn(
-            'pointer-events-none absolute bottom-2 left-1/2 -translate-x-1/2 h-16 w-28 rounded-full blur-2xl',
-            isLight ? 'bg-[hsl(140_52%_50%/0.08)]' : 'bg-saffron/6',
-          )} />
-
           {firstImage && !imgError ? (
             <img
               src={cardImg(firstImage.url)}
@@ -142,12 +129,6 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
               🛒
             </div>
           )}
-
-          {/* Subtle bottom vignette to blend image into card body */}
-          <div className={cn(
-            'pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t to-transparent',
-            isLight ? 'from-white/85' : 'from-surface/80',
-          )} />
 
           {/* Shimmer sweep — light mode luxury feel, diagonal catch-light on hover */}
           {isLight && (
