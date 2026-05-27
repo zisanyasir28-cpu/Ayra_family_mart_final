@@ -80,10 +80,10 @@ export function FlashDeals() {
     queryFn:  async () => {
       try {
         const res = await fetchProducts({ limit: 60, sortBy: 'newest' });
-        const deals = res.data.filter((p) => p.activeCampaign !== null);
-        if (deals.length === 0) throw new Error('no-deals');
-        return deals;
+        return res.data.filter((p) => p.activeCampaign !== null);
       } catch {
+        // API completely unreachable (e.g. GitHub Pages preview) — use demo data.
+        // Demo products have non-UUID IDs so they must never reach the order API.
         return demoFlashDeals;
       }
     },
