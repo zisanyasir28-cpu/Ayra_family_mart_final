@@ -35,8 +35,11 @@ export default defineConfig(() => {
         ],
       },
       workbox: {
-        // Avoid catching API or admin routes — only customer SPA navigation falls back to offline
-        navigateFallback:        'offline.html',
+        // SPA fallback: serve the app shell for any navigation the SW can't match.
+        // Using index.html (not offline.html) prevents false "You're offline" screens
+        // caused by transient SW state during autoUpdate takeovers.
+        // The app handles its own offline/error UI via React Query error states.
+        navigateFallback:        '/index.html',
         navigateFallbackDenylist: [/^\/api\//, /^\/admin\//],
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
         runtimeCaching: [

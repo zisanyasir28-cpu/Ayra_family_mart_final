@@ -2,7 +2,7 @@
 import { Sentry } from '@/lib/sentry';
 import './store/themeStore'; // boots theme matchMedia listener
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -15,7 +15,30 @@ import App from './App';
 import '@/styles/globals.css';
 
 // ─── Error fallback for Sentry's ErrorBoundary ────────────────────────────────
-function ErrorFallback() {
+
+function isChunkLoadError(error: Error | null): boolean {
+  if (!error) return false;
+  return (
+    error.name === 'ChunkLoadError' ||
+    error.message.includes('Failed to fetch dynamically imported module') ||
+    error.message.includes('Importing a module script failed') ||
+    error.message.includes('error loading dynamically imported module')
+  );
+}
+
+// When a new Vercel deployment invalidates old JS chunk hashes, lazy imports
+// throw ChunkLoadError. Auto-reload gets the fresh index.html + new chunks.
+function ErrorFallback({ error }: { error: Error | null }) {
+  useEffect(() => {
+    if (isChunkLoadError(error)) {
+      window.location.reload();
+    }
+  }, [error]);
+
+  if (isChunkLoadError(error)) {
+    return null; // blank while reloading
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6 text-center text-foreground">
       <span className="text-6xl">⚠️</span>
@@ -38,7 +61,7 @@ if (!rootEl) throw new Error('Root element #root not found');
 
 ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
-    <Sentry.ErrorBoundary fallback={<ErrorFallback />}>
+    <Sentry.ErrorBoundary fallback={({ error }) => <ErrorFallback error={error} />}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <AuthProvider>

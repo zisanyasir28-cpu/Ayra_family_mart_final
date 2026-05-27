@@ -53,7 +53,12 @@ api.interceptors.response.use(
       _retry?: boolean;
     };
 
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    // Never intercept the refresh endpoint itself — a 401 there means "no valid
+    // session", and AuthProvider's own .catch() handles it gracefully (clearAuth).
+    // Intercepting it causes an infinite retry loop that fires auth:logout on every
+    // unauthenticated page load.
+    const isRefreshEndpoint = originalRequest.url?.includes('/auth/refresh');
+    if (error.response?.status !== 401 || originalRequest._retry || isRefreshEndpoint) {
       return Promise.reject(error);
     }
 
