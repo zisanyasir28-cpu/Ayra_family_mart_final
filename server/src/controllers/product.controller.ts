@@ -21,6 +21,7 @@ import type {
   UpdateProductInput,
   ProductQueryInput,
   BulkPriceUpdateInput,
+  PaginationMeta,
 } from '@superstore/shared';
 
 // ─── Cache Helpers ────────────────────────────────────────────────────────────
@@ -175,8 +176,8 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   // Cache lookup — version-tagged
   const version = (await redis.get<number>('products:list:version')) ?? 0;
   const cacheKey = listCacheKey({ ...q, _v: version });
-  const cached = await redis.get<unknown>(cacheKey);
-  if (cached) return sendSuccess(res, cached);
+  const cached = await redis.get<{ products: unknown[]; meta: { pagination: PaginationMeta } }>(cacheKey);
+  if (cached) return sendSuccess(res, cached.products, 200, cached.meta.pagination);
 
   const where: Prisma.ProductWhereInput = {
     status: q.status ?? 'ACTIVE',
