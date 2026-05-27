@@ -35,7 +35,7 @@ jobs:
         run: npm run build --workspace=client
         env:
           NODE_ENV: production
-          VITE_DEMO_MODE: 'true'
+          VITE_API_URL: 'https://ayrafamilymartfinal-production.up.railway.app/api/v1'
 
       - name: Copy index.html to 404.html for SPA deep-link support
         run: cp client/dist/index.html client/dist/404.html

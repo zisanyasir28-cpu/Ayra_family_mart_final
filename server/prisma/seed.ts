@@ -5,7 +5,8 @@
  * Run: npx ts-node prisma/seed.ts   (or use `npm run db:seed`)
  */
 
-import { PrismaClient, ProductStatus } from '@prisma/client';
+import { PrismaClient, ProductStatus, UserRole } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -609,6 +610,29 @@ async function main() {
   }
 
   console.log(`  ✓ ${created} products created / verified`);
+
+  // ── Admin user ──────────────────────────────────────────────────────────────
+
+  const adminEmail    = process.env['SEED_ADMIN_EMAIL']    ?? 'bulbulahmed1516@gmail.com';
+  const adminPassword = process.env['SEED_ADMIN_PASSWORD'] ?? 'BulbulAdmin@0';
+  const adminName     = process.env['SEED_ADMIN_NAME']     ?? 'Bulbul Ahmed';
+
+  const adminHash = await bcrypt.hash(adminPassword, 12);
+
+  await prisma.user.upsert({
+    where:  { email: adminEmail },
+    update: { passwordHash: adminHash, role: UserRole.ADMIN, isActive: true },
+    create: {
+      email:           adminEmail,
+      name:            adminName,
+      passwordHash:    adminHash,
+      role:            UserRole.ADMIN,
+      isEmailVerified: true,
+      isActive:        true,
+    },
+  });
+
+  console.log(`  ✓ Admin user:    ${adminEmail}`);
   console.log('🎉  Seed complete!');
 }
 

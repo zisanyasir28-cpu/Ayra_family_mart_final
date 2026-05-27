@@ -1,5 +1,4 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
-import { DEMO_MODE } from './demoMode';
 
 const BASE_URL = import.meta.env['VITE_API_URL'] ?? '/api/v1';
 
@@ -55,11 +54,6 @@ api.interceptors.response.use(
     };
 
     if (error.response?.status !== 401 || originalRequest._retry) {
-      return Promise.reject(error);
-    }
-
-    // In demo mode there is no real server — never attempt refresh
-    if (DEMO_MODE) {
       return Promise.reject(error);
     }
 

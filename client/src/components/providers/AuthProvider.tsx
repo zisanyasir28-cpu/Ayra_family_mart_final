@@ -2,7 +2,6 @@ import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/authStore';
-import { DEMO_MODE } from '@/lib/demoMode';
 import type { UserPublic } from '@superstore/shared';
 
 interface MeResponse {
@@ -15,12 +14,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (DEMO_MODE) {
-      // In demo mode there is no server — restore session from persisted store.
-      setLoading(false);
-      return;
-    }
-
     // Attempt silent token refresh on every page load.
     // The httpOnly refresh-token cookie is sent automatically.
     api

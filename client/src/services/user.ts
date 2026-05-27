@@ -1,6 +1,4 @@
-import toast from 'react-hot-toast';
 import { api } from '@/lib/api';
-import { DEMO_MODE } from '@/lib/demoMode';
 import type { ApiUserProfile } from '@/types/api';
 import type { ApiSuccessResponse } from '@superstore/shared';
 import { useAuthStore } from '@/store/authStore';
@@ -35,10 +33,6 @@ export async function updateMyProfile(data: {
   name?: string;
   phone?: string;
 }): Promise<ApiUserProfile> {
-  if (DEMO_MODE) {
-    toast.error('Demo mode — profile changes not saved');
-    throw new Error('DEMO_MODE');
-  }
   const r = await api.patch<ApiSuccessResponse<ApiUserProfile>>('/users/profile', data);
   return r.data.data;
 }
@@ -50,19 +44,11 @@ export async function changeMyPassword(data: {
   newPassword: string;
   confirmNewPassword: string;
 }): Promise<void> {
-  if (DEMO_MODE) {
-    toast.error('Demo mode — password changes not saved');
-    throw new Error('DEMO_MODE');
-  }
   await api.post('/users/change-password', data);
 }
 
 // ─── Delete Account ───────────────────────────────────────────────────────────
 
 export async function deleteMyAccount(): Promise<void> {
-  if (DEMO_MODE) {
-    toast.error('Demo mode — account deletion not available');
-    throw new Error('DEMO_MODE');
-  }
   await api.delete('/users/account');
 }
