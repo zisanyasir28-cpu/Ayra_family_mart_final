@@ -108,12 +108,19 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
 
         {/* ── Image ───────────────────────────────────────────────────── */}
         {/*
-          Transparent-bg brand images (PNG) show cleanly against the card
-          surface — no gradient, no glow, no vignette bleeding through.
+          Glassy themed well — plum/navy tint in dark mode so transparent-bg
+          brand PNGs float naturally inside the card. Cool lavender in light
+          mode (no white, keeps the purple design language). No extra glow
+          or vignette — the image borders blend into card surface organically.
         */}
         <Link
           to={`/products/${product.slug}`}
-          className="relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)]"
+          className={cn(
+            'relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)]',
+            isLight
+              ? 'bg-[hsl(260_22%_95%)]'        // cool lavender tint — fits purple site palette
+              : 'bg-[hsl(var(--plum)/0.14)]',  // deep plum glass — matches dark theme depth
+          )}
         >
           {firstImage && !imgError ? (
             <img
