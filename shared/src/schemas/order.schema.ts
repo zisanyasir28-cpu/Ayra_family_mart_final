@@ -10,13 +10,13 @@ const orderItemInputSchema = z.object({
 
 export const createOrderSchema = z.object({
   items:             z.array(orderItemInputSchema).min(1).max(50),
-  shippingAddressId: z.string().uuid().optional(),
+  shippingAddressId: z.string().uuid().nullish(),
   shippingAddress:   addressInputSchema.optional(),
   paymentMethod:     z.nativeEnum(PaymentMethod),
-  couponCode:        z.string().max(50).optional(),
-  notes:             z.string().max(500).optional(),
+  couponCode:        z.string().max(50).nullish(),
+  notes:             z.string().max(500).nullish(),
 }).refine(
-  (data) => data.shippingAddressId ?? data.shippingAddress,
+  (data) => data.shippingAddressId || data.shippingAddress,
   { message: 'Either shippingAddressId or shippingAddress is required' },
 );
 
