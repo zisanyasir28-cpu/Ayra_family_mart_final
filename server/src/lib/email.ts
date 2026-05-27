@@ -1,28 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import nodemailer, { type Transporter } from 'nodemailer';
+import { Resend } from 'resend';
 import { logger } from './logger';
 
-// ─── Lazy transporter ─────────────────────────────────────────────────────────
+// ─── Lazy client ──────────────────────────────────────────────────────────────
 
-let cachedTransporter: Transporter | null = null;
+let resend: Resend | null = null;
 
-function getTransporter(): Transporter | null {
-  if (cachedTransporter) return cachedTransporter;
-
-  const host = process.env['SMTP_HOST'];
-  const port = process.env['SMTP_PORT'];
-  const user = process.env['SMTP_USER'];
-  const pass = process.env['SMTP_PASS'];
-
-  if (!host || !port || !user || !pass) return null;
-
-  cachedTransporter = nodemailer.createTransport({
-    host,
-    port: Number(port),
-    secure: Number(port) === 465,
-    auth: { user, pass },
-  });
-  return cachedTransporter;
+function getClient(): Resend | null {
+  if (resend) return resend;
+  const key = process.env['RESEND_API_KEY'];
+  if (!key) return null;
+  resend = new Resend(key);
+  return resend;
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -52,19 +40,20 @@ function paisa(p: number): string {
 }
 
 async function send(subject: string, to: string, text: string, html: string): Promise<void> {
-  const transporter = getTransporter();
-  const from = process.env['SMTP_FROM'] ?? 'no-reply@ayrafamilymart.com';
+  const client = getClient();
+  const from = process.env['RESEND_FROM'] ?? 'Ayra Family Mart <no-reply@ayrafamilymart.com>';
 
-  if (!transporter) {
-    // eslint-disable-next-line no-console
+  if (!client) {
     logger.debug({ subject, to }, 'email.dev.skipped');
     return;
   }
 
   try {
-    await transporter.sendMail({ from, to, subject, text, html });
+    const { error } = await client.emails.send({ from, to, subject, text, html });
+    if (error) {
+      logger.error({ error, subject, to }, 'email.send_failed');
+    }
   } catch (err) {
-    // eslint-disable-next-line no-console
     logger.error({ err, subject, to }, 'email.send_failed');
   }
 }
