@@ -30,7 +30,8 @@ export default function CheckoutPage() {
   const coupon    = useCartStore((s) => s.coupon);
   const applyCoupon = useCartStore((s) => s.applyCoupon);
   const removeCoupon = useCartStore((s) => s.removeCoupon);
-  const clearCart = useCartStore((s) => s.clearCart);
+  const clearCart  = useCartStore((s) => s.clearCart);
+  const removeItem = useCartStore((s) => s.removeItem);
 
   const subtotalInPaisa = items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0);
 
@@ -94,6 +95,22 @@ export default function CheckoutPage() {
 
   // ── Place order ─────────────────────────────────────────────────────────────
   async function handlePlaceOrder() {
+    // Purge any stale demo/preview items whose productId is not a real UUID.
+    // These sneak in when the backend had no campaigns and Flash Deals fell
+    // back to hardcoded demo data — placing an order with them fails Zod
+    // uuid validation on the server.
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const badItems = items.filter((i) => !UUID_RE.test(i.productId));
+    if (badItems.length > 0) {
+      badItems.forEach((i) => removeItem(i.productId));
+      toast.error(
+        badItems.length === items.length
+          ? 'Your cart had outdated items and was cleared. Please add fresh products.'
+          : `${badItems.length} outdated item${badItems.length > 1 ? 's were' : ' was'} removed. Please review your cart.`,
+      );
+      return;
+    }
+
     if (!selectedAddressId) {
       toast.error('Please select a shipping address.');
       setStep(1);
