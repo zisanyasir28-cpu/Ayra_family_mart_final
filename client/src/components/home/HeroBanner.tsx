@@ -136,19 +136,21 @@ export function HeroBanner() {
           <motion.div
             key={i}
             aria-hidden
-            className="pointer-events-none absolute"
+            className="pointer-events-none absolute z-[2]"
             style={{
               top:    p.top,
               left:   p.left,
               right:  p.right,
-              width:  p.size,
-              height: p.size,
+              width:  isLight ? p.size * 1.8 : p.size,
+              height: isLight ? p.size * 1.8 : p.size,
               borderRadius: '50%',
-              background: `radial-gradient(circle, hsla(${p.hsl}, ${p.inner}) 0%, hsla(${p.hsl}, ${p.outer}) 42%, transparent 70%)`,
-              filter: 'blur(1.8px)',
+              background: `radial-gradient(circle, hsla(${p.hsl}, ${isLight ? Math.min(p.inner + 0.1, 1) : p.inner}) 0%, hsla(${p.hsl}, ${isLight ? Math.min(p.outer + 0.1, 0.6) : p.outer}) 42%, transparent 70%)`,
+              filter: isLight
+                ? `blur(0.6px) drop-shadow(0 0 6px hsla(${p.hsl}, 0.9))`
+                : 'blur(1.8px)',
             }}
             initial={{ x: 0, y: 0, scale: p.s[0], opacity: 0 }}
-            animate={{ x: p.x, y: p.y, scale: p.s, opacity: [0, 0.72, 0] }}
+            animate={{ x: p.x, y: p.y, scale: p.s, opacity: [0, isLight ? 0.97 : 0.72, 0] }}
             transition={{
               duration: p.dur,
               delay:    p.delay,
@@ -163,7 +165,7 @@ export function HeroBanner() {
       {/* opacity-0 by default; globals.css :root.light .butterfly sets opacity-85 */}
       <motion.div
         aria-hidden
-        className="butterfly pointer-events-none absolute"
+        className="butterfly pointer-events-none absolute z-[2]"
         style={{ top: '12%', right: '16%' }}
         animate={{ y: [0, -10, 2, -8, 0], rotate: [0, 4, -3, 2, 0] }}
         transition={{ duration: 5.8, repeat: Infinity, ease: 'easeInOut' }}
@@ -182,7 +184,7 @@ export function HeroBanner() {
 
       <motion.div
         aria-hidden
-        className="butterfly pointer-events-none absolute"
+        className="butterfly pointer-events-none absolute z-[2]"
         style={{ top: '38%', right: '8%' }}
         animate={{ y: [0, -8, 4, -6, 0], rotate: [0, -3, 5, -2, 0] }}
         transition={{ duration: 7.2, repeat: Infinity, ease: 'easeInOut', delay: 1.4 }}
@@ -201,7 +203,7 @@ export function HeroBanner() {
 
       <motion.div
         aria-hidden
-        className="butterfly pointer-events-none absolute"
+        className="butterfly pointer-events-none absolute z-[2]"
         style={{ top: '22%', right: '34%' }}
         animate={{ y: [0, -12, 3, -9, 0], rotate: [0, 6, -4, 3, 0] }}
         transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut', delay: 2.8 }}
