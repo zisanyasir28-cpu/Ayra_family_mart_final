@@ -62,6 +62,14 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // If there's no in-memory access token the user was never authenticated in this
+    // session. A 401 on e.g. wishlist/cart endpoints is EXPECTED for guests — don't
+    // attempt a refresh or fire auth:logout (that would redirect them to /login just
+    // for browsing).
+    if (!accessToken) {
+      return Promise.reject(error);
+    }
+
     if (isRefreshing) {
       return new Promise<string>((resolve, reject) => {
         failedQueue.push({ resolve, reject });

@@ -80,7 +80,12 @@ export function FlashDeals() {
     queryFn:  async () => {
       try {
         const res = await fetchProducts({ limit: 60, sortBy: 'newest' });
-        return res.data.filter((p) => p.activeCampaign !== null);
+        const campaignProducts = res.data.filter((p) => p.activeCampaign !== null);
+        // If the API responded but the Redis product-list cache is still warm from
+        // before campaigns were linked (TTL ≤5 min), campaignProducts will be empty.
+        // Fall back to demo flash deals so the section always renders something.
+        // The real campaign products replace this as soon as the cache expires.
+        return campaignProducts.length > 0 ? campaignProducts : demoFlashDeals;
       } catch {
         // API completely unreachable (e.g. GitHub Pages preview) — use demo data.
         // Demo products have non-UUID IDs so they must never reach the order API.

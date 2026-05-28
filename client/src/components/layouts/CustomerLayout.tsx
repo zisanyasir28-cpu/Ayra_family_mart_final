@@ -11,6 +11,7 @@ import {
 import { Logo }            from '../common/Logo';
 import { CartDrawer }      from '../CartDrawer';
 import { CustomerSidebar } from './CustomerSidebar';
+import { TopLoadingBar }   from '../ui/TopLoadingBar';
 import { CursorFollower }  from '../common/CursorFollower';
 import { SearchIcon, BasketIcon, ArrowRightIcon } from '../common/HandIcon';
 import { cn, formatPaisa } from '../../lib/utils';
@@ -1433,6 +1434,7 @@ export default function CustomerLayout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-bg">
+      <TopLoadingBar />
       <CursorFollower />
       <FloatingLeaves />
 

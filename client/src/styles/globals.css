@@ -401,6 +401,19 @@
 .animate-glow-coral { animation: glow-coral 2s ease-in-out infinite; }
 
 /* ════════════════════════════════════════════════════════════════════════════
+   Top loading-bar sweep
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@keyframes loadbar-sweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { transform: translateX(350%) skewX(-15deg); opacity: 0; }
+}
+.animate-loadbar-sweep {
+  animation: loadbar-sweep 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
    Shimmer skeleton
    ──────────────────────────────────────────────────────────────────────────── */
 

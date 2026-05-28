@@ -99,11 +99,13 @@ export function CustomerSidebar() {
             end={end}
             className={({ isActive }) =>
               cn(
-                'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
+                // Base — overflow-hidden so the watermark SVG is clipped cleanly
+                'group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-sm transition-all',
                 isLight
                   ? isActive
-                    ? 'bg-[hsl(145_44%_19%)] font-bold shadow-[0_2px_14px_-4px_hsl(145_55%_8%)]'
-                    : 'hover:bg-[hsl(145_50%_13%)]'
+                    // Light-mode active: green gradient + glow, matching dark-mode energy
+                    ? 'bg-gradient-to-r from-[hsl(142_72%_26%)] to-[hsl(158_65%_20%)] font-bold shadow-[0_4px_16px_-4px_hsl(142_72%_28%/0.65)]'
+                    : 'hover:bg-[hsl(142_40%_16%/0.75)] hover:text-[hsl(142_60%_75%)]'
                   // ── dark mode ──
                   : isActive
                     ? 'bg-gradient-to-r from-saffron to-blush text-bg font-bold shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
@@ -118,6 +120,22 @@ export function CustomerSidebar() {
           >
             {({ isActive }) => (
               <>
+                {/* ── Sparkle watermark — visible only when pill is active ── */}
+                {isActive && (
+                  <svg
+                    aria-hidden
+                    className="pointer-events-none absolute right-7 top-1/2 h-9 w-9 -translate-y-1/2 opacity-[0.13]"
+                    viewBox="0 0 32 32"
+                    fill="currentColor"
+                  >
+                    {/* 4-pointed diamond star */}
+                    <path d="M16 0 L18.2 13.8 L32 16 L18.2 18.2 L16 32 L13.8 18.2 L0 16 L13.8 13.8Z" />
+                    {/* Two smaller flanking diamonds for depth */}
+                    <path d="M6 6 L6.8 9.2 L10 10 L6.8 10.8 L6 14 L5.2 10.8 L2 10 L5.2 9.2Z" opacity="0.7" />
+                    <path d="M26 18 L26.5 20.5 L29 21 L26.5 21.5 L26 24 L25.5 21.5 L23 21 L25.5 20.5Z" opacity="0.6" />
+                  </svg>
+                )}
+
                 <span
                   className={cn(
                     'flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors',

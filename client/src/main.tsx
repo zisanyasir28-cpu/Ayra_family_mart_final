@@ -47,7 +47,7 @@ function ErrorFallback({ error }: { error: unknown }) {
         The page crashed unexpectedly. Our team has been notified.
       </p>
       <button
-        onClick={() => location.reload()}
+        onClick={() => { window.location.href = 'https://ayra-family-mart-final-client.vercel.app/'; }}
         className="rounded-full bg-saffron px-5 py-2.5 font-bold text-bg hover:bg-saffron/90"
       >
         Reload page

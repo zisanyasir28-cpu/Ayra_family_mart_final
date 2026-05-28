@@ -37,29 +37,35 @@ const AdminCampaignsPage   = lazy(() => import('./pages/admin/campaigns/Campaign
 
 // ─── Loaders ─────────────────────────────────────────────────────────────────
 
-function PageLoader() {
+/** Premium branded spinner — two concentric rings with a saffron glow label */
+function BrandedSpinner({ fullScreen = false }: { fullScreen?: boolean }) {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" />
+    <div
+      className={[
+        'flex flex-col items-center justify-center gap-3',
+        fullScreen ? 'min-h-screen bg-bg' : 'min-h-[60vh]',
+      ].join(' ')}
+    >
+      {/* Dual-ring spinner */}
+      <div className="relative h-11 w-11">
+        {/* Outer static ring */}
+        <div className="absolute inset-0 rounded-full border-[2.5px] border-saffron/20" />
+        {/* Inner rotating arc */}
+        <div className="absolute inset-0 animate-spin rounded-full border-[2.5px] border-transparent border-t-saffron [animation-duration:0.8s]" />
+        {/* Subtle glow pulse behind the rings */}
+        <div className="absolute inset-[6px] rounded-full bg-saffron/10 animate-breathe" />
+      </div>
+      {/* Wordmark label */}
+      <span className="font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-cream/35">
+        Loading
+      </span>
     </div>
   );
 }
 
-function AuthLoader() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-bg">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" />
-    </div>
-  );
-}
-
-function AdminLoader() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-bg">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" />
-    </div>
-  );
-}
+function PageLoader()  { return <BrandedSpinner />; }
+function AuthLoader()  { return <BrandedSpinner fullScreen />; }
+function AdminLoader() { return <BrandedSpinner fullScreen />; }
 
 // ─── App ─────────────────────────────────────────────────────────────────────
 
