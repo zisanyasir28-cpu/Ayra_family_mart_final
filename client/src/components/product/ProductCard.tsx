@@ -72,14 +72,16 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
     // Dark:  white/30 → saffron/20 → plum/12 pearl shimmer
     <div
       className={cn(
-        'group relative p-[1.5px] rounded-3xl bg-gradient-to-br',
+        'group relative p-[1.5px] bg-gradient-to-br',
         'transition-all duration-300 ease-editorial',
         isLight ? [
+          'rounded-sm',
           'from-[hsl(42_62%_68%)] via-[hsl(140_40%_60%)] to-[hsl(35_66%_62%)]',
           'hover:from-[hsl(42_72%_60%)] hover:via-[hsl(140_50%_52%)] hover:to-[hsl(35_72%_56%)]',
           'hover:-translate-y-[5px]',
           'hover:shadow-[0_14px_40px_-8px_hsl(42_80%_50%/0.38),_0_4px_16px_-4px_hsl(140_52%_35%/0.24)]',
         ] : [
+          'rounded-3xl',
           'from-white/30 via-saffron/20 to-plum/12',
           'hover:from-white/50 hover:via-saffron/35 hover:to-plum/20',
           'hover:-translate-y-0.5',
@@ -92,8 +94,10 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
     >
       {/* ── Inner card ──────────────────────────────────────────────────── */}
       <div className={cn(
-        'glass-shine relative flex h-full flex-col overflow-hidden rounded-[calc(1.5rem-1.5px)]',
-        isLight ? 'bg-white' : 'bg-surface',
+        'glass-shine relative flex h-full flex-col overflow-hidden',
+        isLight
+          ? 'rounded-[0.5px] bg-white/48 backdrop-blur-md'
+          : 'rounded-[calc(1.5rem-1.5px)] bg-surface',
       )}>
 
         {/* Ambient art orbs */}
@@ -116,10 +120,10 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
         <Link
           to={`/products/${product.slug}`}
           className={cn(
-            'relative block aspect-[5/6] overflow-hidden rounded-t-[calc(1.5rem-1.5px)]',
+            'relative block aspect-[5/6] overflow-hidden',
             isLight
-              ? 'bg-[hsl(260_22%_95%)]'        // cool lavender tint — fits purple site palette
-              : 'bg-[hsl(var(--plum)/0.14)]',  // deep plum glass — matches dark theme depth
+              ? 'rounded-t-none bg-[hsl(260_22%_94%/0.65)]'  // glassy lavender well
+              : 'rounded-t-[calc(1.5rem-1.5px)] bg-[hsl(var(--plum)/0.14)]',
           )}
         >
           {firstImage && !imgError ? (
