@@ -16,8 +16,8 @@ import '@/styles/globals.css';
 
 // ─── Error fallback for Sentry's ErrorBoundary ────────────────────────────────
 
-function isChunkLoadError(error: Error | null): boolean {
-  if (!error) return false;
+function isChunkLoadError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
   return (
     error.name === 'ChunkLoadError' ||
     error.message.includes('Failed to fetch dynamically imported module') ||
@@ -28,7 +28,7 @@ function isChunkLoadError(error: Error | null): boolean {
 
 // When a new Vercel deployment invalidates old JS chunk hashes, lazy imports
 // throw ChunkLoadError. Auto-reload gets the fresh index.html + new chunks.
-function ErrorFallback({ error }: { error: Error | null }) {
+function ErrorFallback({ error }: { error: unknown }) {
   useEffect(() => {
     if (isChunkLoadError(error)) {
       window.location.reload();
