@@ -520,16 +520,15 @@ export function HeroBanner() {
                   initial={{ opacity: 0, scale: 0.88 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.18, type: 'spring', stiffness: 120, damping: 18 }}
-                  className="relative z-10 h-[252px] w-[252px] overflow-hidden rounded-full border border-saffron/20 bg-surface shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.5)] sm:h-[336px] sm:w-[336px]"
+                  className="relative z-10 h-[252px] w-[252px] overflow-hidden rounded-full border border-saffron/20 shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.5)] sm:h-[336px] sm:w-[336px]"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1543168256-418811576931?w=672&h=672&fit=crop&crop=center&q=85"
+                    src="https://res.cloudinary.com/dzhj5tgyv/image/upload/e_background_removal/e_trim/c_pad,h_672,w_672/e_sharpen:50/f_auto/q_auto/v1780011620/neon-bg_lj5fxn.png"
                     alt="Fresh groceries & daily essentials"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                     loading="eager"
                     decoding="async"
                   />
-                  <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/40 via-transparent to-transparent" />
                 </motion.div>
               </div>
             )}
