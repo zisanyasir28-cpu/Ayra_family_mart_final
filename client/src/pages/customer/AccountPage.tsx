@@ -145,9 +145,9 @@ function OverviewSection({ setSection }: { setSection: (s: Section) => void }) {
 // ─── Orders Section ───────────────────────────────────────────────────────────
 
 function OrdersSection() {
-  const [page, setPage]     = useState(1);
-  const { data, isLoading } = useMyOrders({ page, limit: 8 });
-  const orders = data?.data ?? [];
+  const [page, setPage]                 = useState(1);
+  const { data, isLoading, isFetching } = useMyOrders({ page, limit: 8 });
+  const orders     = data?.data ?? [];
   const pagination = data?.meta.pagination;
 
   if (isLoading) {
@@ -167,6 +167,13 @@ function OrdersSection() {
         </div>
       ) : (
         <>
+          <div className="relative space-y-3">
+            {/* Fetching overlay */}
+            {isFetching && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-bg/50 backdrop-blur-[2px]">
+                <AyraSpinner />
+              </div>
+            )}
           {orders.map((o) => (
             <Link
               key={o.id}
@@ -191,21 +198,25 @@ function OrdersSection() {
               </div>
             </Link>
           ))}
+          </div>
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={!pagination.hasPrevPage}
+                disabled={!pagination.hasPrevPage || isFetching}
                 className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm disabled:opacity-40"
               >
                 Previous
               </button>
-              <span className="text-sm text-cream/45">Page {pagination.page} of {pagination.totalPages}</span>
+              <span className="flex items-center gap-2 text-sm text-cream/45">
+                {isFetching && <span className="h-3 w-3 animate-spin rounded-full border-2 border-saffron border-t-transparent" />}
+                Page {pagination.page} of {pagination.totalPages}
+              </span>
               <button
                 onClick={() => setPage((p) => p + 1)}
-                disabled={!pagination.hasNextPage}
+                disabled={!pagination.hasNextPage || isFetching}
                 className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm disabled:opacity-40"
               >
                 Next

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Package, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
+import { AyraSpinner } from '@/components/ui/AyraLoader';
 import { useMyOrders } from '@/hooks/useMyOrders';
 import { formatPaisa, cn } from '@/lib/utils';
 import { OrderStatus } from '@superstore/shared';
@@ -35,7 +36,7 @@ export default function OrdersPage() {
   const [page, setPage] = useState(1);
 
   const params = filter === 'ALL' ? { page } : { page, status: filter };
-  const { data, isLoading } = useMyOrders(params);
+  const { data, isLoading, isFetching } = useMyOrders(params);
 
   const orders     = data?.data ?? [];
   const pagination = data?.meta.pagination;
@@ -65,7 +66,13 @@ export default function OrdersPage() {
         ))}
       </nav>
 
-      <div className="mt-6 space-y-3">
+      <div className="relative mt-6 space-y-3">
+        {/* Fetching overlay — shown on page/filter change */}
+        {isFetching && !isLoading && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-bg/50 backdrop-blur-[2px]">
+            <AyraSpinner />
+          </div>
+        )}
         {isLoading ? (
           <div className="space-y-3">
             {[0, 1, 2].map((i) => (
@@ -123,18 +130,19 @@ export default function OrdersPage() {
         <div className="mt-6 flex items-center justify-center gap-2">
           <button
             type="button"
-            disabled={!pagination.hasPrevPage}
+            disabled={!pagination.hasPrevPage || isFetching}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm font-medium transition-all disabled:opacity-50"
           >
             Previous
           </button>
-          <span className="text-sm text-cream/55">
+          <span className="flex items-center gap-2 text-sm text-cream/55">
+            {isFetching && <span className="h-3 w-3 animate-spin rounded-full border-2 border-saffron border-t-transparent" />}
             Page {pagination.page} of {pagination.totalPages}
           </span>
           <button
             type="button"
-            disabled={!pagination.hasNextPage}
+            disabled={!pagination.hasNextPage || isFetching}
             onClick={() => setPage((p) => p + 1)}
             className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm font-medium transition-all disabled:opacity-50"
           >

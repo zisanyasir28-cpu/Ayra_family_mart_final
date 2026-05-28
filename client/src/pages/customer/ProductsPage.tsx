@@ -7,6 +7,7 @@ import { fetchProducts } from '../../services/products';
 import { fetchCategories } from '../../services/categories';
 import { ProductCard, ProductCardSkeleton } from '../../components/product/ProductCard';
 import { FilterSidebar, type FilterState } from '../../components/products/FilterSidebar';
+import { AyraSpinner } from '../../components/ui/AyraLoader';
 import { cn } from '../../lib/utils';
 
 // ─── Sort options ─────────────────────────────────────────────────────────────
@@ -26,9 +27,10 @@ interface PaginationProps {
   page:       number;
   totalPages: number;
   onChange:   (p: number) => void;
+  disabled?:  boolean;
 }
 
-function Pagination({ page, totalPages, onChange }: PaginationProps) {
+function Pagination({ page, totalPages, onChange, disabled = false }: PaginationProps) {
   const [inputVal, setInputVal] = useState(String(page));
   useEffect(() => setInputVal(String(page)), [page]);
   if (totalPages <= 1) return null;
@@ -52,7 +54,7 @@ function Pagination({ page, totalPages, onChange }: PaginationProps) {
       <div className="flex items-center gap-1">
         <button
           onClick={() => onChange(page - 1)}
-          disabled={page === 1}
+          disabled={page === 1 || disabled}
           className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-cream/60 transition hover:border-saffron/50 hover:text-saffron disabled:opacity-35 active:scale-90"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -65,8 +67,9 @@ function Pagination({ page, totalPages, onChange }: PaginationProps) {
             <button
               key={p}
               onClick={() => onChange(p)}
+              disabled={disabled}
               className={cn(
-                'flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition',
+                'flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition disabled:pointer-events-none',
                 p === page
                   ? 'bg-saffron text-bg shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.6)]'
                   : 'border border-line text-cream/70 hover:border-saffron/40 hover:text-saffron',
@@ -79,7 +82,7 @@ function Pagination({ page, totalPages, onChange }: PaginationProps) {
 
         <button
           onClick={() => onChange(page + 1)}
-          disabled={page === totalPages}
+          disabled={page === totalPages || disabled}
           className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-cream/60 transition hover:border-saffron/50 hover:text-saffron disabled:opacity-35 active:scale-90"
         >
           <ChevronRight className="h-4 w-4" />
@@ -272,11 +275,17 @@ export default function ProductsPage() {
         />
 
         {/* Product grid */}
-        <div className="min-w-0 flex-1">
+        <div className="relative min-w-0 flex-1">
+          {/* Fetching overlay — shown on page change (old data still visible) */}
+          {isFetching && !isLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-bg/50 backdrop-blur-[2px]">
+              <AyraSpinner />
+            </div>
+          )}
           <div
             className={cn(
               'grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 transition-opacity duration-200',
-              isFetching && !isLoading && 'opacity-60',
+              isFetching && !isLoading && 'opacity-50',
             )}
           >
             {isLoading
@@ -304,6 +313,7 @@ export default function ProductsPage() {
               <Pagination
                 page={page}
                 totalPages={totalPages}
+                disabled={isFetching}
                 onChange={(p) =>
                   setSearchParams((prev) => {
                     const next = new URLSearchParams(prev);
