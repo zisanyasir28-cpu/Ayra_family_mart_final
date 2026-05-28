@@ -579,10 +579,14 @@
   animation: leaf-sway var(--duration, 7s) ease-in-out infinite;
 }
 
-/* Light-mode butterflies — hidden in dark, revealed in light */
+/* Butterflies — golden glow in dark, warm drop-shadow in light */
 .butterfly {
   opacity: 0;
   transition: opacity 0.6s ease;
+}
+:root.dark .butterfly {
+  opacity: 0.78;
+  filter: drop-shadow(0 0 8px hsl(45, 96%, 62%)) drop-shadow(0 0 18px hsl(42, 92%, 50% / 0.55));
 }
 :root.light .butterfly {
   opacity: 0.92;

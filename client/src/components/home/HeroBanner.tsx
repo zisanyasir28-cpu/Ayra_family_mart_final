@@ -150,7 +150,7 @@ export function HeroBanner() {
                 : 'blur(1.8px)',
             }}
             initial={{ x: 0, y: 0, scale: p.s[0], opacity: 0 }}
-            animate={{ x: p.x, y: p.y, scale: p.s, opacity: [0, isLight ? 0.97 : 0.72, 0] }}
+            animate={{ x: p.x, y: p.y, scale: p.s, opacity: [0, isLight ? 0.97 : 0.90, 0] }}
             transition={{
               duration: p.dur,
               delay:    p.delay,
