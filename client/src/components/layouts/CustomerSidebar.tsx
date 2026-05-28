@@ -167,7 +167,7 @@ export function CustomerSidebar() {
 
                 <span
                   className={cn(
-                    'flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors',
+                    'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors',
                     isActive
                       ? 'bg-white/15'
                       : isLight
@@ -190,12 +190,12 @@ export function CustomerSidebar() {
                   )}
                 </span>
 
-                <span className="flex-1 truncate">{label}</span>
+                <span className="relative flex-1 truncate">{label}</span>
 
                 {badge && (
                   <span
                     className={cn(
-                      'rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider',
+                      'relative rounded-full bg-coral px-1.5 py-0.5 text-[9px] font-extrabold tracking-wider',
                       !isLight && 'text-bg',
                     )}
                     style={isLight ? { color: 'hsl(145 62% 8%)' } : undefined}
@@ -205,7 +205,9 @@ export function CustomerSidebar() {
                 )}
 
                 {isActive && (
-                  <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-90" strokeWidth={2.4} />
+                  <span className="relative">
+                    <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-90" strokeWidth={2.4} />
+                  </span>
                 )}
               </>
             )}

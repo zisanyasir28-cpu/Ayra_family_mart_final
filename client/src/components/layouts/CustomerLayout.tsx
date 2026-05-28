@@ -1333,67 +1333,113 @@ function Footer() {
 // ─── Bottom mobile tab bar ────────────────────────────────────────────────────
 
 function BottomTabBar({ onCartClick }: { onCartClick: () => void }) {
-  const { itemCount } = useCartStore();
-  const count = itemCount();
+  const { itemCount }       = useCartStore();
+  const { isAuthenticated } = useAuthStore();
+  const navigate            = useNavigate();
+  const qc                  = useQueryClient();
+  const count               = itemCount();
 
-  const navTabs = [
-    { icon: Home,       label: 'Home',     to: '/',                       end: true  },
-    { icon: LayoutGrid, label: 'Browse',   to: '/products',               end: false },
-    { icon: SearchIcon, label: 'Search',   to: '/products?focus=search',  end: false },
-    { icon: User,       label: 'Account',  to: '/account',                end: false },
+  const [notifOpen,  setNotifOpen]  = useState(false);
+  const [notifItems, setNotifItems] = useState<ApiNotification[]>([]);
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey:        ['notifications', 'unread-count'],
+    queryFn:         fetchUnreadCount,
+    refetchInterval: 30_000,
+    enabled:         isAuthenticated,
+  });
+
+  useEffect(() => {
+    if (!notifOpen || !isAuthenticated) return;
+    fetchNotifications({ limit: 20 }).then((r) => setNotifItems(r.data));
+  }, [notifOpen, isAuthenticated]);
+
+  async function handleMarkAll() {
+    await markAllNotificationsRead();
+    setNotifItems((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    void qc.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+  }
+
+  async function handleMarkOne(id: string) {
+    await markNotificationRead(id);
+    setNotifItems((prev) => prev.map((n) => n.id === id ? { ...n, isRead: true } : n));
+    void qc.invalidateQueries({ queryKey: ['notifications', 'unread-count'] });
+  }
+
+  const leftTabs = [
+    { icon: Home,       label: 'Home',   to: '/',         end: true  },
+    { icon: LayoutGrid, label: 'Browse', to: '/products', end: false },
   ] as const;
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-bg/95 backdrop-blur-xl ring-1 ring-saffron/10 pb-[env(safe-area-inset-bottom,0px)] lg:hidden">
-      {navTabs.slice(0, 2).map(({ icon: Icon, label, to, end }) => (
-        <NavLink
-          key={to}
-          to={to}
-          end={end}
-          className={({ isActive }) =>
-            cn(
-              'flex flex-1 flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors',
-              isActive ? 'text-saffron' : 'text-cream/55',
-            )
-          }
-        >
-          {({ isActive }) => (
-            <>
-              <Icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
-              {label}
-            </>
-          )}
-        </NavLink>
-      ))}
-
-      <button
-        onClick={onCartClick}
-        className="relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.15em] text-cream/55 transition hover:text-saffron"
-      >
-        <div className="relative">
-          <BasketIcon size={20} strokeWidth={1.5} />
-          <AnimatePresence>
-            {count > 0 && (
-              <motion.span
-                key={count}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-saffron font-display text-[9px] font-extrabold text-bg"
-              >
-                {count > 9 ? '9+' : count}
-              </motion.span>
+    <>
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-line bg-bg/95 backdrop-blur-xl ring-1 ring-saffron/10 pb-[env(safe-area-inset-bottom,0px)] lg:hidden">
+        {/* Home + Browse */}
+        {leftTabs.map(({ icon: Icon, label, to, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              cn(
+                'flex flex-1 flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors',
+                isActive ? 'text-saffron' : 'text-cream/55',
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <Icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
+                {label}
+              </>
             )}
-          </AnimatePresence>
-        </div>
-        Cart
-      </button>
+          </NavLink>
+        ))}
 
-      {navTabs.slice(2).map(({ icon: Icon, label, to, end }) => (
+        {/* Cart */}
+        <button
+          onClick={onCartClick}
+          className="relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.15em] text-cream/55 transition hover:text-saffron"
+        >
+          <div className="relative">
+            <BasketIcon size={20} strokeWidth={1.5} />
+            <AnimatePresence>
+              {count > 0 && (
+                <motion.span
+                  key={count}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-saffron font-display text-[9px] font-extrabold text-bg"
+                >
+                  {count > 9 ? '9+' : count}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+          Cart
+        </button>
+
+        {/* Notification Bell */}
+        <button
+          onClick={() => isAuthenticated ? setNotifOpen(true) : navigate('/login')}
+          className="relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.15em] text-cream/55 transition hover:text-saffron"
+          aria-label="Notifications"
+        >
+          <div className="relative">
+            <Bell className="h-5 w-5 transition-transform" />
+            {isAuthenticated && unreadCount > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-coral font-display text-[9px] font-extrabold text-bg ring-2 ring-bg">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </div>
+          Alerts
+        </button>
+
+        {/* Account */}
         <NavLink
-          key={to}
-          to={to}
-          end={end}
+          to="/account"
           className={({ isActive }) =>
             cn(
               'flex flex-1 flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-[0.15em] transition-colors',
@@ -1403,13 +1449,108 @@ function BottomTabBar({ onCartClick }: { onCartClick: () => void }) {
         >
           {({ isActive }) => (
             <>
-              <Icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
-              {label}
+              <User className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
+              Account
             </>
           )}
         </NavLink>
-      ))}
-    </nav>
+      </nav>
+
+      {/* Mobile notifications bottom sheet */}
+      <AnimatePresence>
+        {notifOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setNotifOpen(false)}
+              className="fixed inset-0 z-[54] bg-bg/60 backdrop-blur-sm lg:hidden"
+            />
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className="fixed inset-x-0 bottom-0 z-[55] flex max-h-[78vh] flex-col overflow-hidden rounded-t-2xl border-t border-line bg-surface shadow-lift lg:hidden"
+              style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+            >
+              {/* Drag handle */}
+              <div className="flex shrink-0 justify-center pt-3 pb-1">
+                <div className="h-1 w-10 rounded-full bg-cream/20" />
+              </div>
+
+              {/* Sheet header */}
+              <div className="flex shrink-0 items-center justify-between border-b border-line px-4 pb-3">
+                <span className="font-display text-base font-bold text-cream">Notifications</span>
+                <div className="flex items-center gap-3">
+                  {notifItems.some((n) => !n.isRead) && (
+                    <button
+                      onClick={handleMarkAll}
+                      className="text-[11px] text-saffron hover:underline"
+                    >
+                      Mark all read
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setNotifOpen(false)}
+                    className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-cream/5"
+                    aria-label="Close"
+                  >
+                    <X className="h-4 w-4 text-cream" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Notification list */}
+              <div className="flex-1 overflow-y-auto">
+                {notifItems.length === 0 ? (
+                  <div className="flex flex-col items-center gap-3 py-16 text-center">
+                    <Bell className="h-10 w-10 text-cream/20" />
+                    <p className="text-sm text-cream/45">No notifications yet</p>
+                  </div>
+                ) : (
+                  notifItems.map((n) => {
+                    const Icon = notifIcon(n.type);
+                    return (
+                      <button
+                        key={n.id}
+                        onClick={() => { void handleMarkOne(n.id); setNotifOpen(false); }}
+                        className={cn(
+                          'flex w-full gap-3 px-4 py-3 text-left transition active:bg-surface-2',
+                          !n.isRead && 'bg-saffron/5',
+                        )}
+                      >
+                        <div className={cn(
+                          'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
+                          n.type === 'ORDER_STATUS' || n.type === 'ORDER_CREATED'
+                            ? 'bg-saffron/15 text-saffron'
+                            : 'bg-cream/10 text-cream/60',
+                        )}>
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-display text-xs font-semibold text-cream">
+                            {sanitizeText(n.title)}
+                            {!n.isRead && (
+                              <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-coral align-middle" />
+                            )}
+                          </p>
+                          <p className="line-clamp-2 text-[11px] leading-relaxed text-cream/55">
+                            {sanitizeText(n.message)}
+                          </p>
+                          <p className="mt-0.5 text-[10px] text-cream/35">{relativeTime(n.createdAt)}</p>
+                        </div>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

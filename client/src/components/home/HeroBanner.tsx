@@ -462,7 +462,7 @@ export function HeroBanner() {
                     <Icon className="h-4 w-4" strokeWidth={1.8} />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-[11px] font-bold   leading-tight text-cream">
+                    <p className="text-[11px] font-bold leading-tight text-cream">
                       {label}
                     </p>
                     <p className="font-bangla text-[10px] text-cream/45">{sublabel}</p>
