@@ -96,7 +96,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
       <div className={cn(
         'glass-shine relative flex h-full flex-col overflow-hidden',
         isLight
-          ? 'rounded-[0.5px] bg-white/48 backdrop-blur-md'
+          ? 'rounded-[6.5px] bg-white/48 backdrop-blur-md'
           : 'rounded-[calc(1.5rem-1.5px)] bg-surface',
       )}>
 
@@ -122,7 +122,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
           className={cn(
             'relative block aspect-[5/6] overflow-hidden',
             isLight
-              ? 'rounded-t-none bg-[hsl(260_22%_94%/0.65)]'  // glassy lavender well
+              ? 'rounded-t-[6.5px] bg-[hsl(260_22%_94%/0.65)]'  // matches outer minus padding
               : 'rounded-t-[calc(1.5rem-1.5px)] bg-[hsl(var(--plum)/0.14)]',
           )}
         >
