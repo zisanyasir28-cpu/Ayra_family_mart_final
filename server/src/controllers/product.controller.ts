@@ -74,48 +74,57 @@ export function calcEffectivePrice(
 }
 
 // ─── Prisma include snippets ──────────────────────────────────────────────────
+// NOTE: These must be functions (not module-level constants) so that `new Date()`
+// is evaluated fresh on every request. A frozen constant captures the server
+// start time, causing campaigns created after the last deploy to be silently
+// excluded from every query.
 
-const NOW = () => new Date();
+function getActiveCampaignFilter(): Prisma.CampaignProductWhereInput {
+  const now = new Date();
+  return {
+    campaign: {
+      status: 'ACTIVE',
+      startsAt: { lte: now },
+      OR: [{ endsAt: null }, { endsAt: { gte: now } }],
+    },
+  };
+}
 
-const activeCampaignFilter: Prisma.CampaignProductWhereInput = {
-  campaign: {
-    status: 'ACTIVE',
-    startsAt: { lte: NOW() },
-    OR: [{ endsAt: null }, { endsAt: { gte: NOW() } }],
-  },
-};
-
-export const productListInclude = {
-  images: { orderBy: { sortOrder: 'asc' as const }, take: 1 },
-  category: { select: { id: true, name: true, slug: true } },
-  campaignProducts: {
-    where: activeCampaignFilter,
-    include: {
-      campaign: {
-        select: {
-          id: true,
-          discountType: true,
-          discountValue: true,
-          endsAt: true,
+export function getProductListInclude() {
+  return {
+    images: { orderBy: { sortOrder: 'asc' as const }, take: 1 },
+    category: { select: { id: true, name: true, slug: true } },
+    campaignProducts: {
+      where: getActiveCampaignFilter(),
+      include: {
+        campaign: {
+          select: {
+            id: true,
+            discountType: true,
+            discountValue: true,
+            endsAt: true,
+          },
         },
       },
+      take: 1,
     },
-    take: 1,
-  },
-} satisfies Prisma.ProductInclude;
+  } satisfies Prisma.ProductInclude;
+}
 
-const productDetailInclude = {
-  images: { orderBy: { sortOrder: 'asc' as const } },
-  category: true,
-  brand: true,
-  campaignProducts: {
-    where: activeCampaignFilter,
-    include: { campaign: true },
-    take: 1,
-  },
-  reviews: { select: { rating: true } },
-  _count: { select: { reviews: true } },
-} satisfies Prisma.ProductInclude;
+function getProductDetailInclude() {
+  return {
+    images: { orderBy: { sortOrder: 'asc' as const } },
+    category: true,
+    brand: true,
+    campaignProducts: {
+      where: getActiveCampaignFilter(),
+      include: { campaign: true },
+      take: 1,
+    },
+    reviews: { select: { rating: true } },
+    _count: { select: { reviews: true } },
+  } satisfies Prisma.ProductInclude;
+}
 
 // ─── sortBy → Prisma orderBy ──────────────────────────────────────────────────
 
@@ -225,7 +234,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
       orderBy: toOrderBy(sortBy),
       skip:    (page - 1) * limit,
       take:    limit,
-      include: productListInclude,
+      include: getProductListInclude(),
     }),
   ]);
 
@@ -267,7 +276,7 @@ export const getFeaturedProducts = asyncHandler(
       where: { isFeatured: true, status: 'ACTIVE' },
       orderBy: [{ stockQuantity: 'desc' }, { createdAt: 'desc' }],
       take: 8,
-      include: productListInclude,
+      include: getProductListInclude(),
     });
 
     const enriched = products.map((p) => {
@@ -354,7 +363,7 @@ export const getProductBySlug = asyncHandler(
 
     const raw = await prisma.product.findFirst({
       where: { slug, status: 'ACTIVE' },
-      include: productDetailInclude,
+      include: getProductDetailInclude(),
     });
     if (!raw) throw ApiError.notFound('Product');
 

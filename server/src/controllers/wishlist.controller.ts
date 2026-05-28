@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
 import { sendSuccess } from '../utils/ApiResponse';
-import { productListInclude, calcEffectivePrice } from './product.controller';
+import { getProductListInclude, calcEffectivePrice } from './product.controller';
 
 // ─── Get Wishlist ─────────────────────────────────────────────────────────────
 
@@ -15,7 +15,7 @@ export const getWishlist = asyncHandler(async (req: Request, res: Response) => {
     orderBy: { createdAt: 'desc' },
     include: {
       product: {
-        include: productListInclude,
+        include: getProductListInclude(),
       },
     },
   });
