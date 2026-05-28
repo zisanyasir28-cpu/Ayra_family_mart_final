@@ -22,18 +22,20 @@ interface SidebarItem {
   end?:       boolean;
   iconClass?: string;
   badge?:     string;
+  /** Tailwind gradient classes applied to the background span (dark mode only) */
+  grad:       string;
 }
 
 const NAV_ITEMS: SidebarItem[] = [
-  { icon: Home,     label: 'Home',           to: '/',                                  end: true },
-  { icon: Grid2x2,  label: 'All Categories', to: '/products',                          end: true },
-  { icon: Tag,      label: 'Offers',         to: '/products?onSale=true', badge: 'HOT'           },
-  { icon: Star,     label: 'Best Sellers',   to: '/products?sort=popular'                        },
-  { icon: Sparkles, label: 'New Arrivals',   to: '/products?sort=newest'                         },
-  { icon: Award,    label: 'Brands',         to: '/products?view=brands'                         },
-  { icon: Leaf,     label: 'Ayra Fresh+',    to: '/products?collection=fresh-plus', iconClass: 'text-sage' },
-  { icon: Package,  label: 'My Orders',      to: '/orders'                                       },
-  { icon: Heart,    label: 'Wishlist',       to: '/wishlist'                                     },
+  { icon: Home,     label: 'Home',           to: '/',                                  end: true,  grad: 'from-saffron to-blush'  },
+  { icon: Grid2x2,  label: 'All Categories', to: '/products',                          end: true,  grad: 'from-coral to-blush'    },
+  { icon: Tag,      label: 'Offers',         to: '/products?onSale=true', badge: 'HOT',            grad: 'from-saffron to-coral'  },
+  { icon: Star,     label: 'Best Sellers',   to: '/products?sort=popular',                         grad: 'from-plum to-saffron'   },
+  { icon: Sparkles, label: 'New Arrivals',   to: '/products?sort=newest',                          grad: 'from-sage to-coral'     },
+  { icon: Award,    label: 'Brands',         to: '/products?view=brands',                          grad: 'from-plum to-coral'     },
+  { icon: Leaf,     label: 'Ayra Fresh+',    to: '/products?collection=fresh-plus', iconClass: 'text-sage', grad: 'from-sage to-sage/80' },
+  { icon: Package,  label: 'My Orders',      to: '/orders',                                        grad: 'from-saffron to-plum'   },
+  { icon: Heart,    label: 'Wishlist',       to: '/wishlist',                                      grad: 'from-coral to-saffron'  },
 ];
 
 // Light-mode: sidebar is always-dark forest green.
@@ -92,7 +94,7 @@ export function CustomerSidebar() {
       </p>
 
       <nav className="relative flex flex-col gap-0.5">
-        {NAV_ITEMS.map(({ icon: Icon, label, to, end, badge, iconClass }) => (
+        {NAV_ITEMS.map(({ icon: Icon, label, to, end, badge, iconClass, grad }) => (
           <NavLink
             key={to + label}
             to={to}
@@ -106,10 +108,10 @@ export function CustomerSidebar() {
                     // Light-mode active: green gradient + glow, matching dark-mode energy
                     ? 'bg-gradient-to-r from-[hsl(142_72%_26%)] to-[hsl(158_65%_20%)] font-bold shadow-[0_4px_16px_-4px_hsl(142_72%_28%/0.65)]'
                     : 'hover:bg-[hsl(142_40%_16%/0.75)] hover:text-[hsl(142_60%_75%)]'
-                  // ── dark mode ──
+                  // ── dark mode — text color only; background handled by span layer ──
                   : isActive
-                    ? 'bg-gradient-to-r from-saffron to-blush text-bg font-bold shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
-                    : 'text-cream/75 hover:bg-saffron/10 hover:text-saffron',
+                    ? 'font-bold text-bg shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
+                    : 'text-cream/75 hover:text-saffron',
               )
             }
             // Light mode: text is hardcoded because --cream resolves dark on green bg
@@ -120,17 +122,44 @@ export function CustomerSidebar() {
           >
             {({ isActive }) => (
               <>
-                {/* ── Sparkle watermark — visible only when pill is active ── */}
-                {isActive && (
+                {/* ── Gradient background layer (dark mode) — opacity 1 active, 0.18 inactive ── */}
+                {!isLight && (
+                  <span
+                    aria-hidden
+                    className={cn(
+                      'pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-r transition-opacity duration-300',
+                      grad,
+                    )}
+                    style={{ opacity: isActive ? 1 : 0.18 }}
+                  />
+                )}
+
+                {/* ── Static watermark sparkle — always visible, brighter when active ── */}
+                {!isLight && (
+                  <svg
+                    aria-hidden
+                    className="pointer-events-none absolute right-7 top-1/2 h-9 w-9 -translate-y-1/2 transition-opacity duration-300"
+                    viewBox="0 0 32 32"
+                    fill="currentColor"
+                    style={{ opacity: isActive ? 0.15 : 0.07 }}
+                  >
+                    {/* 4-pointed diamond star */}
+                    <path d="M16 0 L18.2 13.8 L32 16 L18.2 18.2 L16 32 L13.8 18.2 L0 16 L13.8 13.8Z" />
+                    {/* Two smaller flanking diamonds for depth */}
+                    <path d="M6 6 L6.8 9.2 L10 10 L6.8 10.8 L6 14 L5.2 10.8 L2 10 L5.2 9.2Z" opacity="0.7" />
+                    <path d="M26 18 L26.5 20.5 L29 21 L26.5 21.5 L26 24 L25.5 21.5 L23 21 L25.5 20.5Z" opacity="0.6" />
+                  </svg>
+                )}
+
+                {/* ── Active sparkle (light mode only — original behaviour) ── */}
+                {isLight && isActive && (
                   <svg
                     aria-hidden
                     className="pointer-events-none absolute right-7 top-1/2 h-9 w-9 -translate-y-1/2 opacity-[0.13]"
                     viewBox="0 0 32 32"
                     fill="currentColor"
                   >
-                    {/* 4-pointed diamond star */}
                     <path d="M16 0 L18.2 13.8 L32 16 L18.2 18.2 L16 32 L13.8 18.2 L0 16 L13.8 13.8Z" />
-                    {/* Two smaller flanking diamonds for depth */}
                     <path d="M6 6 L6.8 9.2 L10 10 L6.8 10.8 L6 14 L5.2 10.8 L2 10 L5.2 9.2Z" opacity="0.7" />
                     <path d="M26 18 L26.5 20.5 L29 21 L26.5 21.5 L26 24 L25.5 21.5 L23 21 L25.5 20.5Z" opacity="0.6" />
                   </svg>

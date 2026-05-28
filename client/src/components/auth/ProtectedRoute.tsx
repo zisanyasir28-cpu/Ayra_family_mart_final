@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import { AyraSpinner } from '@/components/ui/AyraLoader';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -17,11 +18,7 @@ export function ProtectedRoute({
   // AuthProvider is still completing the initial refresh — show a spinner
   // so we neither flash protected content nor incorrectly redirect.
   if (isLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
-      </div>
-    );
+    return <AyraSpinner className="min-h-[60vh]" />;
   }
 
   if (!isAuthenticated) {

@@ -449,7 +449,7 @@ function AllCategoriesDropdown() {
     <div ref={ref} className="relative shrink-0">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-full bg-saffron px-4 py-2.5 text-sm font-bold text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)] active:scale-95"
+        className="btn-grad flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition active:scale-95"
       >
         <LayoutGrid className="h-4 w-4" />
         <span className="hidden lg:block">All Categories</span>
@@ -1504,7 +1504,7 @@ export default function CustomerLayout() {
 
       <div className="flex flex-1">
         <CustomerSidebar />
-        <main className="min-w-0 flex-1 pb-16 lg:pb-0">
+        <main className="min-w-0 flex-1 customer-main">
           <Outlet />
         </main>
       </div>

@@ -122,7 +122,7 @@ function EmptyState({ onClear }: { onClear: () => void }) {
       </p>
       <button
         onClick={onClear}
-        className="mt-6 rounded-full bg-saffron px-7 py-3 text-sm font-bold uppercase tracking-[0.16em] text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.6)] active:scale-95"
+        className="btn-grad mt-6 rounded-full px-7 py-3 text-sm font-bold uppercase tracking-[0.16em] transition active:scale-95"
       >
         Clear Filters
       </button>

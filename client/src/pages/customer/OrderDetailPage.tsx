@@ -200,7 +200,7 @@ export default function OrderDetailPage() {
                 <button
                   type="button"
                   onClick={() => setShowCancel(false)}
-                  className="rounded-full border border-line/50 bg-surface/60 px-4 py-2 text-sm font-medium text-cream hover:border-saffron/40 transition-all"
+                  className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm font-medium transition-all"
                 >
                   Keep order
                 </button>

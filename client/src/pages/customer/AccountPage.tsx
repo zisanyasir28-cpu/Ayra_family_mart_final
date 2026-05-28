@@ -9,6 +9,7 @@ import {
   Plus, Star, ShoppingBag, Wallet, ChevronRight,
 } from 'lucide-react';
 import { cn, formatPaisa } from '@/lib/utils';
+import { AyraSpinner } from '@/components/ui/AyraLoader';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useMyOrders } from '@/hooks/useMyOrders';
@@ -111,7 +112,7 @@ function OverviewSection({ setSection }: { setSection: (s: Section) => void }) {
           <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-10 text-center">
             <ShoppingBag className="h-10 w-10 text-cream/20" />
             <p className="text-sm text-cream/45">No orders yet</p>
-            <Link to="/products" className="rounded-full bg-saffron px-4 py-2 text-xs font-bold text-bg hover:bg-saffron/90">
+            <Link to="/products" className="btn-grad rounded-full px-4 py-2 text-xs font-bold">
               Start Shopping
             </Link>
           </div>
@@ -150,7 +151,7 @@ function OrdersSection() {
   const pagination = data?.meta.pagination;
 
   if (isLoading) {
-    return <div className="flex justify-center py-16"><div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" /></div>;
+    return <AyraSpinner className="py-16" />;
   }
 
   return (
@@ -160,7 +161,7 @@ function OrdersSection() {
         <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-16 text-center">
           <ShoppingBag className="h-12 w-12 text-cream/20" />
           <p className="text-sm text-cream/45">No orders yet</p>
-          <Link to="/products" className="rounded-full bg-saffron px-5 py-2 text-sm font-bold text-bg hover:bg-saffron/90">
+          <Link to="/products" className="btn-grad btn-wm-arrow rounded-full px-5 py-2 text-sm font-bold">
             Browse Products
           </Link>
         </div>
@@ -197,7 +198,7 @@ function OrdersSection() {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={!pagination.hasPrevPage}
-                className="rounded-full border border-line px-4 py-2 text-sm text-cream/70 hover:border-saffron hover:text-cream disabled:opacity-40"
+                className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm disabled:opacity-40"
               >
                 Previous
               </button>
@@ -205,7 +206,7 @@ function OrdersSection() {
               <button
                 onClick={() => setPage((p) => p + 1)}
                 disabled={!pagination.hasNextPage}
-                className="rounded-full border border-line px-4 py-2 text-sm text-cream/70 hover:border-saffron hover:text-cream disabled:opacity-40"
+                className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm disabled:opacity-40"
               >
                 Next
               </button>
@@ -230,7 +231,7 @@ function WishlistSection() {
   const displayItems = items.length > 0 ? items : [];
 
   if (isLoading) {
-    return <div className="flex justify-center py-16"><div className="h-8 w-8 animate-spin rounded-full border-4 border-saffron border-t-transparent" /></div>;
+    return <AyraSpinner className="py-16" />;
   }
 
   return (
@@ -243,7 +244,7 @@ function WishlistSection() {
         <div className="flex flex-col items-center gap-3 rounded-2xl bg-surface/60 ring-1 ring-line/50 backdrop-blur-sm py-16 text-center">
           <Heart className="h-12 w-12 text-cream/20" />
           <p className="text-sm text-cream/45">Your wishlist is empty</p>
-          <Link to="/products" className="rounded-full bg-saffron px-5 py-2 text-sm font-bold text-bg hover:bg-saffron/90">
+          <Link to="/products" className="btn-grad btn-wm-arrow rounded-full px-5 py-2 text-sm font-bold">
             Browse Products
           </Link>
         </div>
@@ -277,7 +278,7 @@ function AddressesSection() {
         <button
           onClick={() => setEditing('new')}
           disabled={addresses.length >= 5}
-          className="flex items-center gap-1.5 rounded-full bg-saffron px-4 py-2 text-sm font-bold text-bg hover:bg-saffron/90 disabled:opacity-50"
+          className="btn-grad btn-wm-pin flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold disabled:opacity-50"
         >
           <Plus className="h-4 w-4" /> Add {addresses.length >= 5 ? '(max 5)' : ''}
         </button>
@@ -422,7 +423,7 @@ function ProfileSection() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-full bg-saffron py-2.5 text-sm font-bold text-bg transition hover:bg-saffron/90 disabled:opacity-60"
+            className="btn-grad w-full rounded-full py-2.5 text-sm font-bold transition disabled:opacity-60"
           >
             {isSubmitting ? 'Saving…' : 'Save Profile'}
           </button>

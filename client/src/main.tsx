@@ -48,7 +48,7 @@ function ErrorFallback({ error }: { error: unknown }) {
       </p>
       <button
         onClick={() => { window.location.href = 'https://ayra-family-mart-final-client.vercel.app/'; }}
-        className="rounded-full bg-saffron px-5 py-2.5 font-bold text-bg hover:bg-saffron/90"
+        className="btn-grad rounded-full px-5 py-2.5 font-bold"
       >
         Reload page
       </button>

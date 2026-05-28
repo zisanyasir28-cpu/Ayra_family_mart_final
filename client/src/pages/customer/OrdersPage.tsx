@@ -77,7 +77,7 @@ export default function OrdersPage() {
             <p className="text-cream/55">No orders to show yet.</p>
             <Link
               to="/products"
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-saffron px-5 py-2 text-sm font-semibold text-bg hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.5)] transition-all"
+              className="btn-grad btn-wm-arrow mt-4 inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-all"
             >
               Start shopping
             </Link>
@@ -125,7 +125,7 @@ export default function OrdersPage() {
             type="button"
             disabled={!pagination.hasPrevPage}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="rounded-full border border-line/50 bg-surface/60 px-4 py-2 text-sm font-medium text-cream disabled:opacity-50 hover:border-saffron/40 transition-all"
+            className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm font-medium transition-all disabled:opacity-50"
           >
             Previous
           </button>
@@ -136,7 +136,7 @@ export default function OrdersPage() {
             type="button"
             disabled={!pagination.hasNextPage}
             onClick={() => setPage((p) => p + 1)}
-            className="rounded-full border border-line/50 bg-surface/60 px-4 py-2 text-sm font-medium text-cream disabled:opacity-50 hover:border-saffron/40 transition-all"
+            className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm font-medium transition-all disabled:opacity-50"
           >
             Next
           </button>

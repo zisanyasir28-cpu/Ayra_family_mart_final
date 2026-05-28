@@ -57,7 +57,7 @@ export default function ProductDetailPage() {
         <span className="text-6xl">🔍</span>
         <h1 className="font-display text-2xl font-bold text-cream">Product not found</h1>
         <p className="text-cream/55">It may have been removed or the link is wrong.</p>
-        <Link to="/products" className="rounded-full bg-saffron px-5 py-2.5 font-bold text-bg">
+        <Link to="/products" className="btn-grad btn-wm-arrow rounded-full px-5 py-2.5 font-bold">
           Browse products
         </Link>
       </div>
@@ -220,7 +220,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={() => setQty((q) => Math.min(product!.stockQuantity, q + 1))}
                 disabled={qty >= product.stockQuantity}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.6)] hover:scale-105 active:scale-90 disabled:opacity-40"
+                className="btn-icon-grad flex h-9 w-9 items-center justify-center rounded-full transition hover:scale-105 active:scale-90 disabled:opacity-40"
                 aria-label="Increase"
               >
                 <Plus className="h-4 w-4" />
@@ -230,7 +230,7 @@ export default function ProductDetailPage() {
             <button
               onClick={handleAdd}
               disabled={isOutOfStock}
-              className="flex flex-1 items-center justify-center gap-2 rounded-full bg-saffron px-6 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition hover:bg-saffron/90 hover:shadow-[0_0_28px_-6px_hsl(var(--saffron)/0.65)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn-grad btn-wm-bag flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold uppercase tracking-[0.14em] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ShoppingBag className="h-4 w-4" />
               {isOutOfStock ? 'Sold out' : 'Add to Cart'}
@@ -241,8 +241,8 @@ export default function ProductDetailPage() {
               className={cn(
                 'flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition',
                 wishlisted
-                  ? 'bg-saffron text-bg shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)]'
-                  : 'border border-line bg-surface text-cream/70 hover:border-saffron/40 hover:bg-surface-2 hover:text-saffron',
+                  ? 'btn-icon-grad shadow-[0_0_16px_-4px_hsl(var(--saffron)/0.6)]'
+                  : 'btn-outline-grad border border-line/50 hover:text-saffron',
               )}
               aria-label="Toggle wishlist"
             >
@@ -272,8 +272,8 @@ export default function ProductDetailPage() {
       <motion.div
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-bg/95 backdrop-blur md:hidden"
-        style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}
+        className="fixed inset-x-0 z-[42] border-t border-line bg-bg/95 backdrop-blur md:hidden"
+        style={{ bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))', paddingBottom: '0.75rem' }}
       >
         <div className="container flex items-center gap-3 py-3">
           <div className="flex items-center gap-0.5 rounded-full border border-line bg-bg p-1">
@@ -291,7 +291,7 @@ export default function ProductDetailPage() {
             <button
               onClick={() => setQty((q) => Math.min(product!.stockQuantity, q + 1))}
               disabled={qty >= product.stockQuantity}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-saffron text-bg transition hover:bg-saffron/90 active:scale-90 disabled:opacity-40"
+              className="btn-icon-grad flex h-9 w-9 items-center justify-center rounded-full transition active:scale-90 disabled:opacity-40"
               aria-label="Increase"
             >
               <Plus className="h-4 w-4" />
@@ -301,7 +301,7 @@ export default function ProductDetailPage() {
           <button
             onClick={handleAdd}
             disabled={isOutOfStock}
-            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-saffron py-3 font-bold text-bg transition active:scale-[0.98] disabled:opacity-50 min-h-[44px]"
+            className="btn-grad btn-wm-bag flex flex-1 items-center justify-center gap-2 rounded-full py-3 font-bold transition active:scale-[0.98] disabled:opacity-50 min-h-[44px]"
           >
             <ShoppingBag className="h-4 w-4" />
             {isOutOfStock ? 'Sold out' : `Add · ${formatPaisa(product.effectivePriceInPaisa * qty)}`}

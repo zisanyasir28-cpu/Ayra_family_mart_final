@@ -70,10 +70,10 @@ export function InstallPrompt() {
           animate={{ y: 0, opacity: 1 }}
           exit={{    y: 100, opacity: 0 }}
           transition={{ type: 'spring', damping: 22, stiffness: 280 }}
-          className="fixed inset-x-3 bottom-3 z-50 flex items-center gap-3 rounded-2xl border border-saffron/30 bg-surface px-4 py-3 shadow-lift sm:left-auto sm:right-4 sm:max-w-sm"
-          style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}
+          className="fixed inset-x-3 z-50 flex items-center gap-3 rounded-2xl border border-saffron/30 bg-surface px-4 py-3 shadow-lift sm:left-auto sm:right-4 sm:bottom-4 sm:max-w-sm"
+          style={{ bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px) + 0.75rem)' }}
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-saffron text-bg">
+          <div className="btn-icon-grad flex h-10 w-10 shrink-0 items-center justify-center rounded-xl">
             <Download className="h-5 w-5" />
           </div>
           <div className="min-w-0 flex-1">
@@ -82,7 +82,7 @@ export function InstallPrompt() {
           </div>
           <button
             onClick={handleInstall}
-            className="rounded-full bg-saffron px-3.5 py-1.5 text-xs font-bold text-bg transition hover:bg-saffron/90"
+            className="btn-grad rounded-full px-3.5 py-1.5 text-xs font-bold"
           >
             Install
           </button>

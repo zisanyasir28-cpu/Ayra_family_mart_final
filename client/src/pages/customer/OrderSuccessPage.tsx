@@ -87,13 +87,13 @@ export default function OrderSuccessPage() {
       >
         <Link
           to={`/orders/${id}`}
-          className="inline-flex items-center gap-2 rounded-full border border-line/50 bg-surface/60 px-5 py-2.5 text-sm font-medium text-cream transition-all hover:border-saffron/40 hover:text-saffron"
+          className="btn-outline-grad inline-flex items-center gap-2 rounded-full border border-line/50 px-5 py-2.5 text-sm font-medium transition-all"
         >
           <Package className="h-4 w-4" /> Track this order
         </Link>
         <Link
           to="/products"
-          className="inline-flex items-center gap-2 rounded-full bg-saffron px-5 py-2.5 text-sm font-bold uppercase tracking-[0.12em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)]"
+          className="btn-grad btn-wm-arrow inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold uppercase tracking-[0.12em] transition-all"
         >
           <ShoppingBag className="h-4 w-4" /> Continue shopping
         </Link>

@@ -216,7 +216,7 @@ export default function CheckoutPage() {
                     type="button"
                     disabled={!selectedAddressId}
                     onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)] active:scale-95 disabled:opacity-50"
+                    className="btn-grad btn-wm-check inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold uppercase tracking-[0.14em] transition-all active:scale-95 disabled:opacity-50"
                   >
                     Continue to review <ArrowRight className="h-4 w-4" />
                   </button>
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                         type="button"
                         onClick={handleApplyCoupon}
                         disabled={!couponInput.trim() || couponLoading}
-                        className="rounded-full bg-saffron px-4 py-2 text-sm font-semibold text-bg hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.5)] disabled:opacity-50 transition-all"
+                        className="btn-grad btn-wm-tag rounded-full px-4 py-2 text-sm font-semibold transition-all disabled:opacity-50"
                       >
                         {couponLoading ? 'Checking…' : 'Apply'}
                       </button>
@@ -305,14 +305,14 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-cream active:scale-95"
+                    className="btn-outline-grad inline-flex items-center gap-2 rounded-full border border-line/50 px-5 py-2.5 text-sm font-medium transition active:scale-95"
                   >
                     <ArrowLeft className="h-4 w-4" /> Back
                   </button>
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_20px_-4px_hsl(var(--saffron)/0.6)] active:scale-95"
+                    className="btn-grad btn-wm-check inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-bold uppercase tracking-[0.14em] transition-all active:scale-95"
                   >
                     Continue to payment <ArrowRight className="h-4 w-4" />
                   </button>
@@ -353,7 +353,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-cream active:scale-95"
+                    className="btn-outline-grad inline-flex items-center gap-2 rounded-full border border-line/50 px-5 py-2.5 text-sm font-medium transition active:scale-95"
                   >
                     <ArrowLeft className="h-4 w-4" /> Back
                   </button>
@@ -362,8 +362,8 @@ export default function CheckoutPage() {
                     onClick={handlePlaceOrder}
                     disabled={placing}
                     className={cn(
-                      'inline-flex items-center gap-2 rounded-full bg-saffron px-7 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-bg transition-all active:scale-95',
-                      'hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.65)] disabled:opacity-60',
+                      'btn-grad btn-wm-check inline-flex items-center gap-2 rounded-full px-7 py-2.5 text-sm font-bold uppercase tracking-[0.14em] transition-all active:scale-95',
+                      'disabled:opacity-60',
                     )}
                   >
                     {placing ? (
@@ -390,8 +390,8 @@ export default function CheckoutPage() {
 
       {/* Mobile sticky total bar */}
       <div
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-bg/95 backdrop-blur md:hidden"
-        style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom, 0px))' }}
+        className="fixed inset-x-0 z-[42] border-t border-line bg-bg/95 backdrop-blur md:hidden"
+        style={{ bottom: 'calc(3.5rem + env(safe-area-inset-bottom, 0px))', paddingBottom: '0.5rem' }}
       >
         <div className="container flex items-center justify-between py-3">
           <div>

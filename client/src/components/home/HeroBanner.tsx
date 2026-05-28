@@ -393,7 +393,7 @@ export function HeroBanner() {
                   'group relative inline-flex items-center overflow-hidden rounded-lg font-bold uppercase tracking-[0.16em] transition-all duration-150 hover:brightness-105 active:scale-95',
                   isLight
                     ? 'gap-1.5 px-4 py-2 text-xs sm:gap-2.5 sm:px-7 sm:py-3.5 sm:text-sm active:translate-y-[3px]'
-                    : 'gap-2.5 px-7 py-3.5 text-sm bg-gradient-to-r from-saffron via-saffron to-blush text-bg shadow-[0_8px_28px_-8px_hsl(var(--saffron)/0.6)]'
+                    : 'btn-grad btn-wm-arrow gap-2.5 px-7 py-3.5 text-sm'
                 )}
                 style={isLight ? {
                   background: 'linear-gradient(175deg, hsl(145 50% 28%) 0%, hsl(145 64% 14%) 100%)',

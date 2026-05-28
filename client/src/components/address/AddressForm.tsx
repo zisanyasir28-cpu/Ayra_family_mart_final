@@ -141,7 +141,7 @@ export function AddressForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full border border-line/50 bg-surface/60 px-4 py-2 text-sm font-medium text-cream transition-all hover:border-saffron/40 hover:text-saffron"
+            className="btn-outline-grad rounded-full border border-line/50 px-4 py-2 text-sm font-medium transition-all"
           >
             Cancel
           </button>
@@ -149,7 +149,7 @@ export function AddressForm({
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-full bg-saffron px-5 py-2 text-sm font-bold text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_16px_-2px_hsl(var(--saffron)/0.5)] disabled:opacity-50"
+          className="btn-grad btn-wm-pin rounded-full px-5 py-2 text-sm font-bold transition-all disabled:opacity-50"
         >
           {submitting ? 'Saving…' : submitLabel}
         </button>

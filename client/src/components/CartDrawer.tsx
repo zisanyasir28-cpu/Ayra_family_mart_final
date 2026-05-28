@@ -94,7 +94,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               </div>
               <button
                 onClick={onClose}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:bg-saffron/10 hover:text-saffron active:scale-90"
+                className="btn-outline-grad flex h-9 w-9 items-center justify-center rounded-full text-cream/70 transition hover:text-saffron active:scale-90"
                 aria-label="Close cart"
               >
                 <X className="h-4 w-4" />
@@ -154,7 +154,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                 <Link
                   to="/products"
                   onClick={onClose}
-                  className="group inline-flex items-center gap-2 rounded-full bg-saffron px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_24px_-4px_hsl(var(--saffron)/0.65)]"
+                  className="btn-grad btn-wm-arrow group inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold uppercase tracking-[0.18em] transition-all"
                 >
                   Browse products
                   <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-1" />
@@ -212,7 +212,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                                   <button
                                     onClick={() => updateQuantity(item.productId, item.quantity + 1, item.variantId)}
                                     disabled={item.quantity >= item.stock}
-                                    className="flex h-7 w-7 items-center justify-center rounded-full bg-saffron text-bg transition hover:shadow-[0_0_12px_-2px_hsl(var(--saffron)/0.7)] hover:scale-105 active:scale-90 disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="btn-icon-grad flex h-7 w-7 items-center justify-center rounded-full transition hover:scale-105 active:scale-90 disabled:cursor-not-allowed"
                                   >
                                     <PlusIcon size={12} />
                                   </button>
@@ -270,7 +270,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                         <button
                           onClick={() => void handleApplyCoupon()}
                           disabled={!couponInput.trim() || couponLoading}
-                          className="rounded-full bg-saffron px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-bg transition hover:shadow-[0_0_18px_-4px_hsl(var(--saffron)/0.65)] hover:bg-saffron/90 active:scale-95 disabled:opacity-50"
+                          className="btn-grad btn-wm-tag rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] transition active:scale-95"
                         >
                           {couponLoading ? '…' : 'Apply'}
                         </button>
@@ -308,14 +308,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                   <Link
                     to="/checkout"
                     onClick={onClose}
-                    className="group/co mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-saffron py-4 text-sm font-bold uppercase tracking-[0.18em] text-bg transition-all hover:bg-saffron/90 hover:shadow-[0_0_28px_-4px_hsl(var(--saffron)/0.7)] active:scale-[0.98]"
+                    className="btn-grad btn-wm-bag group/co mt-5 flex w-full items-center justify-center gap-3 rounded-full py-4 text-sm font-bold uppercase tracking-[0.18em] transition-all active:scale-[0.98]"
                   >
                     Proceed to checkout
                     <ArrowRightIcon size={14} strokeWidth={2} className="transition-transform duration-300 group-hover/co:translate-x-1" />
                   </Link>
                   <button
                     onClick={onClose}
-                    className="mt-2 w-full rounded-full py-2.5 text-center text-xs uppercase tracking-[0.18em] text-cream/55 transition hover:text-cream"
+                    className="btn-outline-grad mt-2 w-full rounded-full border border-transparent py-2.5 text-center text-xs uppercase tracking-[0.18em] transition"
                   >
                     Continue shopping
                   </button>

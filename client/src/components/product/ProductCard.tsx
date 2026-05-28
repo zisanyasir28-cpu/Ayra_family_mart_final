@@ -278,7 +278,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
                             : 'transition-all hover:scale-105 active:translate-y-[2px] active:scale-100'
                           : addedFlash
                             ? 'bg-sage text-bg shadow-[0_0_10px_-2px_hsl(var(--sage)/0.65)] transition-all active:scale-90'
-                            : 'bg-saffron text-bg shadow-[0_3px_10px_-2px_hsl(var(--saffron)/0.5)] hover:bg-saffron/90 hover:shadow-[0_4px_16px_-2px_hsl(var(--saffron)/0.7)] hover:scale-105 transition-all active:scale-90',
+                            : 'btn-icon-grad hover:scale-105 transition-all active:scale-90',
                       )}
                       style={isLight ? (addedFlash ? {
                         background: 'hsl(158 56% 36%)',
@@ -334,7 +334,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
                         onClick={() => increment(product.id, qty, product.stockQuantity)}
                         className={cn(
                           'flex h-5 w-5 items-center justify-center rounded-full transition-all hover:scale-105 active:scale-90 sm:h-6 sm:w-6',
-                          isLight ? 'text-white' : 'bg-saffron text-bg hover:bg-saffron/90',
+                          isLight ? 'text-white' : 'btn-icon-grad hover:scale-105',
                         )}
                         style={isLight ? {
                           background: 'linear-gradient(175deg, hsl(145 52% 26%) 0%, hsl(145 65% 14%) 100%)',

@@ -32,13 +32,13 @@ export default function WishlistPage() {
         <div className="flex gap-3">
           <Link
             to="/login"
-            className="rounded-full bg-saffron px-6 py-3 font-bold text-bg transition hover:bg-saffron/90"
+            className="btn-grad rounded-full px-6 py-3 font-bold transition"
           >
             Log in
           </Link>
           <Link
             to="/register"
-            className="rounded-full border border-line/50 bg-surface/60 px-6 py-3 text-cream/70 transition hover:border-saffron/40 hover:text-cream"
+            className="btn-outline-grad rounded-full border border-line/50 px-6 py-3 transition"
           >
             Register
           </Link>
@@ -78,7 +78,7 @@ export default function WishlistPage() {
         </div>
         <Link
           to="/products"
-          className="flex items-center gap-2 rounded-full bg-saffron px-6 py-3 font-bold text-bg transition hover:bg-saffron/90"
+          className="btn-grad btn-wm-arrow flex items-center gap-2 rounded-full px-6 py-3 font-bold transition"
         >
           <ShoppingBag className="h-4 w-4" />
           Browse Products
