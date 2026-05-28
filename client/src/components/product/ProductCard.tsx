@@ -76,10 +76,10 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
         'transition-all duration-300 ease-editorial',
         isLight ? [
           'rounded-sm',
-          'from-[hsl(42_62%_68%)] via-[hsl(140_40%_60%)] to-[hsl(35_66%_62%)]',
-          'hover:from-[hsl(42_72%_60%)] hover:via-[hsl(140_50%_52%)] hover:to-[hsl(35_72%_56%)]',
+          'from-[hsl(42_18%_86%/0.6)] via-[hsl(140_14%_88%/0.5)] to-[hsl(35_16%_86%/0.6)]',
+          'hover:from-[hsl(42_48%_70%/0.85)] hover:via-[hsl(140_36%_68%/0.75)] hover:to-[hsl(35_44%_68%/0.85)]',
           'hover:-translate-y-[5px]',
-          'hover:shadow-[0_14px_40px_-8px_hsl(42_80%_50%/0.38),_0_4px_16px_-4px_hsl(140_52%_35%/0.24)]',
+          'hover:shadow-[0_14px_40px_-8px_hsl(42_70%_44%/0.22),_0_4px_16px_-4px_hsl(140_45%_32%/0.16)]',
         ] : [
           'rounded-3xl',
           'from-white/30 via-saffron/20 to-plum/12',
