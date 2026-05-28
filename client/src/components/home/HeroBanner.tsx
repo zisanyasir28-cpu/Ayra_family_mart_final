@@ -523,7 +523,7 @@ export function HeroBanner() {
                   className="relative z-10 h-[252px] w-[252px] overflow-hidden rounded-full border border-saffron/20 shadow-[0_0_60px_-20px_hsl(var(--saffron)/0.5)] sm:h-[336px] sm:w-[336px]"
                 >
                   <img
-                    src="https://res.cloudinary.com/dzhj5tgyv/image/upload/e_background_removal/e_trim/c_pad,h_672,w_672/e_sharpen:50/f_auto/q_auto/v1780011620/neon-bg_lj5fxn.png"
+                    src="https://res.cloudinary.com/dzhj5tgyv/image/upload/e_background_removal/e_trim/c_pad,h_480,w_480/e_sharpen:30/q_auto:low/f_auto/v1780011620/neon-bg_lj5fxn.png"
                     alt="Fresh groceries & daily essentials"
                     className="h-full w-full object-contain"
                     loading="eager"
