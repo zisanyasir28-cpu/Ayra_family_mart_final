@@ -67,9 +67,9 @@ export default function OrdersPage() {
       </nav>
 
       <div className="relative mt-6 space-y-3">
-        {/* Fetching overlay — shown on page/filter change */}
+        {/* Fetching overlay — fixed to viewport centre on page/filter change */}
         {isFetching && !isLoading && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-bg/50 backdrop-blur-[2px]">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/40 backdrop-blur-[2px]">
             <AyraSpinner />
           </div>
         )}

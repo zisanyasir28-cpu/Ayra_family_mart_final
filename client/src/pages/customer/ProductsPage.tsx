@@ -276,9 +276,9 @@ export default function ProductsPage() {
 
         {/* Product grid */}
         <div className="relative min-w-0 flex-1">
-          {/* Fetching overlay — shown on page change (old data still visible) */}
+          {/* Fetching overlay — fixed to viewport centre on page change */}
           {isFetching && !isLoading && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-bg/50 backdrop-blur-[2px]">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/40 backdrop-blur-[2px]">
               <AyraSpinner />
             </div>
           )}
