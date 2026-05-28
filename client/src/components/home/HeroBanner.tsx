@@ -473,7 +473,7 @@ export function HeroBanner() {
           </div>
 
           {/* ── Right: Farm photo (light) / Neon ring (dark) + floating cards ── */}
-          <div className="relative mx-auto flex w-full max-w-[46px] flex-1 items-center justify-center lg:mx-0 lg:max-w-none">
+          <div className="relative mx-auto flex w-full flex-1 items-center justify-center lg:mx-0">
 
             {isLight ? (
               /* ── LIGHT MODE right column ────────────────────────────────────
@@ -538,54 +538,74 @@ export function HeroBanner() {
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
               whileHover={{ y: -3 }}
-              className="absolute -right-3 top-2 z-20 sm:-right-2 sm:top-6"
+              className="absolute right-2 top-[22%] z-20 lg:-right-2 lg:top-6"
             >
-              {/* Coral neon ring border */}
+              {/* Ring border — green glass in light, coral in dark */}
               <div
-                className="group rounded-sm bg-gradient-to-br from-coral/60 via-saffron/40 to-coral/20 p-[1.5px] transition-all duration-300 hover:from-coral/75 hover:via-saffron/60 hover:to-coral/35"
+                className={cn(
+                  'group rounded-sm p-[1.5px] transition-all duration-300',
+                  isLight
+                    ? 'bg-gradient-to-br from-[hsl(142_55%_32%)]/75 via-[hsl(142_40%_18%)]/55 to-[hsl(142_55%_32%)]/40 hover:from-[hsl(142_55%_38%)]/90 hover:via-[hsl(142_40%_22%)]/70 hover:to-[hsl(142_55%_38%)]/55'
+                    : 'bg-gradient-to-br from-coral/60 via-saffron/40 to-coral/20 hover:from-coral/75 hover:via-saffron/60 hover:to-coral/35',
+                )}
                 style={{
-                  boxShadow:
-                    '0 0 7px -8px hsl(var(--coral)/0.55), 0 0 8px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
+                  boxShadow: isLight
+                    ? '0 0 12px -4px hsl(142 60% 28% / 0.55), 0 10px 28px -10px hsl(142 50% 18% / 0.45)'
+                    : '0 0 7px -8px hsl(var(--coral)/0.55), 0 0 8px -10px hsl(var(--coral)/0.4), 0 10px 28px -14px hsl(var(--coral)/0.5)',
                 }}
               >
-                {/* Inner glass surface — always dark in both themes */}
-                <div className="relative min-w-[145px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-surface-dark/90 p-3.5 backdrop-blur-xl">
-                  {/* Inner coral wash for warmth */}
+                {/* Inner glass surface — narrow + tall */}
+                <div className="relative w-[118px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-surface-dark/86 px-3.5 py-4 backdrop-blur-xl">
+                  {/* Inner wash — green in light, coral in dark */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-br from-coral/15 via-transparent to-saffron/8"
+                    className={cn(
+                      'pointer-events-none absolute inset-0 bg-gradient-to-br',
+                      isLight
+                        ? 'from-[hsl(142_50%_18%)]/22 via-transparent to-[hsl(142_65%_35%)]/10'
+                        : 'from-coral/15 via-transparent to-saffron/8',
+                    )}
                   />
                   {/* Decorative BadgePercent watermark — bottom-right corner */}
                   <BadgePercent
                     aria-hidden
-                    className="pointer-events-none absolute -bottom-2 -right-2 h-14 w-14 text-coral/15"
+                    className={cn(
+                      'pointer-events-none absolute -bottom-2 -right-2 h-14 w-14',
+                      isLight ? 'text-[hsl(142_50%_45%)]/18' : 'text-coral/15',
+                    )}
                     strokeWidth={1.5}
                   />
-                  {/* Sparkle accent — top-right, theme-aware */}
+                  {/* Sparkle accent */}
                   <div
                     aria-hidden
                     className="pointer-events-none absolute right-2.5 top-2.5 h-1 w-1 rounded-full"
                     style={{
-                      background: 'hsl(var(--shine-color) / 0.65)',
-                      boxShadow:  '0 0 8px 2px hsl(var(--shine-color) / 0.5)',
+                      background: isLight ? 'hsl(142 70% 55% / 0.7)' : 'hsl(var(--shine-color) / 0.65)',
+                      boxShadow:  isLight ? '0 0 8px 2px hsl(142 70% 55% / 0.5)' : '0 0 8px 2px hsl(var(--shine-color) / 0.5)',
                     }}
                   />
-                  {/* Glass shine arc — top-left */}
+                  {/* Glass shine arc */}
                   <div
                     aria-hidden
                     className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(0_0%_100%/0.12)_0%,transparent_45%)]"
                   />
 
-                  {/* "SPECIAL OFFER" — eyebrow label */}
-                  <p className="relative text-[9px] font-bold uppercase tracking-[0.2em] text-coral [text-shadow:0_1px_4px_rgba(0,0,0,0.7)]">
+                  {/* "SPECIAL OFFER" — white in light, coral in dark */}
+                  <p className={cn(
+                    'relative text-[9px] font-bold uppercase tracking-[0.2em] [text-shadow:0_1px_4px_rgba(0,0,0,0.7)]',
+                    isLight ? 'text-white/90' : 'text-coral',
+                  )}>
                     Special Offer
                   </p>
 
-                  {/* "40% OFF" — gradient on "40%", solid on "OFF" */}
-                  <p className="relative font-display text-2xl font-black leading-none sm:text-[1.7rem]">
+                  {/* "40%" + "OFF" stacked — tall card, no wrap */}
+                  <div className="relative mt-0.5 leading-none">
                     <span
+                      className="block font-display text-[2rem] font-black"
                       style={{
-                        background: 'linear-gradient(to right, hsl(var(--saffron)), hsl(var(--blush)))',
+                        background: isLight
+                          ? 'linear-gradient(160deg, hsl(142 72% 60%) 0%, hsl(142 60% 28%) 100%)'
+                          : 'linear-gradient(to right, hsl(var(--saffron)), hsl(var(--blush)))',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                         backgroundClip: 'text',
@@ -593,20 +613,25 @@ export function HeroBanner() {
                     >
                       40%
                     </span>
-                    <span className="ml-1 text-dark-fg [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]">
+                    <span className="block font-display text-[1.15rem] font-black text-dark-fg [text-shadow:0_2px_8px_rgba(0,0,0,0.7)]">
                       OFF
                     </span>
-                  </p>
+                  </div>
 
-                  {/* "This Week Only" — readable supporting line */}
+                  {/* "This Week Only" */}
                   <p className="relative mt-1 text-[10.5px] font-semibold text-dark-fg/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.75)]">
                     This Week Only
                   </p>
 
-                  {/* Shop Now — saffron→blush neon pill */}
+                  {/* Shop Now pill — green in light, saffron→blush in dark */}
                   <Link
                     to="/products?onSale=true"
-                    className="relative mt-3 inline-flex items-center gap-1.5 rounded-sm bg-gradient-to-r from-saffron to-blush px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-bg shadow-[0_0_14px_-2px_hsl(var(--saffron)/0.7)] transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_20px_-2px_hsl(var(--saffron)/0.95)]"
+                    className={cn(
+                      'relative mt-3 inline-flex w-full items-center justify-center gap-1 whitespace-nowrap rounded-sm px-2 py-1.5 text-[10px] font-bold uppercase tracking-[0.06em] text-white transition-all duration-300 hover:scale-[1.05]',
+                      isLight
+                        ? 'bg-gradient-to-r from-[hsl(142_55%_22%)] to-[hsl(142_65%_38%)] shadow-[0_0_14px_-2px_hsl(142_55%_28%/0.65)] hover:shadow-[0_0_20px_-2px_hsl(142_65%_38%/0.9)]'
+                        : 'bg-gradient-to-r from-saffron to-blush text-bg shadow-[0_0_14px_-2px_hsl(var(--saffron)/0.7)] hover:shadow-[0_0_20px_-2px_hsl(var(--saffron)/0.95)]',
+                    )}
                   >
                     Shop Now
                     <ArrowIcon size={10} />
