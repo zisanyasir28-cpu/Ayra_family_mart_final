@@ -175,7 +175,9 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
   await redisSet(REDIS_KEYS.refreshTokenFamily(newFamily), user.id, REFRESH_TTL_SEC);
   setRefreshCookie(res, newRefreshToken);
 
-  return sendSuccess(res, { accessToken: newAccessToken });
+  // Return user alongside the new access token so AuthProvider can
+  // restore the full user object (including role) on every page load.
+  return sendSuccess(res, { user: toUserPublic(user), accessToken: newAccessToken });
 });
 
 // ─── Logout ───────────────────────────────────────────────────────────────────
