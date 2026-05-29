@@ -42,7 +42,12 @@ export default function LoginPage() {
       const { data } = await api.post<LoginResponse>('/auth/login', values);
       setAuth(data.data.user, data.data.accessToken);
       toast.success(`Welcome back, ${data.data.user.name.split(' ')[0]}.`);
-      navigate(redirect, { replace: true });
+      const role = data.data.user.role;
+      if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate(redirect, { replace: true });
+      }
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { error?: { message?: string } } } })
