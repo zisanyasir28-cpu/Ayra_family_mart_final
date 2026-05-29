@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ayra-family-mart-final-client.vercel.app/sitemap.xml
