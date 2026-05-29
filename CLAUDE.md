@@ -1,5 +1,10 @@
 # Ayra Family Mart — Production Build
 
+## ⚠️ Production URLs (never forget these)
+- **Frontend (PRODUCTION)**: https://ayra-family-mart-final-client.vercel.app/ — Vercel, auto-deploys on every push to `main`
+- **Backend (PRODUCTION)**: https://ayrafamilymartfinal-production.up.railway.app — Railway
+- **GH Pages**: https://zisanyasir28-cpu.github.io/Ayra_family_mart_final/ — preview only, NOT production
+
 ## Business context
 Online superstore for Bangladesh. Customers buy groceries, daily goods, electronics, clothing, and household products. Admin manages products, pricing, orders, discounts, and campaigns. UI is bilingual: English primary, Bangla accents on featured headings and category labels. All prices in BDT (৳), stored as integer paisa in the DB.
 
