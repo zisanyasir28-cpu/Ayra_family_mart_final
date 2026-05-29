@@ -298,10 +298,9 @@
    Scrollbar — slim, themed
    ──────────────────────────────────────────────────────────────────────────── */
 
-::-webkit-scrollbar              { width: 8px; height: 8px; }
-::-webkit-scrollbar-track        { background: hsl(var(--bg)); }
-::-webkit-scrollbar-thumb        { background: hsl(var(--line)); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover  { background: hsl(var(--muted-fg) / 0.5); }
+/* Hide all scrollbars — both modes */
+*                    { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { display: none; }
 
 @utility scrollbar-hide {
   -ms-overflow-style: none;
