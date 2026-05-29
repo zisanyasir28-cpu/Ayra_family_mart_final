@@ -440,6 +440,26 @@ export const adminGetAllOrders = asyncHandler(async (req: Request, res: Response
   return sendSuccess(res, orders, 200, buildPagination(q.page, q.limit, total));
 });
 
+// ─── Admin: get single order by id ───────────────────────────────────────────
+
+export const adminGetOrderById = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+
+  const order = await prisma.order.findUnique({
+    where: { id },
+    include: {
+      items:         true,
+      statusHistory: { orderBy: { createdAt: 'asc' } },
+      payment:       true,
+      user:          { select: { id: true, name: true, email: true } },
+    },
+  });
+
+  if (!order) throw ApiError.notFound('Order');
+
+  return sendSuccess(res, order);
+});
+
 // ─── Admin: update status ─────────────────────────────────────────────────────
 
 export const adminUpdateOrderStatus = asyncHandler(async (req: Request, res: Response) => {

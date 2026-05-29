@@ -8,6 +8,7 @@ import {
   getMyOrderById,
   cancelOrder,
   adminGetAllOrders,
+  adminGetOrderById,
   adminUpdateOrderStatus,
 } from '../controllers/order.controller';
 import {
@@ -41,7 +42,8 @@ customerOrderRouter.patch('/me/:id/cancel',
 export const adminOrderRouter = Router();
 adminOrderRouter.use(requireAdmin);
 
-adminOrderRouter.get('/',    validate(orderQuerySchema, 'query'), adminGetAllOrders);
+adminOrderRouter.get('/',     validate(orderQuerySchema, 'query'),    adminGetAllOrders);
+adminOrderRouter.get('/:id',  validate(orderIdParamSchema, 'params'),  adminGetOrderById);
 adminOrderRouter.patch('/:id/status',
   validate(orderIdParamSchema, 'params'),
   validate(updateOrderStatusSchema),
