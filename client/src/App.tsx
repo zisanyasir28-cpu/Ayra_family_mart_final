@@ -35,6 +35,7 @@ const AdminOrderDetailPage = lazy(() => import('./pages/admin/orders/OrderDetail
 const AdminCustomersPage   = lazy(() => import('./pages/admin/customers/CustomersPage'));
 const AdminCouponsPage     = lazy(() => import('./pages/admin/coupons/CouponsPage'));
 const AdminCampaignsPage   = lazy(() => import('./pages/admin/campaigns/CampaignsPage'));
+const AdminInventoryPage   = lazy(() => import('./pages/admin/inventory/InventoryPage'));
 
 // ─── Loaders ─────────────────────────────────────────────────────────────────
 
@@ -148,6 +149,14 @@ export default function App() {
           element={
             <Suspense fallback={<AdminLoader />}>
               <AdminCampaignsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="inventory"
+          element={
+            <Suspense fallback={<AdminLoader />}>
+              <AdminInventoryPage />
             </Suspense>
           }
         />

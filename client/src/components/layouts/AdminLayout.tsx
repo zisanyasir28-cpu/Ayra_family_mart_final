@@ -16,6 +16,7 @@ import {
   Bell,
   ChevronRight,
   PanelLeft,
+  Warehouse,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
@@ -27,6 +28,7 @@ import { UserRole } from '@superstore/shared';
 const NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard',  to: '/admin',            end: true  },
   { icon: Package,         label: 'Products',   to: '/admin/products',   end: false },
+  { icon: Warehouse,       label: 'Inventory',  to: '/admin/inventory',  end: false },
   { icon: Tag,             label: 'Categories', to: '/admin/categories', end: false },
   { icon: ShoppingCart,    label: 'Orders',     to: '/admin/orders',     end: false },
   { icon: Users,           label: 'Customers',  to: '/admin/customers',  end: false },

@@ -208,6 +208,17 @@ export async function patchProductStatus(
   return res.data.data;
 }
 
+export async function patchProductStock(
+  id: string,
+  stockQuantity: number,
+): Promise<ApiProduct> {
+  const res = await api.patch<ApiSuccessResponse<ApiProduct>>(
+    `/products/${id}`,
+    { stockQuantity },
+  );
+  return res.data.data;
+}
+
 export async function deleteAdminProduct(id: string): Promise<void> {
   await api.delete(`/products/${id}`);
 }
