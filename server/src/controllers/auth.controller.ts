@@ -64,18 +64,29 @@ function signRefresh(sub: string, tokenFamily: string): string {
   } as jwt.SignOptions);
 }
 
+const IS_PROD = process.env['NODE_ENV'] === 'production';
+
 function setRefreshCookie(res: Response, token: string): void {
   res.cookie('refreshToken', token, {
     httpOnly: true,
-    secure: process.env['NODE_ENV'] === 'production',
-    sameSite: 'lax',
-    maxAge: REFRESH_TTL_SEC * 1000,
-    path: '/api/v1/auth',
+    secure:   IS_PROD,
+    // 'none' is required for cross-origin cookie delivery (Vercel → Railway).
+    // SameSite=None mandates Secure=true, which is guaranteed by IS_PROD above.
+    // In local dev (same origin / localhost) 'lax' is fine and avoids the need for HTTPS.
+    sameSite: IS_PROD ? 'none' : 'lax',
+    maxAge:   REFRESH_TTL_SEC * 1000,
+    path:     '/api/v1/auth',
   });
 }
 
 function clearRefreshCookie(res: Response): void {
-  res.clearCookie('refreshToken', { httpOnly: true, path: '/api/v1/auth' });
+  // Must mirror the same flags used when setting or the browser won't clear it
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure:   IS_PROD,
+    sameSite: IS_PROD ? 'none' : 'lax',
+    path:     '/api/v1/auth',
+  });
 }
 
 // ─── Register ─────────────────────────────────────────────────────────────────
