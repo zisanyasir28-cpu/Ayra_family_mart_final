@@ -469,7 +469,7 @@ export default function ProductsListPage() {
 
       {/* ── Bulk actions bar ─────────────────────────────────────────────────── */}
       {someSelected && (
-        <div className="flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5">
+        <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5">
           <span className="text-sm font-medium text-primary">
             {selected.size} selected
           </span>
@@ -681,7 +681,7 @@ export default function ProductsListPage() {
 
         {/* ── Pagination ─────────────────────────────────────────────────────── */}
         {pagination && (
-          <div className="flex items-center justify-between border-t border-border px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-y-2 border-t border-border px-3 py-3">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>
                 {(page - 1) * limit + 1}–{Math.min(page * limit, pagination.total)} of{' '}

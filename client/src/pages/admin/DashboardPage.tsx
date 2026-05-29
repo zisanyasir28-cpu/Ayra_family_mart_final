@@ -55,7 +55,7 @@ function StatCard({
           <Icon className="h-4 w-4" />
         </span>
       </div>
-      <p className="mt-3 text-2xl font-bold text-foreground">{value}</p>
+      <p className="mt-3 text-xl font-bold text-foreground sm:text-2xl">{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{sub}</p>
     </div>
   );

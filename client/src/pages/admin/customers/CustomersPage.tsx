@@ -303,8 +303,54 @@ export default function CustomersPage() {
           />
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+        {/* Mobile card list */}
+        <div className="space-y-2 md:hidden">
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl border border-border bg-card" />
+            ))
+          ) : customers.length === 0 ? (
+            <div className="rounded-xl border border-border bg-card py-10 text-center text-sm text-muted-foreground">
+              No customers found.
+            </div>
+          ) : (
+            customers.map((c: ApiCustomer) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setSelectedId(c.id)}
+                className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-3 text-left transition active:scale-[0.99]"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                  {initials(c.name)}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium text-foreground">{c.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">{c.email}</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">
+                    {c._count.orders} orders · {formatPaisa(c.totalSpentInPaisa)}
+                  </p>
+                </div>
+                <div className="flex shrink-0 flex-col items-end gap-1.5">
+                  <span className={cn(
+                    'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                    c.isActive
+                      ? 'bg-emerald-500/15 text-emerald-500'
+                      : 'bg-rose-500/15 text-rose-500',
+                  )}>
+                    {c.isActive ? 'Active' : 'Banned'}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground">
+                    {format(new Date(c.createdAt), 'dd MMM yyyy')}
+                  </span>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden overflow-x-auto rounded-2xl border border-border bg-card md:block">
           <table className="w-full text-sm">
             <thead className="border-b border-border">
               <tr className="text-left text-xs text-muted-foreground">
@@ -349,7 +395,7 @@ export default function CustomersPage() {
                         <span className="font-medium text-foreground">{c.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">{c.email}</td>
+                    <td className="max-w-[180px] truncate px-4 py-3 text-muted-foreground">{c.email}</td>
                     <td className="px-4 py-3 text-center text-foreground">{c._count.orders}</td>
                     <td className="px-4 py-3 text-right font-semibold text-foreground">
                       {formatPaisa(c.totalSpentInPaisa)}

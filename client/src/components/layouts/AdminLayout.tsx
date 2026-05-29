@@ -341,8 +341,8 @@ function AdminHeader({ onMenuClick }: HeaderProps) {
       </button>
 
       {/* Breadcrumb + title */}
-      <div className="flex flex-col justify-center">
-        <nav className="flex items-center gap-1 text-xs text-muted-foreground">
+      <div className="min-w-0 flex-1 flex flex-col justify-center">
+        <nav className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground">
           {crumbs.slice(0, -1).map((crumb, i) => (
             <span key={crumb.to} className="flex items-center gap-1">
               {i > 0 && <ChevronRight className="h-3 w-3" />}
@@ -356,7 +356,7 @@ function AdminHeader({ onMenuClick }: HeaderProps) {
           ))}
           {crumbs.length > 1 && <ChevronRight className="h-3 w-3" />}
         </nav>
-        <h1 className="text-base font-semibold leading-tight text-foreground">
+        <h1 className="truncate text-base font-semibold leading-tight text-foreground">
           {pageTitle}
         </h1>
       </div>

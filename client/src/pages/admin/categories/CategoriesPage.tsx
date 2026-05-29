@@ -614,9 +614,9 @@ export default function CategoriesPage() {
     formMode.kind === 'edit' ? formMode.category.id : null;
 
   return (
-    <div className="flex h-full gap-6">
+    <div className="flex flex-col gap-4 md:h-full md:flex-row md:gap-6">
       {/* ── Left: Tree panel ─────────────────────────────────────────────────── */}
-      <div className="flex w-72 shrink-0 flex-col overflow-hidden rounded-xl border border-border bg-card">
+      <div className="flex w-full shrink-0 flex-col overflow-hidden rounded-xl border border-border bg-card md:w-64">
         {/* Tree header */}
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h3 className="text-sm font-semibold text-foreground">Categories</h3>
@@ -630,7 +630,7 @@ export default function CategoriesPage() {
         </div>
 
         {/* Tree */}
-        <div className="flex-1 overflow-y-auto py-2">
+        <div className="max-h-56 overflow-y-auto py-2 md:max-h-none md:flex-1">
           {isLoading ? (
             <div className="flex justify-center py-12">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-border border-t-primary" />
@@ -648,7 +648,7 @@ export default function CategoriesPage() {
       </div>
 
       {/* ── Right: Form / Empty state ─────────────────────────────────────────── */}
-      <div className="flex-1 overflow-hidden rounded-xl border border-border bg-card">
+      <div className="min-h-[300px] flex-1 overflow-hidden rounded-xl border border-border bg-card">
         {formMode.kind === 'idle' ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-muted-foreground">
             <span className="text-5xl">📂</span>

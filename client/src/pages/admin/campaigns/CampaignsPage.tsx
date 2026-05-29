@@ -78,14 +78,14 @@ export default function CampaignsPage() {
   const campaigns = data?.data ?? [];
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-display text-2xl font-extrabold tracking-tight">Campaigns</h1>
           <p className="text-sm text-muted-foreground">Time-bound product discounts and flash sales.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setShowBulkPrice(true)}
