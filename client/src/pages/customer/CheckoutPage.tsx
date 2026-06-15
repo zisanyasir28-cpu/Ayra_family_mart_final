@@ -14,7 +14,13 @@ import { Accordion } from '@/components/common/Accordion';
 import { RadioCard } from '@/components/common/RadioCard';
 import { createOrder, validateCoupon } from '@/services/orders';
 import { formatPaisa, cn } from '@/lib/utils';
-import { PaymentMethod, type AddressInput } from '@superstore/shared';
+import {
+  PaymentMethod,
+  type AddressInput,
+  FREE_DELIVERY_THRESHOLD_PAISA,
+  DELIVERY_FEE_PAISA,
+  COD_SURCHARGE_PAISA,
+} from '@superstore/shared';
 
 const STEPS = ['Delivery', 'Review', 'Payment'];
 
@@ -402,8 +408,8 @@ export default function CheckoutPage() {
               {formatPaisa(
                 subtotalInPaisa
                   - (coupon?.discountInPaisa ?? 0)
-                  + (subtotalInPaisa - (coupon?.discountInPaisa ?? 0) >= 99_900 ? 0 : 6_000)
-                  + (paymentMethod === PaymentMethod.COD ? 2_000 : 0),
+                  + (subtotalInPaisa - (coupon?.discountInPaisa ?? 0) >= FREE_DELIVERY_THRESHOLD_PAISA ? 0 : DELIVERY_FEE_PAISA)
+                  + (paymentMethod === PaymentMethod.COD ? COD_SURCHARGE_PAISA : 0),
               )}
             </p>
           </div>

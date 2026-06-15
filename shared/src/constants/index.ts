@@ -13,6 +13,15 @@ export const CACHE_TTL = {
   DAY: 86400,       // 24 hours
 } as const;
 
+/**
+ * Delivery pricing — single source of truth shared by the server order
+ * calculation and the client cart/checkout display, so the charged fee and the
+ * displayed fee can never drift apart. All values in paisa.
+ */
+export const FREE_DELIVERY_THRESHOLD_PAISA = 99_900; // free delivery at/above ৳999
+export const DELIVERY_FEE_PAISA = 6_000;             // flat ৳60 below the threshold
+export const COD_SURCHARGE_PAISA = 2_000;            // ৳20 extra for cash on delivery
+
 export const PASSWORD_MIN_LENGTH = 8;
 export const PASSWORD_MAX_LENGTH = 72;
 

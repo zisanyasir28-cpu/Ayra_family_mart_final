@@ -16,24 +16,18 @@ import { previewBulkPriceUpdate, applyBulkPriceUpdate } from '@/services/adminBu
 import type { ApiCampaign, ApiCampaignTimeStatus, ApiBulkPricePreview, ApiDiscountType } from '@/types/api';
 import type { CreateCampaignInput, BulkPriceUpdateInput } from '@superstore/shared';
 import { DiscountType } from '@superstore/shared';
+import { Spinner } from '@/components/ui/Spinner';
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 
 // ─── Tiny UI ─────────────────────────────────────────────────────────────────
 
-function Spinner({ className }: { className?: string }) {
-  return <div className={cn('h-4 w-4 animate-spin rounded-full border-2 border-border border-t-primary', className)} />;
-}
-
 function TimeStatusBadge({ status }: { status: ApiCampaignTimeStatus }) {
-  const map: Record<ApiCampaignTimeStatus, string> = {
-    active:   'bg-green-100 text-green-700',
-    upcoming: 'bg-blue-100 text-blue-700',
-    ended:    'bg-gray-100 text-gray-600',
+  const map: Record<ApiCampaignTimeStatus, BadgeTone> = {
+    active:   'green',
+    upcoming: 'blue',
+    ended:    'gray',
   };
-  return (
-    <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide', map[status])}>
-      {status}
-    </span>
-  );
+  return <Badge tone={map[status]}>{status}</Badge>;
 }
 
 function DiscountBadge({ type, value }: { type: ApiDiscountType; value: number }) {

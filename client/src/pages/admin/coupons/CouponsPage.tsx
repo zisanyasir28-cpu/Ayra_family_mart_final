@@ -7,6 +7,10 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn, formatPaisa } from '@/lib/utils';
+import { useDebounce } from '@/hooks/useDebounce';
+import { Spinner } from '@/components/ui/Spinner';
+import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import {
   fetchAdminCoupons,
   createCoupon,
@@ -21,25 +25,15 @@ import type { Resolver } from 'react-hook-form';
 
 // ─── Tiny UI primitives ───────────────────────────────────────────────────────
 
-function Spinner({ className }: { className?: string }) {
-  return (
-    <div className={cn('h-4 w-4 animate-spin rounded-full border-2 border-border border-t-primary', className)} />
-  );
-}
-
 function StatusBadge({ status }: { status: ApiCouponStatus }) {
-  const map: Record<ApiCouponStatus, string> = {
-    active:    'bg-green-100 text-green-700',
-    inactive:  'bg-gray-100 text-gray-600',
-    upcoming:  'bg-blue-100 text-blue-700',
-    expired:   'bg-red-100 text-red-700',
-    exhausted: 'bg-yellow-100 text-yellow-700',
+  const map: Record<ApiCouponStatus, BadgeTone> = {
+    active:    'green',
+    inactive:  'gray',
+    upcoming:  'blue',
+    expired:   'red',
+    exhausted: 'yellow',
   };
-  return (
-    <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide', map[status])}>
-      {status}
-    </span>
-  );
+  return <Badge tone={map[status]}>{status}</Badge>;
 }
 
 function TypeBadge({ type, value }: { type: 'PERCENTAGE' | 'FIXED_AMOUNT'; value: number }) {
@@ -47,24 +41,6 @@ function TypeBadge({ type, value }: { type: 'PERCENTAGE' | 'FIXED_AMOUNT'; value
     <span className="inline-flex items-center gap-1 rounded-md bg-saffron/10 px-2 py-0.5 text-xs font-semibold text-saffron">
       {type === 'PERCENTAGE' ? `${value}% off` : `${formatPaisa(value)} off`}
     </span>
-  );
-}
-
-function ToggleSwitch({ checked, onChange, disabled }: { checked: boolean; onChange: (c: boolean) => void; disabled?: boolean }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        'relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50',
-        checked ? 'bg-primary' : 'bg-muted',
-      )}
-    >
-      <span className={cn('inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200', checked ? 'translate-x-4' : 'translate-x-0')} />
-    </button>
   );
 }
 
@@ -89,17 +65,6 @@ function UsageBar({ used, limit }: { used: number; limit: number | null }) {
   );
 }
 
-// ─── Debounce helper ─────────────────────────────────────────────────────────
-
-function useDebounced<T>(value: T, ms = 400): T {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), ms);
-    return () => clearTimeout(t);
-  }, [value, ms]);
-  return debounced;
-}
-
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 type StatusFilter = 'all' | 'active' | 'expired' | 'upcoming' | 'exhausted';
@@ -111,7 +76,7 @@ export default function CouponsPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [showCreate,  setShowCreate]  = useState(false);
   const [deleteId,    setDeleteId]    = useState<string | null>(null);
-  const debouncedSearch = useDebounced(search, 400);
+  const debouncedSearch = useDebounce(search, 400);
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ['admin', 'coupons', { page, debouncedSearch, statusFilter }],

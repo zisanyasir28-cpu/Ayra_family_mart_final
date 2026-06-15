@@ -6,7 +6,6 @@ import { Zap, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
 import { ProductCard, ProductCardSkeleton } from '../product/ProductCard';
 import { useCountdown } from '../../hooks/useCountdown';
-import { demoFlashDeals } from '../../lib/demoProducts';
 
 // ─── Animated flip digit ──────────────────────────────────────────────────────
 
@@ -80,16 +79,13 @@ export function FlashDeals() {
     queryFn:  async () => {
       try {
         const res = await fetchProducts({ limit: 60, sortBy: 'newest' });
-        const campaignProducts = res.data.filter((p) => p.activeCampaign !== null);
-        // If the API responded but the Redis product-list cache is still warm from
-        // before campaigns were linked (TTL ≤5 min), campaignProducts will be empty.
-        // Fall back to demo flash deals so the section always renders something.
-        // The real campaign products replace this as soon as the cache expires.
-        return campaignProducts.length > 0 ? campaignProducts : demoFlashDeals;
+        // Show only real, campaign-linked products. If there are none — or the
+        // API is unreachable — return empty so the section hides itself (see the
+        // `products.length === 0` guard below). We never render fake/demo products
+        // because they can't be ordered (non-UUID ids fail server-side validation).
+        return res.data.filter((p) => p.activeCampaign !== null);
       } catch {
-        // API completely unreachable (e.g. GitHub Pages preview) — use demo data.
-        // Demo products have non-UUID IDs so they must never reach the order API.
-        return demoFlashDeals;
+        return [];
       }
     },
     staleTime: 1000 * 60 * 2,

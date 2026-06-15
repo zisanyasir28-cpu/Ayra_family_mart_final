@@ -5,6 +5,7 @@ import { X, Trash2, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useCartStore } from '@/store/cartStore';
 import { formatPaisa } from '@/lib/utils';
+import { FREE_DELIVERY_THRESHOLD_PAISA } from '@superstore/shared';
 import { api } from '@/lib/api';
 import { BasketIcon, PlusIcon, MinusIcon, ArrowRightIcon } from './common/HandIcon';
 
@@ -51,9 +52,8 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const delivery = deliveryFeeInPaisa();
   const discount = coupon?.discountInPaisa ?? 0;
   const total    = totalInPaisa();
-  const FREE_DELIVERY_THRESHOLD = 99_900;
-  const amountToFree = FREE_DELIVERY_THRESHOLD - sub;
-  const progressPct  = Math.min(100, (sub / FREE_DELIVERY_THRESHOLD) * 100);
+  const amountToFree = FREE_DELIVERY_THRESHOLD_PAISA - sub;
+  const progressPct  = Math.min(100, (sub / FREE_DELIVERY_THRESHOLD_PAISA) * 100);
 
   return (
     <AnimatePresence>

@@ -1,14 +1,15 @@
 import { formatPaisa } from '@/lib/utils';
 import { useCartStore } from '@/store/cartStore';
-import type { PaymentMethod } from '@superstore/shared';
+import {
+  type PaymentMethod,
+  FREE_DELIVERY_THRESHOLD_PAISA,
+  DELIVERY_FEE_PAISA,
+  COD_SURCHARGE_PAISA,
+} from '@superstore/shared';
 
 interface OrderSummaryProps {
   paymentMethod?: PaymentMethod | 'COD' | 'SSLCOMMERZ' | null;
 }
-
-const FREE_SHIPPING_THRESHOLD_PAISA = 99_900;
-const STANDARD_SHIPPING_PAISA       = 6_000;
-const COD_SURCHARGE_PAISA           = 2_000;
 
 export function OrderSummary({ paymentMethod }: OrderSummaryProps) {
   const items    = useCartStore((s) => s.items);
@@ -16,7 +17,7 @@ export function OrderSummary({ paymentMethod }: OrderSummaryProps) {
   const subtotal = items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0);
   const discount = coupon?.discountInPaisa ?? 0;
   const afterDiscount = Math.max(0, subtotal - discount);
-  const baseShipping  = afterDiscount >= FREE_SHIPPING_THRESHOLD_PAISA ? 0 : STANDARD_SHIPPING_PAISA;
+  const baseShipping  = afterDiscount >= FREE_DELIVERY_THRESHOLD_PAISA ? 0 : DELIVERY_FEE_PAISA;
   const codSurcharge  = paymentMethod === 'COD' ? COD_SURCHARGE_PAISA : 0;
   const shipping      = baseShipping + codSurcharge;
   const total         = afterDiscount + shipping;

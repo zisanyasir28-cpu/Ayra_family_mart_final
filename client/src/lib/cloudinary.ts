@@ -18,7 +18,6 @@
 import { Cloudinary }          from '@cloudinary/url-gen';
 import { quality, format }     from '@cloudinary/url-gen/actions/delivery';
 import { limitFit, pad }       from '@cloudinary/url-gen/actions/resize';
-import { sharpen }             from '@cloudinary/url-gen/actions/adjust';
 import { auto as autoQuality } from '@cloudinary/url-gen/qualifiers/quality';
 import { auto as autoFormat }  from '@cloudinary/url-gen/qualifiers/format';
 import { color }               from '@cloudinary/url-gen/qualifiers/background';
@@ -123,31 +122,5 @@ export const detail = (id: string): string =>
 export const hero = (id: string): string =>
   getOptimizedImageUrl(id, { width: 1600 });
 
-// ─── Demo product URL builder (used by demoProducts.ts) ───────────────────────
-//
-// Source images already have transparent backgrounds (pre-processed in Cloudinary UI).
-// Transform chain:
-//   e_sharpen:80   → crisp product edges
-//   c_pad,600×720  → pad to exact 5:6 card ratio, no cropping (transparent fill)
-//   q_40/f_auto    → WebP/AVIF at quality 40, alpha preserved
-//
-// NOTE: e_improve was removed — it's AI-based and adds 1–5 s first-request latency.
-// Images are already well-processed from Cloudinary UI; sharpen alone is sufficient.
-//
-export function buildDemoProductUrl(publicId: string): string {
-  if (!CLOUD_NAME) {
-    // No env var (GitHub Pages / CI) — fall back to the hardcoded cloud name
-    return `https://res.cloudinary.com/dzhj5tgyv/image/upload/e_sharpen:80/c_pad,w_600,h_720/q_40/f_auto/${publicId}`;
-  }
-  return cld
-    .image(publicId)
-    .adjust(sharpen(80))                   // e_sharpen:80 — edge crispness
-    .resize(
-      pad()
-        .width(600)
-        .height(720),                      // c_pad,w_600,h_720 — transparent padding
-    )
-    .delivery(quality(40))                 // q_40
-    .delivery(format(autoFormat()))        // f_auto (WebP/AVIF, alpha preserved)
-    .toURL();
-}
+// (Demo product URL builder removed — demo data subsystem deleted; all storefront
+//  images now come from real product records served via the Cloudinary helpers above.)

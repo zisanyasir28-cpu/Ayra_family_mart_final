@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'motion/react';
-import { SlidersHorizontal, ChevronLeft, ChevronRight, PackageSearch } from 'lucide-react';
+import { SlidersHorizontal, ChevronLeft, ChevronRight, PackageSearch, AlertTriangle } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
 import { fetchCategories } from '../../services/categories';
 import { ProductCard, ProductCardSkeleton } from '../../components/product/ProductCard';
@@ -133,6 +133,28 @@ function EmptyState({ onClear }: { onClear: () => void }) {
   );
 }
 
+// ─── Error state ──────────────────────────────────────────────────────────────
+
+function ErrorState({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-surface-2">
+        <AlertTriangle className="h-12 w-12 text-coral/60" strokeWidth={1.5} />
+      </div>
+      <h3 className="mt-5 font-display text-xl font-bold text-cream">Couldn&apos;t load products</h3>
+      <p className="mt-2 max-w-xs text-sm text-cream/55">
+        Something went wrong while loading products. Check your connection and try again.
+      </p>
+      <button
+        onClick={onRetry}
+        className="btn-grad mt-6 rounded-full px-7 py-3 text-sm font-bold uppercase tracking-[0.16em] transition active:scale-95"
+      >
+        Try Again
+      </button>
+    </div>
+  );
+}
+
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 const LIMIT = 12;
@@ -196,7 +218,7 @@ export default function ProductsPage() {
   });
 
   const queryKey = ['products', 'list', { page, sortBy, search, categoryId, minPrice, maxPrice, inStock }];
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching, isError, refetch } = useQuery({
     queryKey,
     queryFn: () =>
       fetchProducts({
@@ -302,8 +324,11 @@ export default function ProductsPage() {
                 ))}
           </div>
 
+          {/* Error state — API failed (no demo fallback anymore) */}
+          {isError && <ErrorState onRetry={() => refetch()} />}
+
           {/* Empty state */}
-          {!isLoading && products.length === 0 && (
+          {!isLoading && !isError && products.length === 0 && (
             <EmptyState onClear={clearFilters} />
           )}
 

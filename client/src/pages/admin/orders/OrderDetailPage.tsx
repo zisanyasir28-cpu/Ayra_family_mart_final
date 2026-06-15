@@ -132,10 +132,10 @@ export default function AdminOrderDetailPage() {
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Customer</p>
           </div>
           <p className="mt-2 font-medium text-foreground">
-            {(order as { user?: { name: string; email: string } }).user?.name ?? order.snapFullName}
+            {order.user?.name ?? order.snapFullName}
           </p>
           <p className="text-xs text-muted-foreground">
-            {(order as { user?: { name: string; email: string } }).user?.email ?? '—'}
+            {order.user?.email ?? '—'}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">{order.snapPhone}</p>
         </div>

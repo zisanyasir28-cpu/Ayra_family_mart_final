@@ -500,7 +500,12 @@ export const updateProduct = asyncHandler(
         body.removeImageIds!.includes(img.id),
       );
       await Promise.all([
-        ...toDelete.map((img) => deleteImage(img.publicId).catch(() => null)),
+        ...toDelete.map((img) =>
+          deleteImage(img.publicId).catch((err) => {
+            console.error('Failed to delete image from Cloudinary:', img.publicId, err);
+            return null;
+          })
+        ),
         prisma.productImage.deleteMany({
           where: { id: { in: toDelete.map((i) => i.id) } },
         }),

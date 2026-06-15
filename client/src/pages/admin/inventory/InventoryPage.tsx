@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Package, Search, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn, formatPaisa } from '@/lib/utils';
+import { useDebounce } from '@/hooks/useDebounce';
 import { fetchProducts, patchProductStock } from '@/services/products';
 import { fetchCategories } from '@/services/categories';
 import type { ApiProduct } from '@/types/api';
@@ -116,17 +117,6 @@ const FILTER_TABS: { label: string; value: StockFilter }[] = [
   { label: 'Low Stock',   value: 'low'      },
   { label: 'Out of Stock',value: 'out'      },
 ];
-
-// ─── useDebounce ──────────────────────────────────────────────────────────────
-
-function useDebounce<T>(value: T, ms = 400): T {
-  const [d, setD] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setD(value), ms);
-    return () => clearTimeout(t);
-  }, [value, ms]);
-  return d;
-}
 
 // ─── InventoryPage ────────────────────────────────────────────────────────────
 

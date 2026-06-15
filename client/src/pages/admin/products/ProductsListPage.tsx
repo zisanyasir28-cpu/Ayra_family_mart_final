@@ -3,6 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Search, Pencil, Trash2, Copy, ChevronLeft, ChevronRight, AlertTriangle, Package } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn, formatPaisa } from '@/lib/utils';
+import { useDebounce } from '@/hooks/useDebounce';
+import { Spinner } from '@/components/ui/Spinner';
+import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import {
   fetchProducts,
   deleteAdminProduct,
@@ -15,65 +19,14 @@ import { ProductFormSheet } from '@/components/admin/products/ProductFormSheet';
 
 // ─── Tiny UI primitives ───────────────────────────────────────────────────────
 
-function Spinner({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        'h-4 w-4 animate-spin rounded-full border-2 border-border border-t-primary',
-        className,
-      )}
-    />
-  );
-}
-
 function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, string> = {
-    ACTIVE:       'bg-green-100 text-green-700',
-    INACTIVE:     'bg-gray-100 text-gray-600',
-    OUT_OF_STOCK: 'bg-yellow-100 text-yellow-700',
-    DISCONTINUED: 'bg-red-100 text-red-700',
+  const map: Record<string, BadgeTone> = {
+    ACTIVE:       'green',
+    INACTIVE:     'gray',
+    OUT_OF_STOCK: 'yellow',
+    DISCONTINUED: 'red',
   };
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
-        map[status] ?? 'bg-muted text-muted-foreground',
-      )}
-    >
-      {status.replace('_', ' ')}
-    </span>
-  );
-}
-
-// ─── Toggle Switch ────────────────────────────────────────────────────────────
-
-interface ToggleSwitchProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  disabled?: boolean;
-}
-
-function ToggleSwitch({ checked, onChange, disabled }: ToggleSwitchProps) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className={cn(
-        'relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50',
-        checked ? 'bg-primary' : 'bg-muted',
-      )}
-    >
-      <span
-        className={cn(
-          'inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200',
-          checked ? 'translate-x-4' : 'translate-x-0',
-        )}
-      />
-    </button>
-  );
+  return <Badge tone={map[status] ?? 'muted'}>{status.replace('_', ' ')}</Badge>;
 }
 
 // ─── Actions dropdown ─────────────────────────────────────────────────────────
@@ -270,17 +223,6 @@ function DeleteConfirmDialog({ product, onConfirm, onCancel, isPending }: Delete
   );
 }
 
-// ─── useDebounce ──────────────────────────────────────────────────────────────
-
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-  return debouncedValue;
-}
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ProductsListPage() {
@@ -404,14 +346,20 @@ export default function ProductsListPage() {
     setSheetOpen(true);
   }, []);
 
-  // ── Bulk status change
-  function handleBulkStatus(status: string) {
+  // ── Bulk status change — report partial failures instead of all-or-nothing
+  async function handleBulkStatus(status: string) {
     const ids = Array.from(selected);
-    Promise.all(ids.map((id) => patchProductStatus(id, status))).then(() => {
-      toast.success(`Updated ${ids.length} product(s)`);
-      setSelected(new Set());
-      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
-    });
+    const results = await Promise.allSettled(
+      ids.map((id) => patchProductStatus(id, status)),
+    );
+    const ok     = results.filter((r) => r.status === 'fulfilled').length;
+    const failed = results.length - ok;
+
+    if (ok > 0)     toast.success(`Updated ${ok} product${ok === 1 ? '' : 's'}`);
+    if (failed > 0) toast.error(`${failed} update${failed === 1 ? '' : 's'} failed — please retry`);
+
+    setSelected(new Set());
+    queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
   }
 
   return (

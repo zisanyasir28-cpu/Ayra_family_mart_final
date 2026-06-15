@@ -123,6 +123,8 @@ export interface ApiOrder {
   items:             ApiOrderItem[];
   statusHistory?:    ApiOrderStatusHistoryEntry[];
   payment?:          { method: ApiPaymentMethod; status: ApiPaymentStatus; amountInPaisa: number } | null;
+  /** Present only on admin order responses — the customer who placed the order. */
+  user?:             { id: string; name: string; email: string };
 }
 
 // ─── Admin: Customers ────────────────────────────────────────────────────────

@@ -179,7 +179,7 @@ export default function AdminOrdersListPage() {
                 <div className="min-w-0 flex-1">
                   <p className="font-mono text-xs font-semibold text-foreground">{order.orderNumber}</p>
                   <p className="mt-0.5 truncate text-sm text-foreground">
-                    {(order as { user?: { name: string } }).user?.name ?? order.snapFullName}
+                    {order.user?.name ?? order.snapFullName}
                   </p>
                   <p className="mt-0.5 text-[11px] text-muted-foreground">
                     {format(new Date(order.createdAt), 'dd MMM yyyy')}
@@ -249,7 +249,7 @@ export default function AdminOrdersListPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-foreground">
-                    {(order as { user?: { name: string } }).user?.name ?? order.snapFullName}
+                    {order.user?.name ?? order.snapFullName}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {format(new Date(order.createdAt), 'dd MMM yyyy')}

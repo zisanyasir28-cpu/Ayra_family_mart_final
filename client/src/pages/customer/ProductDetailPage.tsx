@@ -82,7 +82,12 @@ export default function ProductDetailPage() {
   async function handleWishlist() {
     if (!isAuthenticated) { toast.error('Please log in to save to wishlist', { icon: '🔒' }); return; }
     toggle(product!.id);
-    try { await toggleWishlistItem(product!.id); } catch { /* demo OK */ }
+    try {
+      await toggleWishlistItem(product!.id);
+    } catch (err) {
+      toggle(product!.id); // rollback
+      toast.error('Failed to update wishlist. Please try again.');
+    }
   }
 
   const images = product.images.length > 0 ? product.images : [{ id: 'placeholder', url: '', altText: product.name }];

@@ -260,7 +260,7 @@ export default function DashboardPage() {
                       {order.orderNumber}
                     </Link>
                     <p className="text-[10px] text-muted-foreground">
-                      {(order as { user?: { name: string } }).user?.name ?? '—'}
+                      {order.user?.name ?? '—'}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

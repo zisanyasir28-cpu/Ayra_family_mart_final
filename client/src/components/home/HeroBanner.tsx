@@ -556,7 +556,7 @@ export function HeroBanner() {
                 }}
               >
                 {/* Inner glass surface — narrow + tall */}
-                <div className="relative w-[118px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-surface-dark/86 px-3.5 py-4 backdrop-blur-xl">
+                <div className="relative w-[118px] overflow-hidden rounded-[calc(0.5rem-1.2px)] bg-surface-dark/40 px-3.5 py-4 backdrop-blur-xl ring-1 ring-white/10">
                   {/* Inner wash — green in light, coral in dark */}
                   <div
                     aria-hidden

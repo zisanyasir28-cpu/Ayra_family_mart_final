@@ -89,8 +89,15 @@ export default defineConfig(() => {
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        // Dev + Claude preview talk to the LIVE Railway backend so we always see
+        // real data (433 products) instead of demo fallbacks. changeOrigin lets
+        // Railway accept the proxied request (server-to-server → no browser Origin,
+        // so CORS allows it); cookieDomainRewrite rebinds the httpOnly auth cookie
+        // to localhost so login/cart work too. Point back at http://localhost:5000
+        // if you ever run the backend locally.
+        target: 'https://ayrafamilymartfinal-production.up.railway.app',
         changeOrigin: true,
+        cookieDomainRewrite: 'localhost',
       },
     },
   },

@@ -19,12 +19,18 @@ import type {
   CancelOrderInput,
   AddressInput,
 } from '@superstore/shared';
+import {
+  FREE_DELIVERY_THRESHOLD_PAISA,
+  DELIVERY_FEE_PAISA,
+  COD_SURCHARGE_PAISA,
+} from '@superstore/shared';
 
 // ─── Pricing constants ────────────────────────────────────────────────────────
 
-const FREE_SHIPPING_THRESHOLD_PAISA = 99_900; // ৳999
-const STANDARD_SHIPPING_PAISA       = 6_000;  // ৳60
-const COD_SURCHARGE_PAISA           = 2_000;  // ৳20
+// Sourced from @superstore/shared — single source of truth, shared with the client
+// cart/checkout display so the charged fee and the shown fee can never diverge.
+const FREE_SHIPPING_THRESHOLD_PAISA = FREE_DELIVERY_THRESHOLD_PAISA;
+const STANDARD_SHIPPING_PAISA       = DELIVERY_FEE_PAISA;
 const MAX_ORDER_NUMBER_RETRIES      = 3;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

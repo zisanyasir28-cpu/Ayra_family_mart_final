@@ -57,7 +57,7 @@ api.interceptors.response.use(
     // session", and AuthProvider's own .catch() handles it gracefully (clearAuth).
     // Intercepting it causes an infinite retry loop that fires auth:logout on every
     // unauthenticated page load.
-    const isRefreshEndpoint = originalRequest.url?.includes('/auth/refresh');
+    const isRefreshEndpoint = originalRequest.url?.endsWith('/auth/refresh');
     if (error.response?.status !== 401 || originalRequest._retry || isRefreshEndpoint) {
       return Promise.reject(error);
     }
@@ -75,6 +75,7 @@ api.interceptors.response.use(
         failedQueue.push({ resolve, reject });
       })
         .then((token) => {
+          originalRequest._retry = true; // a re-queued retry must not kick off another refresh
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return api(originalRequest);
         })
