@@ -160,7 +160,7 @@ function ProductCardImpl({ product, className, emphasis = false }: ProductCardPr
 
           {/* ── Content ─────────────────────────────────────────────────── */}
           <div className="flex flex-1 flex-col gap-0.5 px-3 pb-3 pt-2.5">
-            <span className={cn('text-[9px] font-semibold uppercase tracking-[0.18em]', isLight ? 'text-black/40' : 'text-saffron/70')}>
+            <span className={cn('text-[9px] font-bold uppercase tracking-[0.18em]', isLight ? 'text-sage' : 'text-sage/80')}>
               {product.category.name}
             </span>
 
