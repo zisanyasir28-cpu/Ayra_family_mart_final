@@ -54,6 +54,11 @@ export async function fetchProductBySlug(slug: string): Promise<ApiProduct> {
   return res.data.data;
 }
 
+export async function fetchRelatedProducts(productId: string): Promise<ApiProduct[]> {
+  const res = await api.get<ApiSuccessResponse<ApiProduct[]>>(`/products/${productId}/related`);
+  return res.data.data;
+}
+
 // ─── Autocomplete ─────────────────────────────────────────────────────────────
 
 export interface AutocompleteHit {

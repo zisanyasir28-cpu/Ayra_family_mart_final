@@ -486,15 +486,30 @@ export const getRelatedProducts = asyncHandler(
         id: { not: id },
         status: 'ACTIVE',
       },
-      take: 4,
-      orderBy: { isFeatured: 'desc' },
-      include: {
-        images: { orderBy: { sortOrder: 'asc' }, take: 1 },
-        category: { select: { name: true, slug: true } },
-      },
+      take: 12,
+      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+      include: getProductListInclude(),
     });
 
-    return sendSuccess(res, related);
+    // Enrich with campaign pricing so the cards render correct prices/discounts.
+    const enriched = related.map((p) => {
+      const campaign = p.campaignProducts[0]?.campaign ?? null;
+      return {
+        ...p,
+        effectivePriceInPaisa: calcEffectivePrice(p.priceInPaisa, campaign),
+        activeCampaign: campaign
+          ? {
+              id:            campaign.id,
+              discountType:  campaign.discountType,
+              discountValue: campaign.discountValue,
+              endsAt:        campaign.endsAt,
+            }
+          : null,
+        campaignProducts: undefined,
+      };
+    });
+
+    return sendSuccess(res, enriched);
   },
 );
 

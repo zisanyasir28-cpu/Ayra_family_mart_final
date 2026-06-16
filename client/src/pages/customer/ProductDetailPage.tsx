@@ -8,7 +8,8 @@ import {
 } from 'lucide-react';
 import { cn, formatPaisa } from '@/lib/utils';
 import { detail as detailImg } from '@/lib/cloudinary';
-import { fetchProductBySlug } from '@/services/products';
+import { fetchProductBySlug, fetchRelatedProducts } from '@/services/products';
+import { ProductCard } from '@/components/product/ProductCard';
 import { useCart } from '@/hooks/useCart';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useAuthStore }     from '@/store/authStore';
@@ -27,6 +28,14 @@ export default function ProductDetailPage() {
     queryFn:   () => fetchProductBySlug(slug),
     enabled:   !!slug,
     retry:     false,
+  });
+
+  // "You may also like" — same-category recommendations (hook stays top-level)
+  const { data: related = [] } = useQuery({
+    queryKey:  ['product', product?.id, 'related'],
+    queryFn:   () => fetchRelatedProducts(product!.id),
+    enabled:   !!product?.id,
+    staleTime: 1000 * 60 * 5,
   });
 
   const { addToCart }       = useCart();
@@ -272,6 +281,34 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* ── You may also like ────────────────────────────────────────── */}
+      {related.length > 0 && (
+        <section className="mt-14 md:mt-20">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <div className="eyebrow">
+                <span className="eyebrow-dot" />
+                <span>More to explore</span>
+              </div>
+              <h2 className="display-md mt-3 text-cream">
+                You may also <em className="text-saffron">like.</em>
+              </h2>
+            </div>
+            <Link
+              to={`/products?categoryId=${product.category.id}`}
+              className="hidden shrink-0 rounded-full border border-line px-5 py-2.5 text-sm text-cream transition-colors hover:border-saffron hover:text-saffron sm:inline-flex"
+            >
+              View all
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
+            {related.map((p) => (
+              <ProductCard key={p.id} product={p} className="h-full" />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Mobile sticky bottom Add-to-Cart bar ─────────────────────── */}
       <motion.div
