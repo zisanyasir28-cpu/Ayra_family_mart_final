@@ -172,6 +172,9 @@ async function searchWithTrgm(term: string): Promise<string[]> {
  * GET /api/v1/products
  * Full-featured paginated product listing with filters + campaign pricing.
  */
+// Ayra Fresh+ — the fresh/perishable line, spanning several real categories.
+const FRESH_PLUS_SLUGS = ['fresh-produce', 'fruits', 'vegetables', 'dairy-eggs', 'fish', 'meat', 'bakery'];
+
 export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const q = req.query as unknown as ProductQueryInput;
   const page   = Number(q.page   ?? 1);
@@ -191,6 +194,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const where: Prisma.ProductWhereInput = {
     status: q.status ?? 'ACTIVE',
     ...(q.categoryId && { categoryId: q.categoryId }),
+    ...(q.collection === 'fresh-plus' && { category: { slug: { in: FRESH_PLUS_SLUGS } } }),
     ...(q.brandId    && { brandId: q.brandId }),
     ...(q.isFeatured !== undefined && { isFeatured: Boolean(q.isFeatured) }),
     ...(q.inStock    && { stockQuantity: { gt: 0 } }),

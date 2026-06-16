@@ -173,6 +173,7 @@ export default function ProductsPage() {
   const minPrice   = searchParams.get('minPrice')   ?? '';
   const maxPrice   = searchParams.get('maxPrice')   ?? '';
   const inStock    = searchParams.get('inStock')    === 'true';
+  const collection = searchParams.get('collection') ?? '';
 
   const filters: FilterState = { categoryId, minPrice, maxPrice, inStock };
 
@@ -217,7 +218,7 @@ export default function ProductsPage() {
     staleTime: 1000 * 60 * 10,
   });
 
-  const queryKey = ['products', 'list', { page, sortBy, search, categoryId, minPrice, maxPrice, inStock }];
+  const queryKey = ['products', 'list', { page, sortBy, search, categoryId, minPrice, maxPrice, inStock, collection }];
   const { data, isLoading, isFetching, isError, refetch } = useQuery({
     queryKey,
     queryFn: () =>
@@ -230,6 +231,7 @@ export default function ProductsPage() {
         minPrice:   minPrice   ? Number(minPrice) : undefined,
         maxPrice:   maxPrice   ? Number(maxPrice) : undefined,
         inStock:    inStock    || undefined,
+        collection: collection || undefined,
       }),
     placeholderData: (prev) => prev,
   });
@@ -241,8 +243,30 @@ export default function ProductsPage() {
 
   const hasActiveFilters = !!categoryId || !!minPrice || !!maxPrice || inStock || !!search;
 
+  // ── Contextual page heading — reflects what the shopper clicked ──
+  const rawSort = searchParams.get('sortBy');
+  const activeCategory = categories.find((c) => c.id === categoryId);
+  const pageTitle =
+    collection === 'fresh-plus' ? 'Ayra Fresh+'
+      : search         ? `Results for “${search}”`
+      : activeCategory ? activeCategory.name
+      : rawSort === 'newest' ? 'New Arrivals'
+      : 'All Products';
+  const pageSubtitle =
+    collection === 'fresh-plus'
+      ? 'Farm-fresh produce, dairy, fish, meat & bakery — the Ayra Fresh+ line.'
+      : rawSort === 'newest' && !categoryId && !search
+      ? 'The latest additions to our shelves.'
+      : null;
+
   return (
     <div ref={topRef} className="container py-8">
+
+      {/* Page heading — reflects the clicked view */}
+      <div className="mb-5">
+        <h1 className="font-display text-2xl font-black text-cream sm:text-3xl">{pageTitle}</h1>
+        {pageSubtitle && <p className="mt-1 text-sm text-cream/55">{pageSubtitle}</p>}
+      </div>
 
       {/* Top bar — mobile filter trigger + result count + sort */}
       <div className="mb-5 flex items-center justify-between gap-3">

@@ -6,6 +6,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { InstallPrompt }  from './components/pwa/InstallPrompt';
 import { UpdateToast }    from './components/pwa/UpdateToast';
 import { AyraLoader }     from './components/ui/AyraLoader';
+import { ScrollToTop }    from './components/common/ScrollToTop';
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
@@ -19,6 +20,8 @@ const OrderSuccessPage = lazy(() => import('./pages/customer/OrderSuccessPage'))
 const AccountPage      = lazy(() => import('./pages/customer/AccountPage'));
 const WishlistPage     = lazy(() => import('./pages/customer/WishlistPage'));
 const ProductDetailPage = lazy(() => import('./pages/customer/ProductDetailPage'));
+const HelpPage          = lazy(() => import('./pages/customer/HelpPage'));
+const ReturnsPage       = lazy(() => import('./pages/customer/ReturnsPage'));
 
 // Auth (outside CustomerLayout — own centered layout)
 const LoginPage           = lazy(() => import('./pages/auth/LoginPage'));
@@ -48,6 +51,7 @@ function AdminLoader() { return <AyraLoader fullScreen />; }
 export default function App() {
   return (
     <>
+      <ScrollToTop />
       <InstallPrompt />
       <UpdateToast />
       <Routes>
@@ -249,6 +253,24 @@ export default function App() {
           element={
             <Suspense fallback={<PageLoader />}>
               <WishlistPage />
+            </Suspense>
+          }
+        />
+
+        {/* Info pages */}
+        <Route
+          path="/help"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <HelpPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/returns"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ReturnsPage />
             </Suspense>
           }
         />

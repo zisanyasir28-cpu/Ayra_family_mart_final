@@ -1226,7 +1226,7 @@ function Footer() {
                 { label: 'Home',          to: '/'                          },
                 { label: 'All Products',  to: '/products'                  },
                 { label: 'Flash Deals',   to: '/products?deals=true'       },
-                { label: 'New Arrivals',  to: '/products?sort=newest'      },
+                { label: 'New Arrivals',  to: '/products?sortBy=newest'     },
                 { label: 'Best Sellers',  to: '/products?sort=popular'     },
                 { label: 'Wishlist',      to: '/wishlist'                  },
               ].map((l) => (
@@ -1247,15 +1247,32 @@ function Footer() {
           <div>
             <h4 className="mb-4 text-[10px] uppercase tracking-[0.22em] text-cream/40">Help</h4>
             <ul className="space-y-3">
-              {['Help Center', 'Track Order', 'Returns', 'Privacy', 'Terms', 'Contact Us'].map((l) => (
-                <li key={l}>
-                  <a
-                    href="#"
-                    className="group inline-flex items-center gap-1.5 text-sm text-cream/70 transition-colors hover:text-saffron"
-                  >
-                    {l}
-                    <ArrowRightIcon size={11} className="opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
-                  </a>
+              {[
+                { label: 'Help Center', to: '/help' },
+                { label: 'Track Order', to: '/orders' },
+                { label: 'Returns',     to: '/returns' },
+                { label: 'Privacy',     to: '#' },
+                { label: 'Terms',       to: '#' },
+                { label: 'Contact Us',  to: '/help' },
+              ].map((l) => (
+                <li key={l.label}>
+                  {l.to === '#' ? (
+                    <a
+                      href="#"
+                      className="group inline-flex items-center gap-1.5 text-sm text-cream/70 transition-colors hover:text-saffron"
+                    >
+                      {l.label}
+                      <ArrowRightIcon size={11} className="opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                    </a>
+                  ) : (
+                    <Link
+                      to={l.to}
+                      className="group inline-flex items-center gap-1.5 text-sm text-cream/70 transition-colors hover:text-saffron"
+                    >
+                      {l.label}
+                      <ArrowRightIcon size={11} className="opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

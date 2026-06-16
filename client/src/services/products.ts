@@ -16,6 +16,7 @@ export interface ProductQueryParams {
   inStock?: boolean;
   isFeatured?: boolean;
   status?: string;
+  collection?: string;
 }
 
 export async function fetchProducts(
@@ -32,6 +33,7 @@ export async function fetchProducts(
   if (params.inStock    != null) query['inStock']    = String(params.inStock);
   if (params.isFeatured != null) query['isFeatured'] = String(params.isFeatured);
   if (params.status)             query['status']     = params.status;
+  if (params.collection)         query['collection'] = params.collection;
 
   const res = await api.get<{
     success: true;

@@ -168,3 +168,33 @@
 - ❌ Scout inaccuracy: `ToggleSwitch` was 2 copies, not 3 — CategoriesPage has a *different* labeled `Switch` (left alone).
 - Verified: `shared` build + client `tsc` + server build all clean; storefront renders (16 product links, 0 console errors).
 - 🔭 New backlog item: the order total is still computed in 3 places (store, OrderSummary, CheckoutPage header) — constants are now shared, but the *calculation* could be unified into one shared helper next.
+
+---
+
+# Phase II — Homepage feature build-out
+
+Decided 2026-06-15. Goal: make the homepage real — every label works, nothing fake (or clearly "Coming soon"). Each item verified with `tsc` + preview before moving on.
+
+**Decisions made:**
+- **Free delivery → ৳1500** (was ৳999). ⚠️ Revenue change. Correct implementation must update `cartStore` (the stable-contract store that actually computes the fee) or the cart will *show* ৳1500 while still giving free delivery at ৳999 — confirm before touching the store.
+- **Promo % banners (40% off, extra 15%) → keep as-is** this round (not wired to live campaigns).
+- **Member Exclusive + Ayra Points → deferred**; show **"Coming soon"** labels until built as dedicated projects.
+- **Ayra Fresh+** = curated collection of existing fresh categories: Fresh Produce, Fruits, Vegetables, Dairy & Eggs, Fish & Seafood, Meat & Poultry, Bakery & Bread (no schema change).
+
+| # | Feature | Plan | Size | Status |
+|---|---|---|---|---|
+| 1 | Help Center | New `/help` FAQ/support page + wire the dead nav link | 🟢 | ✅ done |
+| 2 | Returns | New `/returns` policy page + wire link (request workflow = later) | 🟢 | ✅ done |
+| 3 | New Arrivals | Home section + route using existing `newest` sort + nav link | 🟢 | ✅ done |
+| 4 | Ayra Fresh+ | Fresh-categories collection landing + nav | 🟡 | ✅ done (filter needs deploy) |
+| 5 | Best Sellers | Backend aggregate (top by units sold) + endpoint + section + nav | 🟡 | todo |
+| 6 | Free delivery ৳1500 | Shared constant + `cartStore` + consistent display text | 🟢 | todo (needs store OK) |
+| 7 | "Coming soon" labels | Tag the Member Exclusive + Ayra Points UI | 🟢 | todo |
+
+**Later (planned projects, not this batch):** Ayra Points loyalty system · Membership system · Returns request workflow.
+
+**Bonus fix (2026-06-15):** Added a global `ScrollToTop` (`components/common/ScrollToTop.tsx`) so client-side navigation starts at the top (respects browser back/forward). Verified: scroll 1500→0 on link click.
+
+**Finding — broken nav params (still to address):** several nav links pass query params `ProductsPage` ignores → they silently show the default list: `?onSale=true` (Offers), `?view=brands` (Brands), `?deals=true` (Flash Deals), `?isFeatured=true` (Featured "view all"). `?sort=popular` (Best Sellers) handled in feature #5; `?collection=fresh-plus` (Ayra Fresh+) in #4; New Arrivals fixed.
+
+**Feature 4 + contextual heading (2026-06-15):** Added a `collection=fresh-plus` query param (shared schema → server filter by the 7 fresh category slugs → client wiring) and a **contextual page heading** on `ProductsPage` (Ayra Fresh+ / New Arrivals / category name / search results / All Products) — so clicking a nav item lands on a clearly-labeled page. Verified headings render. ⚠️ **The Fresh+ *filter* runs server-side** — until the server is redeployed to Railway, the page shows all products under the right heading. (Same applies to the earlier `order.controller` delivery-constant change.)

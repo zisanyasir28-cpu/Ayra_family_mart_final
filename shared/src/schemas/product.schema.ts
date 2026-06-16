@@ -58,6 +58,7 @@ export const productQuerySchema = z.object({
   inStock: z.coerce.boolean().optional(),
   isFeatured: z.coerce.boolean().optional(),
   status: z.nativeEnum(ProductStatus).optional(),
+  collection: z.enum(['fresh-plus']).optional(),
   sortBy: z
     .enum(['price_asc', 'price_desc', 'newest', 'oldest', 'name_asc', 'name_desc'])
     .default('newest'),
