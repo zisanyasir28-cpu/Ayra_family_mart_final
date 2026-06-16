@@ -74,6 +74,7 @@ export const productQuerySchema = z.object({
   maxPrice: z.coerce.number().min(0).optional(), // BDT taka
   inStock: z.coerce.boolean().optional(),
   isFeatured: z.coerce.boolean().optional(),
+  onSale: z.coerce.boolean().optional(), // true → only products with an active campaign discount
   status: z.nativeEnum(ProductStatus).optional(),
   collection: z.enum(['fresh-plus', 'best-sellers']).optional(),
   sortBy: z

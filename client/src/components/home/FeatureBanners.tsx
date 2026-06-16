@@ -182,7 +182,7 @@ const BANNERS: Banner[] = [
     extra:         null,
     label:         null,
     cta:           'Shop Now',
-    to:            '/products?collection=fresh',
+    to:            '/products?collection=fresh-plus',
     image:         'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=520&h=520&fit=crop&crop=center&q=85',
     colorWash:     'bg-gradient-to-br from-sage/10 via-transparent to-transparent',
     glowColor:     'hsl(var(--sage) / 0.65)',

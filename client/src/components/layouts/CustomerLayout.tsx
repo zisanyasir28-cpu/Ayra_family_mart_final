@@ -1015,7 +1015,7 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
                   All Products
                 </Link>
                 <Link
-                  to="/products?deals=true"
+                  to="/products?onSale=true"
                   onClick={onClose}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-coral transition hover:bg-coral/10"
                 >
@@ -1081,7 +1081,7 @@ function CategoryNav({ categories }: { categories: ApiCategory[] }) {
         </NavLink>
 
         <NavLink
-          to="/products?deals=true"
+          to="/products?onSale=true"
           className="group relative flex shrink-0 items-center gap-1.5 px-3 py-1 text-sm font-semibold text-coral transition hover:text-saffron"
         >
           <Zap className="h-3.5 w-3.5" />
@@ -1227,7 +1227,7 @@ function Footer() {
               {[
                 { label: 'Home',          to: '/'                          },
                 { label: 'All Products',  to: '/products'                  },
-                { label: 'Flash Deals',   to: '/products?deals=true'       },
+                { label: 'Flash Deals',   to: '/products?onSale=true'      },
                 { label: 'New Arrivals',  to: '/products?sortBy=newest'     },
                 { label: 'Best Sellers',  to: '/products?collection=best-sellers' },
                 { label: 'Wishlist',      to: '/wishlist'                  },

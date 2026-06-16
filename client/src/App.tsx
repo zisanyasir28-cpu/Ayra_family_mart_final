@@ -13,6 +13,7 @@ import { ScrollToTop }    from './components/common/ScrollToTop';
 // Storefront
 const HomePage         = lazy(() => import('./pages/customer/HomePage'));
 const ProductsPage     = lazy(() => import('./pages/customer/ProductsPage'));
+const BrandsPage       = lazy(() => import('./pages/customer/BrandsPage'));
 const CheckoutPage     = lazy(() => import('./pages/customer/CheckoutPage'));
 const OrdersPage       = lazy(() => import('./pages/customer/OrdersPage'));
 const OrderDetailPage  = lazy(() => import('./pages/customer/OrderDetailPage'));
@@ -191,6 +192,14 @@ export default function App() {
           element={
             <Suspense fallback={<PageLoader />}>
               <ProductDetailPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/brands"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <BrandsPage />
             </Suspense>
           }
         />

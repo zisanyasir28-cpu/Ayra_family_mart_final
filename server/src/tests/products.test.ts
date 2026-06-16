@@ -174,10 +174,21 @@ describe('GET /api/v1/products', () => {
     );
   });
 
-  it('rejects limit > 48 with 400', async () => {
-    const res = await request(app).get('/api/v1/products?limit=100');
+  it('rejects limit > 100 with 400', async () => {
+    const res = await request(app).get('/api/v1/products?limit=101');
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
+  });
+
+  it('onSale=true filters to products with an active campaign', async () => {
+    await request(app).get('/api/v1/products?onSale=true');
+    expect(prisma.product.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          campaignProducts: expect.objectContaining({ some: expect.anything() }),
+        }),
+      }),
+    );
   });
 
   it('attaches effectivePriceInPaisa with active campaign (20% off ৳150 = 12000)', async () => {

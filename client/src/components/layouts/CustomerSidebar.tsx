@@ -32,7 +32,7 @@ const NAV_ITEMS: SidebarItem[] = [
   { icon: Tag,      label: 'Offers',         to: '/products?onSale=true', badge: 'HOT',            grad: 'from-saffron to-coral'  },
   { icon: Star,     label: 'Best Sellers',   to: '/products?collection=best-sellers',               grad: 'from-plum to-saffron'   },
   { icon: Sparkles, label: 'New Arrivals',   to: '/products?sortBy=newest',                        grad: 'from-sage to-coral'     },
-  { icon: Award,    label: 'Brands',         to: '/products?view=brands',                          grad: 'from-plum to-coral'     },
+  { icon: Award,    label: 'Brands',         to: '/brands',                                        grad: 'from-plum to-coral'     },
   { icon: Leaf,     label: 'Ayra Fresh+',    to: '/products?collection=fresh-plus', iconClass: 'text-sage', grad: 'from-sage to-sage/80' },
   { icon: Package,  label: 'My Orders',      to: '/orders',                                        grad: 'from-saffron to-plum'   },
   { icon: Heart,    label: 'Wishlist',       to: '/wishlist',                                      grad: 'from-coral to-saffron'  },

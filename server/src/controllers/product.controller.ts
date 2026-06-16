@@ -41,7 +41,7 @@ function listCacheKey(params: Record<string, unknown>): string {
 }
 
 export async function invalidateProductCaches(productId?: string): Promise<void> {
-  const patterns = ['products:list:*', 'products:featured', 'products:low-stock', 'products:best-sellers:ids'];
+  const patterns = ['products:list:*', 'products:featured', 'products:low-stock', 'products:best-sellers:ids', 'brands:list'];
   if (productId) patterns.push(`products:${productId}`);
 
   // Upstash Redis doesn't support KEYS in serverless — delete known keys
@@ -271,6 +271,8 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     ...(q.collection === 'fresh-plus' && { category: { slug: { in: FRESH_PLUS_SLUGS } } }),
     ...(q.brandId    && { brandId: q.brandId }),
     ...(q.isFeatured !== undefined && { isFeatured: Boolean(q.isFeatured) }),
+    // onSale → only products that currently have an active campaign discount
+    ...(q.onSale && { campaignProducts: { some: getActiveCampaignFilter() } }),
     ...(q.inStock    && { stockQuantity: { gt: 0 } }),
     ...((minPricePaisa != null || maxPricePaisa != null) && {
       priceInPaisa: {

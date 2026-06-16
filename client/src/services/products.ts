@@ -10,11 +10,13 @@ export interface ProductQueryParams {
   limit?: number;
   sortBy?: string;
   categoryId?: string;
+  brandId?: string;
   search?: string;
   minPrice?: number;
   maxPrice?: number;
   inStock?: boolean;
   isFeatured?: boolean;
+  onSale?: boolean;
   status?: string;
   collection?: string;
 }
@@ -27,11 +29,13 @@ export async function fetchProducts(
   if (params.limit      != null) query['limit']      = String(params.limit);
   if (params.sortBy)             query['sortBy']     = params.sortBy;
   if (params.categoryId)         query['categoryId'] = params.categoryId;
+  if (params.brandId)            query['brandId']    = params.brandId;
   if (params.search)             query['search']     = params.search;
   if (params.minPrice   != null) query['minPrice']   = String(params.minPrice);
   if (params.maxPrice   != null) query['maxPrice']   = String(params.maxPrice);
   if (params.inStock    != null) query['inStock']    = String(params.inStock);
   if (params.isFeatured != null) query['isFeatured'] = String(params.isFeatured);
+  if (params.onSale     != null) query['onSale']     = String(params.onSale);
   if (params.status)             query['status']     = params.status;
   if (params.collection)         query['collection'] = params.collection;
 

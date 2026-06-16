@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { SlidersHorizontal, ChevronLeft, ChevronRight, PackageSearch, AlertTriangle } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
 import { fetchCategories } from '../../services/categories';
+import { fetchBrands } from '../../services/brands';
 import { ProductCard, ProductCardSkeleton } from '../../components/product/ProductCard';
 import { FilterSidebar, type FilterState } from '../../components/products/FilterSidebar';
 import { AyraSpinner } from '../../components/ui/AyraLoader';
@@ -158,7 +159,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 const LIMIT = 12;
-const EMPTY_FILTERS: FilterState = { categoryId: '', minPrice: '', maxPrice: '', inStock: false };
+const EMPTY_FILTERS: FilterState = { categoryId: '', brandId: '', minPrice: '', maxPrice: '', inStock: false };
 
 export default function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -174,8 +175,11 @@ export default function ProductsPage() {
   const maxPrice   = searchParams.get('maxPrice')   ?? '';
   const inStock    = searchParams.get('inStock')    === 'true';
   const collection = searchParams.get('collection') ?? '';
+  const brandId    = searchParams.get('brandId')    ?? '';
+  const isFeatured = searchParams.get('isFeatured') === 'true';
+  const onSale     = searchParams.get('onSale')     === 'true';
 
-  const filters: FilterState = { categoryId, minPrice, maxPrice, inStock };
+  const filters: FilterState = { categoryId, brandId, minPrice, maxPrice, inStock };
 
   function updateParams(patch: Record<string, string>) {
     setSearchParams((prev) => {
@@ -192,16 +196,23 @@ export default function ProductsPage() {
   function handleFilterChange(f: FilterState) {
     updateParams({
       categoryId: f.categoryId,
+      brandId:    f.brandId,
       minPrice:   f.minPrice,
       maxPrice:   f.maxPrice,
       inStock:    f.inStock ? 'true' : 'false',
     });
   }
 
+  // Clear the sidebar-driven filters (category, brand, price, stock) but keep
+  // the navigation context the shopper arrived with (search, collection, sort,
+  // and the on-sale / featured views) — those aren't represented in the sidebar.
   const clearFilters = useCallback(() => {
     setSearchParams((prev) => {
       const next = new URLSearchParams();
-      if (prev.get('search')) next.set('search', prev.get('search')!);
+      for (const key of ['search', 'collection', 'onSale', 'isFeatured', 'sortBy'] as const) {
+        const v = prev.get(key);
+        if (v) next.set(key, v);
+      }
       return next;
     });
   }, [setSearchParams]);
@@ -218,7 +229,13 @@ export default function ProductsPage() {
     staleTime: 1000 * 60 * 10,
   });
 
-  const queryKey = ['products', 'list', { page, sortBy, search, categoryId, minPrice, maxPrice, inStock, collection }];
+  const { data: brands = [] } = useQuery({
+    queryKey: ['brands'],
+    queryFn:  fetchBrands,
+    staleTime: 1000 * 60 * 10,
+  });
+
+  const queryKey = ['products', 'list', { page, sortBy, search, categoryId, brandId, minPrice, maxPrice, inStock, isFeatured, onSale, collection }];
   const { data, isLoading, isFetching, isError, refetch } = useQuery({
     queryKey,
     queryFn: () =>
@@ -228,9 +245,12 @@ export default function ProductsPage() {
         sortBy,
         search:     search     || undefined,
         categoryId: categoryId || undefined,
+        brandId:    brandId    || undefined,
         minPrice:   minPrice   ? Number(minPrice) : undefined,
         maxPrice:   maxPrice   ? Number(maxPrice) : undefined,
         inStock:    inStock    || undefined,
+        isFeatured: isFeatured || undefined,
+        onSale:     onSale     || undefined,
         collection: collection || undefined,
       }),
     placeholderData: (prev) => prev,
@@ -241,7 +261,7 @@ export default function ProductsPage() {
   const totalPages = pagination?.totalPages ?? 1;
   const total      = pagination?.total ?? 0;
 
-  const hasActiveFilters = !!categoryId || !!minPrice || !!maxPrice || inStock || !!search;
+  const hasActiveFilters = !!categoryId || !!brandId || !!minPrice || !!maxPrice || inStock || !!search;
 
   // ── Contextual page heading — reflects what the shopper clicked ──
   // "Curated" collections are server-ranked lists (e.g. Best Sellers); the
@@ -249,10 +269,14 @@ export default function ProductsPage() {
   const isCurated = collection === 'best-sellers';
   const rawSort = searchParams.get('sortBy');
   const activeCategory = categories.find((c) => c.id === categoryId);
+  const activeBrand = brands.find((b) => b.id === brandId);
   const pageTitle =
     collection === 'best-sellers' ? 'Best Sellers'
       : collection === 'fresh-plus' ? 'Ayra Fresh+'
+      : onSale         ? 'Deals & Offers'
+      : isFeatured     ? 'Featured Products'
       : search         ? `Results for “${search}”`
+      : activeBrand    ? activeBrand.name
       : activeCategory ? activeCategory.name
       : rawSort === 'newest' ? 'New Arrivals'
       : 'All Products';
@@ -261,7 +285,13 @@ export default function ProductsPage() {
       ? 'Our top-selling products, ranked by what shoppers buy most.'
       : collection === 'fresh-plus'
       ? 'Farm-fresh produce, dairy, fish, meat & bakery — the Ayra Fresh+ line.'
-      : rawSort === 'newest' && !categoryId && !search
+      : onSale
+      ? 'Live discounts across the store — grab them before they end.'
+      : isFeatured
+      ? 'A hand-picked selection of standout products.'
+      : activeBrand && !search
+      ? `Explore everything from ${activeBrand.name}.`
+      : rawSort === 'newest' && !categoryId && !brandId && !search
       ? 'The latest additions to our shelves.'
       : null;
 
@@ -327,6 +357,7 @@ export default function ProductsPage() {
             onChange={handleFilterChange}
             onClear={clearFilters}
             categories={categories}
+            brands={brands}
             mobileOpen={mobileFilterOpen}
             onMobileClose={() => setMobileFilterOpen(false)}
           />

@@ -2,10 +2,11 @@ import { useState, useCallback } from 'react';
 import { X, SlidersHorizontal, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import type { ApiCategory } from '../../types/api';
+import type { ApiCategory, ApiBrand } from '../../types/api';
 
 export interface FilterState {
   categoryId: string;
+  brandId: string;
   minPrice: string;
   maxPrice: string;
   inStock: boolean;
@@ -16,6 +17,7 @@ interface FilterSidebarProps {
   onChange: (filters: FilterState) => void;
   onClear: () => void;
   categories: ApiCategory[];
+  brands: ApiBrand[];
   mobileOpen: boolean;
   onMobileClose: () => void;
 }
@@ -62,15 +64,19 @@ function PriceRangeInput({
 // ─── Filter content (shared between desktop + mobile) ─────────────────────────
 
 function FilterContent({
-  filters, onChange, onClear, categories, hasActiveFilters,
+  filters, onChange, onClear, categories, brands, hasActiveFilters,
 }: {
   filters: FilterState;
   onChange: (f: FilterState) => void;
   onClear: () => void;
   categories: ApiCategory[];
+  brands: ApiBrand[];
   hasActiveFilters: boolean;
 }) {
   const [catExpanded, setCatExpanded] = useState(true);
+  // Brand list is long (one entry per brand), so default it collapsed — but
+  // open it automatically when a brand is already selected.
+  const [brandExpanded, setBrandExpanded] = useState(!!filters.brandId);
 
   const update = useCallback(
     (patch: Partial<FilterState>) => onChange({ ...filters, ...patch }),
@@ -178,6 +184,84 @@ function FilterContent({
         </AnimatePresence>
       </div>
 
+      {/* Brands */}
+      {brands.length > 0 && (
+        <div className="rounded-xl border border-line/50 bg-bg/40 overflow-hidden">
+          <button
+            onClick={() => setBrandExpanded((v) => !v)}
+            className="flex w-full items-center justify-between px-4 py-3"
+          >
+            <span className="text-xs font-bold uppercase tracking-[0.14em] text-cream/60">
+              Brand
+            </span>
+            <ChevronDown
+              className={cn(
+                'h-3.5 w-3.5 text-cream/40 transition-transform duration-200',
+                brandExpanded && 'rotate-180',
+              )}
+            />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {brandExpanded && (
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                exit={{ height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="flex max-h-64 flex-col gap-0.5 overflow-y-auto px-2 pb-3">
+                  {/* All brands option */}
+                  <label className={cn(
+                    'flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 transition',
+                    filters.brandId === '' ? 'bg-saffron/15' : 'hover:bg-surface-2/60',
+                  )}>
+                    <input
+                      type="radio"
+                      name="brand"
+                      checked={filters.brandId === ''}
+                      onChange={() => update({ brandId: '' })}
+                      className="accent-saffron"
+                    />
+                    <span className={cn(
+                      'flex-1 text-sm font-medium',
+                      filters.brandId === '' ? 'text-saffron' : 'text-cream/80',
+                    )}>
+                      All Brands
+                    </span>
+                  </label>
+
+                  {brands.map((brand) => (
+                    <label
+                      key={brand.id}
+                      className={cn(
+                        'flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-2 transition',
+                        filters.brandId === brand.id ? 'bg-saffron/15' : 'hover:bg-surface-2/60',
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        name="brand"
+                        checked={filters.brandId === brand.id}
+                        onChange={() => update({ brandId: brand.id })}
+                        className="accent-saffron"
+                      />
+                      <span className={cn(
+                        'flex-1 text-sm',
+                        filters.brandId === brand.id ? 'font-semibold text-saffron' : 'text-cream/75',
+                      )}>
+                        {brand.name}
+                      </span>
+                      <span className="text-[11px] text-cream/35">{brand.productCount}</span>
+                    </label>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
+
       {/* Price range */}
       <div>
         <p className="mb-2.5 text-xs font-bold uppercase tracking-[0.14em] text-cream/60">
@@ -245,10 +329,10 @@ function FilterContent({
 // ─── FilterSidebar (exported) ─────────────────────────────────────────────────
 
 export function FilterSidebar({
-  filters, onChange, onClear, categories, mobileOpen, onMobileClose,
+  filters, onChange, onClear, categories, brands, mobileOpen, onMobileClose,
 }: FilterSidebarProps) {
   const hasActiveFilters =
-    !!filters.categoryId || !!filters.minPrice || !!filters.maxPrice || filters.inStock;
+    !!filters.categoryId || !!filters.brandId || !!filters.minPrice || !!filters.maxPrice || filters.inStock;
 
   return (
     <>
@@ -260,6 +344,7 @@ export function FilterSidebar({
             onChange={onChange}
             onClear={onClear}
             categories={categories}
+            brands={brands}
             hasActiveFilters={hasActiveFilters}
           />
         </div>
@@ -298,6 +383,7 @@ export function FilterSidebar({
                 onChange={onChange}
                 onClear={onClear}
                 categories={categories}
+                brands={brands}
                 hasActiveFilters={hasActiveFilters}
               />
 

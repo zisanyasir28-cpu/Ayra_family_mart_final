@@ -5,6 +5,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    // Only run the TypeScript source tests. Without this, a prior `tsc` build
+    // leaves compiled copies in dist/tests/*.test.js that vitest also picks up
+    // — they fail because compiled CommonJS can't `require` vitest.
+    include: ['src/**/*.{test,spec}.ts'],
     setupFiles: ['./src/tests/setup.ts'],
     coverage: {
       provider: 'v8',

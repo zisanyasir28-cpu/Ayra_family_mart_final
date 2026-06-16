@@ -36,6 +36,16 @@ export interface ApiCategory {
   children: ApiCategory[];
 }
 
+// ─── Brand (GET /api/v1/brands) ──────────────────────────────────────────────
+
+export interface ApiBrand {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string | null;
+  productCount: number;
+}
+
 // ─── Paginated list response helper ─────────────────────────────────────────
 
 export interface PaginatedData<T> {
