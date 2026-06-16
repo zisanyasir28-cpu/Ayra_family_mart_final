@@ -74,6 +74,31 @@ export async function uploadProductImage(
   return { url: cardUrl, publicId: result.public_id };
 }
 
+/**
+ * Upload a product image from a remote URL (admin "add by URL").
+ *
+ * Cloudinary fetches the URL on its own servers (no SSRF risk on ours) and we
+ * re-host it, so the stored image follows the "always via Cloudinary" rule and
+ * gets the same baked card transform chain as file uploads.
+ */
+export async function uploadProductImageFromUrl(
+  imageUrl: string,
+): Promise<CloudinaryUploadResult> {
+  const cloudName = process.env['CLOUDINARY_CLOUD_NAME'] ?? 'dzhj5tgyv';
+
+  const result = await cloudinary.uploader.upload(imageUrl, {
+    folder: 'superstore/products',
+    unique_filename: true,
+    overwrite: false,
+  });
+
+  const cardUrl =
+    `https://res.cloudinary.com/${cloudName}/image/upload` +
+    `/e_sharpen:40,f_auto,q_auto:low,w_600,h_720,c_pad/${result.public_id}`;
+
+  return { url: cardUrl, publicId: result.public_id };
+}
+
 export async function uploadCategoryImage(
   buffer: Buffer,
 ): Promise<CloudinaryUploadResult> {

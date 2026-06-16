@@ -11,10 +11,12 @@ import {
   Wand2,
   GripVertical,
   ChevronDown,
+  Link as LinkIcon,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { cn, paisaToTaka, takaToPaisa } from '@/lib/utils';
 import { createAdminProduct, updateAdminProduct } from '@/services/products';
+import { ImageCropEditor } from './ImageCropEditor';
 import type { ApiProduct } from '@/types/api';
 import type { ApiCategory } from '@/types/api';
 
@@ -220,19 +222,21 @@ function CategoryCombobox({ value, onChange, options, placeholder = 'Select…' 
   );
 }
 
-// ─── Image dropzone ───────────────────────────────────────────────────────────
+// ─── Image zone (upload + crop, or add by URL) ────────────────────────────────
 
 interface ImageEntry {
-  id: string;            // local temp id for new files, or DB id for existing
-  type: 'existing' | 'new';
-  url: string;           // preview URL (object URL for new, CDN url for existing)
+  id: string;            // local temp id for new files/urls, or DB id for existing
+  type: 'existing' | 'new' | 'url';
+  url: string;           // preview URL (object URL for new, CDN for existing, remote for 'url')
   file?: File;
   publicId?: string;
 }
 
+const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
 interface ImageZoneProps {
   existingImages: { id: string; url: string; publicId: string }[];
-  onChange: (newFiles: File[], removeIds: string[]) => void;
+  onChange: (newFiles: File[], imageUrls: string[], removeIds: string[]) => void;
 }
 
 function ImageZone({ existingImages, onChange }: ImageZoneProps) {
@@ -244,32 +248,54 @@ function ImageZone({ existingImages, onChange }: ImageZoneProps) {
       publicId: img.publicId,
     })),
   );
-  const [isDrag, setIsDrag] = useState(false);
+  const [isDrag, setIsDrag]     = useState(false);
+  const [urlInput, setUrlInput] = useState('');
+  const [cropSrc, setCropSrc]   = useState<string | null>(null);  // object URL being cropped
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Notify parent whenever images change
   useEffect(() => {
-    const newFiles = images.filter((i) => i.type === 'new' && i.file).map((i) => i.file!);
+    const newFiles  = images.filter((i) => i.type === 'new' && i.file).map((i) => i.file!);
+    const imageUrls = images.filter((i) => i.type === 'url').map((i) => i.url);
     const removedIds = existingImages
       .filter((orig) => !images.some((i) => i.id === orig.id))
       .map((orig) => orig.id);
-    onChange(newFiles, removedIds);
+    onChange(newFiles, imageUrls, removedIds);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images]);
 
-  function addFiles(files: FileList | File[]) {
-    const arr = Array.from(files).filter((f) =>
-      ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(f.type),
-    );
-    const MAX = 8 - images.length;
-    const toAdd = arr.slice(0, Math.max(0, MAX));
-    const entries: ImageEntry[] = toAdd.map((f) => ({
-      id:   crypto.randomUUID(),
-      type: 'new',
-      url:  URL.createObjectURL(f),
-      file: f,
-    }));
-    setImages((prev) => [...prev, ...entries]);
+  const atLimit = images.length >= 8;
+
+  // A picked file opens the crop editor; the cropped result is added on apply.
+  function pickFile(files: FileList | File[]) {
+    if (atLimit) { toast.error('Maximum 8 images'); return; }
+    const first = Array.from(files).find((f) => ACCEPTED_TYPES.includes(f.type));
+    if (!first) return;
+    setCropSrc(URL.createObjectURL(first));
+  }
+
+  function handleCropApply(blob: Blob) {
+    const file = new File([blob], `product-${Date.now()}.png`, { type: 'image/png' });
+    setImages((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), type: 'new', url: URL.createObjectURL(file), file },
+    ]);
+    if (cropSrc) URL.revokeObjectURL(cropSrc);
+    setCropSrc(null);
+  }
+
+  function handleCropCancel() {
+    if (cropSrc) URL.revokeObjectURL(cropSrc);
+    setCropSrc(null);
+  }
+
+  function addUrl() {
+    const url = urlInput.trim();
+    if (!url) return;
+    if (!/^https?:\/\/.+/i.test(url)) { toast.error('Enter a valid http(s) image URL'); return; }
+    if (atLimit) { toast.error('Maximum 8 images'); return; }
+    setImages((prev) => [...prev, { id: crypto.randomUUID(), type: 'url', url }]);
+    setUrlInput('');
   }
 
   function removeImage(id: string) {
@@ -293,37 +319,65 @@ function ImageZone({ existingImages, onChange }: ImageZoneProps) {
 
   return (
     <div className="space-y-3">
-      {/* Drop zone */}
-      {images.length < 8 && (
+      {/* Crop editor (opens after a file is picked) */}
+      {cropSrc && (
+        <ImageCropEditor src={cropSrc} onCancel={handleCropCancel} onApply={handleCropApply} />
+      )}
+
+      {/* Upload dropzone */}
+      {!atLimit && (
         <div
           onDragOver={(e) => { e.preventDefault(); setIsDrag(true); }}
           onDragLeave={() => setIsDrag(false)}
-          onDrop={(e) => { e.preventDefault(); setIsDrag(false); addFiles(e.dataTransfer.files); }}
+          onDrop={(e) => { e.preventDefault(); setIsDrag(false); pickFile(e.dataTransfer.files); }}
           onClick={() => inputRef.current?.click()}
           className={cn(
-            'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-8 text-center transition',
+            'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-7 text-center transition',
             isDrag
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-primary/50 hover:bg-muted/50',
           )}
         >
-          <Upload className="h-8 w-8 text-muted-foreground" />
+          <Upload className="h-7 w-7 text-muted-foreground" />
           <div>
             <p className="text-sm font-medium text-foreground">
-              Drop images here or click to browse
+              Drop an image or click to browse
             </p>
             <p className="text-xs text-muted-foreground">
-              JPEG, PNG, WebP · Max 8 images · First image is primary
+              JPEG, PNG, WebP · you&apos;ll crop &amp; position it next
             </p>
           </div>
           <input
             ref={inputRef}
             type="file"
             accept="image/jpeg,image/jpg,image/png,image/webp"
-            multiple
             className="hidden"
-            onChange={(e) => addFiles(e.target.files ?? [])}
+            onChange={(e) => { pickFile(e.target.files ?? []); e.target.value = ''; }}
           />
+        </div>
+      )}
+
+      {/* Add by URL */}
+      {!atLimit && (
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="url"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addUrl(); } }}
+              placeholder="Or paste an image URL…"
+              className={cn(inputClass, 'pl-9')}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={addUrl}
+            className="shrink-0 rounded-lg border border-border bg-muted px-4 py-2 text-sm font-medium text-foreground transition hover:bg-primary/10 hover:text-primary"
+          >
+            Add URL
+          </button>
         </div>
       )}
 
@@ -338,6 +392,11 @@ function ImageZone({ existingImages, onChange }: ImageZoneProps) {
               {i === 0 && (
                 <span className="absolute left-1 top-1 z-10 rounded bg-primary px-1 py-0.5 text-[10px] font-semibold text-primary-foreground">
                   Primary
+                </span>
+              )}
+              {img.type === 'url' && (
+                <span className="absolute right-1 top-1 z-10 rounded bg-black/60 px-1 py-0.5 text-[9px] font-semibold text-white">
+                  URL
                 </span>
               )}
 
@@ -372,6 +431,10 @@ function ImageZone({ existingImages, onChange }: ImageZoneProps) {
           ))}
         </div>
       )}
+
+      <p className="text-xs text-muted-foreground">
+        First image is the primary · max 8 · hover a tile to reorder or remove
+      </p>
     </div>
   );
 }
@@ -400,6 +463,7 @@ export function ProductFormSheet({
 }: ProductFormSheetProps) {
   const [activeTab, setActiveTab] = useState<TabKey>('Basic Info');
   const [newImages, setNewImages] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [removeImageIds, setRemoveImageIds] = useState<string[]>([]);
 
   const isEdit = !!product?.id;
@@ -455,6 +519,7 @@ export function ProductFormSheet({
     }
     // Reset image state
     setNewImages([]);
+    setImageUrls([]);
     setRemoveImageIds([]);
   }, [open, product, reset]);
 
@@ -512,6 +577,7 @@ export function ProductFormSheet({
         metaTitle:         values.metaTitle,
         metaDescription:   values.metaDescription,
         newImages,
+        imageUrls,
         removeImageIds,
       };
 
@@ -807,8 +873,9 @@ export function ProductFormSheet({
                 {activeTab === 'Images' && (
                   <ImageZone
                     existingImages={product?.images ?? []}
-                    onChange={(files, removedIds) => {
+                    onChange={(files, urls, removedIds) => {
                       setNewImages(files);
+                      setImageUrls(urls);
                       setRemoveImageIds(removedIds);
                     }}
                   />

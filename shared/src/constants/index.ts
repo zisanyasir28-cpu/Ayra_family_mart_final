@@ -18,8 +18,8 @@ export const CACHE_TTL = {
  * calculation and the client cart/checkout display, so the charged fee and the
  * displayed fee can never drift apart. All values in paisa.
  */
-export const FREE_DELIVERY_THRESHOLD_PAISA = 99_900; // free delivery at/above ৳999
-export const DELIVERY_FEE_PAISA = 6_000;             // flat ৳60 below the threshold
+export const FREE_DELIVERY_THRESHOLD_PAISA = 150_000; // free delivery at/above ৳1,500
+export const DELIVERY_FEE_PAISA = 6_000;              // flat ৳60 below the threshold
 export const COD_SURCHARGE_PAISA = 2_000;            // ৳20 extra for cash on delivery
 
 export const PASSWORD_MIN_LENGTH = 8;

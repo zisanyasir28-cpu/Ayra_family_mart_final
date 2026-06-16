@@ -400,7 +400,7 @@ function AnnouncementBar() {
           <span key={i} className="mx-4 inline-flex items-center gap-6 text-cream/60">
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-saffron animate-pulse" />
-              <span>FREE DELIVERY ABOVE ৳999</span>
+              <span>FREE DELIVERY ABOVE ৳1,500</span>
             </span>
             <span className="opacity-40">/</span>
             <span className="flex items-center gap-2">
@@ -514,14 +514,16 @@ function LocationSelector() {
 function GoldMemberBadge() {
   const { isAuthenticated } = useAuthStore();
   if (!isAuthenticated) return null;
+  // Membership isn't built yet — show it as an upcoming perk, not a status the
+  // user already holds (that would be false). See PromoStrip "Coming soon" cards.
   return (
-    <Link
-      to="/products?collection=fresh-plus"
-      className="hidden xl:flex shrink-0 items-center gap-1.5 rounded-full border border-coral/40 bg-coral/10 px-3.5 py-1.5 transition hover:border-coral/70 hover:bg-coral/15"
+    <span
+      className="hidden xl:flex shrink-0 items-center gap-1.5 rounded-full border border-coral/40 bg-coral/10 px-3.5 py-1.5"
+      title="Membership rewards are coming soon"
     >
       <span className="text-[13px] leading-none">👑</span>
-      <span className="text-[11px] font-bold text-coral">Gold Member</span>
-    </Link>
+      <span className="text-[11px] font-bold text-coral">Gold · Soon</span>
+    </span>
   );
 }
 
@@ -1227,7 +1229,7 @@ function Footer() {
                 { label: 'All Products',  to: '/products'                  },
                 { label: 'Flash Deals',   to: '/products?deals=true'       },
                 { label: 'New Arrivals',  to: '/products?sortBy=newest'     },
-                { label: 'Best Sellers',  to: '/products?sort=popular'     },
+                { label: 'Best Sellers',  to: '/products?collection=best-sellers' },
                 { label: 'Wishlist',      to: '/wishlist'                  },
               ].map((l) => (
                 <li key={l.label}>

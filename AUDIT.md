@@ -187,11 +187,23 @@ Decided 2026-06-15. Goal: make the homepage real — every label works, nothing 
 | 2 | Returns | New `/returns` policy page + wire link (request workflow = later) | 🟢 | ✅ done |
 | 3 | New Arrivals | Home section + route using existing `newest` sort + nav link | 🟢 | ✅ done |
 | 4 | Ayra Fresh+ | Fresh-categories collection landing + nav | 🟡 | ✅ done (filter needs deploy) |
-| 5 | Best Sellers | Backend aggregate (top by units sold) + endpoint + section + nav | 🟡 | todo |
-| 6 | Free delivery ৳1500 | Shared constant + `cartStore` + consistent display text | 🟢 | todo (needs store OK) |
-| 7 | "Coming soon" labels | Tag the Member Exclusive + Ayra Points UI | 🟢 | todo |
+| 5 | Best Sellers | Backend aggregate (top by units sold) + endpoint + section + nav | 🟡 | ✅ done (ranking needs deploy) |
+| 6 | Free delivery ৳1500 | Shared constant + `cartStore` + consistent display text | 🟢 | ✅ done |
+| 7 | "Coming soon" labels | Tag the Member Exclusive + Ayra Points UI | 🟢 | ✅ done |
 
 **Later (planned projects, not this batch):** Ayra Points loyalty system · Membership system · Returns request workflow.
+
+**Feature 5 — Best Sellers (2026-06-16):** Ranked via a `groupBy` on `order_items` (real units sold, excluding CANCELLED/REFUNDED, ACTIVE products only), routed through the existing `collection=best-sellers` param — one code path serves both the home section and the paginated page (no new endpoint, no schema migration). Self-contained branch in `getProducts` paginates over the ranked-ID set and preserves rank order; cached 10 min. ProductsPage shows a "Best Sellers" heading and hides the filter sidebar + sort (curated ranked view). Nav links fixed (sidebar + footer `?sort=popular` → `?collection=best-sellers`). ⚠️ **Ranking is server-side** — live Railway strips the unknown param pre-deploy and shows the default list under the right heading (same caveat as Fresh+). Verified spotlight layout + rank medallions live.
+
+**Home sections redesign (2026-06-16):** Featured / Best Sellers / New Arrivals were three near-identical grids. Redesigned into one cohesive system, three distinct rhythms — shared themed `SectionHeader` (icon chip · English eyebrow · small Bengali accent · heading), reusing `ProductCard` (no cart-logic duplication, no contract changes):
+- **Featured** — plum, "নির্বাচিত", calm editorial grid (baseline).
+- **Best Sellers** — gold, "সবার পছন্দ", #1 spotlight (hero ~368px) + 2×2 ranked runners-up with medallions + "#1 Best Seller · জনপ্রিয়" trophy ribbon.
+- **New Arrivals** — pink, "নতুন এসেছে", horizontal "just landed" scroll rail (snap + desktop arrows + edge fades) + "NEW · নতুন" card badges.
+English-primary, small meaningful Bengali (Hind Siliguri) per the design language. Verified mobile (screenshots) + desktop (DOM measurements). Typechecks clean.
+
+**Feature 6 — Free delivery ৳1500 (2026-06-16):** Bumped `FREE_DELIVERY_THRESHOLD_PAISA` 99_900 → 150_000 in `shared/`. Critically, `cartStore` now **imports** the shared constants (was hardcoding `99_900`/`6_000`) so the cart *charges* the same threshold it *displays* — public store API unchanged. Updated copy: home marquee + header announcement bar `৳999 → ৳1,500` (PromoStrip + HelpPage already said ৳1,500 — now consistent). Server `order.controller` already aliases the shared constant (live after deploy). Updated the `orders.test.ts` free-shipping test to the new threshold; all 18 server tests pass. Verified live: cart drawer shows "Add ৳1432.00 more for free delivery" (= 1500 − 68), proving the new threshold is active (no stale-bundle bug).
+
+**Feature 7 — "Coming soon" labels (2026-06-16):** Member Exclusive + Ayra Points PromoStrip cards now carry a "⏰ Coming Soon" badge and their fake CTAs ("Join Now" → unrelated link, "Redeem Now" → /account) are replaced with non-actionable "Coming Soon" placeholders. Dropped the misleading "640 more to Platinum tier" personal-data line. Also fixed the header "Gold Member" badge, which falsely told *every* logged-in user they were a Gold Member (and linked to fresh-plus) → now a non-asserting "Gold · Soon" teaser. Teaser visuals kept (clearly upcoming, not live).
 
 **Bonus fix (2026-06-15):** Added a global `ScrollToTop` (`components/common/ScrollToTop.tsx`) so client-side navigation starts at the top (respects browser back/forward). Verified: scroll 1500→0 on link click.
 

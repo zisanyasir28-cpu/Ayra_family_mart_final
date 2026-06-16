@@ -4,6 +4,7 @@ import { prisma } from '../lib/prisma';
 import { redis } from '../lib/redis';
 import {
   uploadProductImage,
+  uploadProductImageFromUrl,
   deleteImage,
   generateThumbnailUrl,
 } from '../lib/cloudinary';
@@ -40,7 +41,7 @@ function listCacheKey(params: Record<string, unknown>): string {
 }
 
 export async function invalidateProductCaches(productId?: string): Promise<void> {
-  const patterns = ['products:list:*', 'products:featured', 'products:low-stock'];
+  const patterns = ['products:list:*', 'products:featured', 'products:low-stock', 'products:best-sellers:ids'];
   if (productId) patterns.push(`products:${productId}`);
 
   // Upstash Redis doesn't support KEYS in serverless — delete known keys
@@ -175,6 +176,36 @@ async function searchWithTrgm(term: string): Promise<string[]> {
 // Ayra Fresh+ — the fresh/perishable line, spanning several real categories.
 const FRESH_PLUS_SLUGS = ['fresh-produce', 'fruits', 'vegetables', 'dairy-eggs', 'fish', 'meat', 'bakery'];
 
+// Best Sellers — a curated, ranked top-N list built from real units sold.
+const BEST_SELLER_MAX = 60;
+
+/**
+ * Returns product IDs ranked by real units sold (highest first), capped at
+ * BEST_SELLER_MAX. Excludes cancelled/refunded orders (those sales reversed)
+ * and non-ACTIVE products. Cached for 10 minutes — the underlying groupBy is
+ * an aggregate over order_items and shouldn't run on every request.
+ */
+async function getBestSellerIds(): Promise<string[]> {
+  const cacheKey = 'products:best-sellers:ids';
+  const cached = await redis.get<string[]>(cacheKey).catch(() => null);
+  if (cached) return cached;
+
+  const grouped = await prisma.orderItem.groupBy({
+    by: ['productId'],
+    where: {
+      order:   { status: { notIn: ['CANCELLED', 'REFUNDED'] } },
+      product: { status: 'ACTIVE' },
+    },
+    _sum:    { quantity: true },
+    orderBy: { _sum: { quantity: 'desc' } },
+    take:    BEST_SELLER_MAX,
+  });
+
+  const ids = grouped.map((g) => g.productId);
+  await redis.set(cacheKey, ids, { ex: 60 * 10 }).catch(() => {});
+  return ids;
+}
+
 export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const q = req.query as unknown as ProductQueryInput;
   const page   = Number(q.page   ?? 1);
@@ -190,6 +221,49 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
   const cacheKey = listCacheKey({ ...q, _v: version });
   const cached = await redis.get<{ products: unknown[]; meta: { pagination: PaginationMeta } }>(cacheKey);
   if (cached) return sendSuccess(res, cached.products, 200, cached.meta.pagination);
+
+  // ── Best Sellers — curated ranked view (by real units sold) ──
+  // Self-contained path: rank IDs from order history, paginate over that
+  // fixed set, then preserve the popularity order (which `IN (...)` loses).
+  // The filter sidebar doesn't apply here — this is a ranked top list, not
+  // a filterable catalog (the client hides the filters for this collection).
+  if (q.collection === 'best-sellers') {
+    const rankedIds = await getBestSellerIds();
+    const total     = rankedIds.length;
+    const pageIds   = rankedIds.slice((page - 1) * limit, (page - 1) * limit + limit);
+
+    const rawBest = pageIds.length
+      ? await prisma.product.findMany({
+          where:   { id: { in: pageIds }, status: 'ACTIVE' },
+          include: getProductListInclude(),
+        })
+      : [];
+
+    const byId = new Map(rawBest.map((p) => [p.id, p]));
+    const bestProducts = pageIds
+      .map((id) => byId.get(id))
+      .filter((p): p is (typeof rawBest)[number] => Boolean(p))
+      .map((p) => {
+        const campaign = p.campaignProducts[0]?.campaign ?? null;
+        return {
+          ...p,
+          effectivePriceInPaisa: calcEffectivePrice(p.priceInPaisa, campaign),
+          activeCampaign: campaign
+            ? {
+                id:            campaign.id,
+                discountType:  campaign.discountType,
+                discountValue: campaign.discountValue,
+                endsAt:        campaign.endsAt,
+              }
+            : null,
+          campaignProducts: undefined,
+        };
+      });
+
+    const pagination = buildPagination(page, limit, total);
+    await redis.set(cacheKey, { products: bestProducts, meta: { pagination } }, { ex: LIST_TTL });
+    return sendSuccess(res, bestProducts, 200, pagination);
+  }
 
   const where: Prisma.ProductWhereInput = {
     status: q.status ?? 'ACTIVE',
@@ -436,12 +510,18 @@ export const createProduct = asyncHandler(
 
     const slug = await uniqueProductSlug(body.name);
 
-    // Upload all images in parallel
-    const uploadedImages = await Promise.all(
+    // Upload file images + URL images (Cloudinary fetches URLs itself) in parallel
+    const fileImages = await Promise.all(
       files.map((f, i) =>
         uploadProductImage(f.buffer).then((r) => ({ ...r, sortOrder: i })),
       ),
     );
+    const urlImages = await Promise.all(
+      (body.imageUrls ?? []).map((url, i) =>
+        uploadProductImageFromUrl(url).then((r) => ({ ...r, sortOrder: files.length + i })),
+      ),
+    );
+    const uploadedImages = [...fileImages, ...urlImages];
 
     const product = await prisma.product.create({
       data: {
@@ -516,9 +596,9 @@ export const updateProduct = asyncHandler(
       ]);
     }
 
-    // Upload new images
+    // Upload new file images + URL images (appended after existing)
     const nextSortOrder = existing.images.length;
-    const newUploads = await Promise.all(
+    const newFileUploads = await Promise.all(
       newFiles.map((f, i) =>
         uploadProductImage(f.buffer).then((r) => ({
           ...r,
@@ -526,6 +606,15 @@ export const updateProduct = asyncHandler(
         })),
       ),
     );
+    const newUrlUploads = await Promise.all(
+      (body.imageUrls ?? []).map((url, i) =>
+        uploadProductImageFromUrl(url).then((r) => ({
+          ...r,
+          sortOrder: nextSortOrder + newFiles.length + i,
+        })),
+      ),
+    );
+    const newUploads = [...newFileUploads, ...newUrlUploads];
 
     // Regenerate slug only if name changed
     let slug = existing.slug;

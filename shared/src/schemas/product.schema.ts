@@ -25,6 +25,22 @@ const coerceTags = z.preprocess(
   z.array(z.string().max(50)).max(20),
 );
 
+// Image URLs (admin "add by URL") arrive as a JSON string in multipart bodies.
+const coerceUrlArray = z.preprocess(
+  (v) => {
+    if (Array.isArray(v)) return v;
+    if (typeof v === 'string') {
+      try {
+        return JSON.parse(v);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  },
+  z.array(z.string().url()).max(8),
+);
+
 export const createProductSchema = z.object({
   name: z.string().min(2).max(255),
   description: z.string().min(10).max(5000),
@@ -40,6 +56,7 @@ export const createProductSchema = z.object({
   categoryId: z.string().uuid(),
   brandId: z.string().uuid().optional(),
   tags: coerceTags.default([]),
+  imageUrls: coerceUrlArray.optional(), // admin "add by URL" — uploaded to Cloudinary server-side
   isFeatured: coerceBool.default(false),
   status: z.nativeEnum(ProductStatus).default(ProductStatus.ACTIVE),
 });
@@ -58,7 +75,7 @@ export const productQuerySchema = z.object({
   inStock: z.coerce.boolean().optional(),
   isFeatured: z.coerce.boolean().optional(),
   status: z.nativeEnum(ProductStatus).optional(),
-  collection: z.enum(['fresh-plus']).optional(),
+  collection: z.enum(['fresh-plus', 'best-sellers']).optional(),
   sortBy: z
     .enum(['price_asc', 'price_desc', 'newest', 'oldest', 'name_asc', 'name_desc'])
     .default('newest'),

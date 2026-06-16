@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Zap, Truck, Award, Coins, ArrowRight } from 'lucide-react';
+import { Zap, Truck, Award, Coins, ArrowRight, Clock } from 'lucide-react';
 
 // ─── Countdown to end-of-day ─────────────────────────────────────────────────
 function useCountdown() {
@@ -37,6 +37,29 @@ function TimeUnit({ value, label }: { value: string; label: string }) {
       </span>
       <span className="mt-0.5 text-[9px] uppercase tracking-wider text-dark-fg/45">{label}</span>
     </div>
+  );
+}
+
+// ─── "Coming soon" badge ──────────────────────────────────────────────────────
+// Member Exclusive + Ayra Points are previewed here but not built yet (they ship
+// as dedicated projects). This badge keeps the teaser honest — nothing on these
+// cards is live, so the perks/points shown are illustrative, not real data.
+function ComingSoonBadge() {
+  return (
+    <span className="absolute right-4 top-4 z-10 inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-dark-fg/70 ring-1 ring-white/15 backdrop-blur-sm">
+      <Clock className="h-2.5 w-2.5" strokeWidth={2.4} />
+      Coming Soon
+    </span>
+  );
+}
+
+// Non-actionable CTA placeholder (replaces the fake "Join Now" / "Redeem Now").
+function ComingSoonCta() {
+  return (
+    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-dark-fg/35">
+      <Clock className="h-3.5 w-3.5" strokeWidth={2.2} />
+      Coming Soon
+    </span>
   );
 }
 
@@ -151,6 +174,7 @@ export function PromoStrip() {
             variants={cardVariants}
             className="invert-card glass-shine relative overflow-hidden rounded-3xl border border-coral/20 bg-gradient-to-br from-coral/20 via-surface-dark to-surface-dark p-5 shadow-[0_0_12px_-3px_hsl(var(--coral)/0.35),inset_0_0_0_1px_hsl(var(--coral)/0.2)]"
           >
+            <ComingSoonBadge />
             <div className="flex items-center gap-2.5 text-coral">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-coral/20">
                 <Award className="h-4 w-4" strokeWidth={1.9} />
@@ -169,13 +193,7 @@ export function PromoStrip() {
               <p className="mt-0.5 text-[10px] text-dark-fg/60">on every purchase</p>
             </div>
 
-            <Link
-              to="/products?collection=fresh-plus"
-              className="group mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-coral transition hover:text-dark-fg"
-            >
-              Join Now
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            <ComingSoonCta />
 
             <div
               aria-hidden
@@ -188,6 +206,7 @@ export function PromoStrip() {
             variants={cardVariants}
             className="invert-card glass-shine relative overflow-hidden rounded-3xl border border-plum/20 bg-gradient-to-br from-plum/20 via-surface-dark to-surface-dark p-5 shadow-[0_0_12px_-3px_hsl(var(--plum)/0.35),inset_0_0_0_1px_hsl(var(--plum)/0.2)]"
           >
+            <ComingSoonBadge />
             <div className="flex items-center gap-2.5 text-plum">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-plum/20">
                 <Coins className="h-4 w-4" strokeWidth={1.9} />
@@ -215,15 +234,9 @@ export function PromoStrip() {
                 transition={{ duration: 1.2, ease: 'easeOut', delay: 0.4 }}
               />
             </div>
-            <p className="mt-1 text-[10px] text-dark-fg/40">640 more to Platinum tier</p>
+            <p className="mt-1 text-[10px] text-dark-fg/40">Earn &amp; redeem points on every order — soon.</p>
 
-            <Link
-              to="/account"
-              className="group mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-plum transition hover:text-dark-fg"
-            >
-              Redeem Now
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+            <ComingSoonCta />
 
             {/* Coin stack SVG watermark */}
             <svg

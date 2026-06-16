@@ -97,6 +97,7 @@ export interface AdminProductFormValues {
   metaTitle?: string;
   metaDescription?: string;
   newImages: File[];
+  imageUrls: string[];       // images added by URL — uploaded to Cloudinary server-side
   removeImageIds: string[];
 }
 
@@ -124,6 +125,10 @@ function buildProductFormData(values: AdminProductFormValues): FormData {
   if (values.metaDescription) fd.append('metaDescription', values.metaDescription);
 
   values.newImages.forEach((f) => fd.append('images', f));
+
+  if (values.imageUrls.length) {
+    fd.append('imageUrls', JSON.stringify(values.imageUrls));
+  }
 
   if (values.removeImageIds.length) {
     fd.append('removeImageIds', JSON.stringify(values.removeImageIds));

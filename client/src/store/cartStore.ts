@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { FREE_DELIVERY_THRESHOLD_PAISA, DELIVERY_FEE_PAISA } from '@superstore/shared';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -63,12 +64,12 @@ export const useCartStore = create<CartState>()(
 
       deliveryFeeInPaisa: () => {
         const sub = get().items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0);
-        return sub > 0 && sub < 99_900 ? 6_000 : 0;
+        return sub > 0 && sub < FREE_DELIVERY_THRESHOLD_PAISA ? DELIVERY_FEE_PAISA : 0;
       },
 
       totalInPaisa: () => {
         const sub = get().items.reduce((s, i) => s + i.priceInPaisa * i.quantity, 0);
-        const delivery = sub > 0 && sub < 99_900 ? 6_000 : 0;
+        const delivery = sub > 0 && sub < FREE_DELIVERY_THRESHOLD_PAISA ? DELIVERY_FEE_PAISA : 0;
         const discount = get().coupon?.discountInPaisa ?? 0;
         return Math.max(0, sub + delivery - discount);
       },

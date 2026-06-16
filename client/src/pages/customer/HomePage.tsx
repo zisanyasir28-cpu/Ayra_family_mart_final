@@ -3,6 +3,7 @@ import { PromoStrip }       from '../../components/home/PromoStrip';
 import { BazarPanel }       from '../../components/home/BazarPanel';
 import { FlashDeals }       from '../../components/home/FlashDeals';
 import { FeaturedProducts } from '../../components/home/FeaturedProducts';
+import { BestSellers }      from '../../components/home/BestSellers';
 import { NewArrivals }      from '../../components/home/NewArrivals';
 import { WhyShopWithUs }    from '../../components/home/WhyShopWithUs';
 import { NewsletterBar }    from '../../components/home/NewsletterBar';
@@ -15,12 +16,14 @@ export default function HomePage() {
       <PromoStrip />
 
       <MarqueeBand
-        items={['Fresh today', 'Free above ৳999', 'Same-day delivery', 'Daily essentials', 'Curated picks']}
+        items={['Fresh today', 'Free above ৳1,500', 'Same-day delivery', 'Daily essentials', 'Curated picks']}
         banglaAccent="তাজা"
         variant="cream"
       />
 
       <FeaturedProducts />
+
+      <BestSellers />
 
       <FlashDeals />
 

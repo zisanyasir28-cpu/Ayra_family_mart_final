@@ -169,12 +169,12 @@ describe('POST /api/v1/orders — server-side pricing', () => {
     });
   });
 
-  it('grants free shipping above ৳999 threshold', async () => {
+  it('grants free shipping above ৳1,500 threshold', async () => {
     vi.mocked(prisma.product.findMany).mockResolvedValue([
-      { ...mockProductA, priceInPaisa: 100_000, stockQuantity: 10 },
+      { ...mockProductA, priceInPaisa: 200_000, stockQuantity: 10 },
     ] as any);
     vi.mocked(prisma.order.create).mockResolvedValue(
-      createdOrderShape({ subtotalInPaisa: 100_000, shippingInPaisa: 2_000, totalInPaisa: 102_000 }) as any,
+      createdOrderShape({ subtotalInPaisa: 200_000, shippingInPaisa: 2_000, totalInPaisa: 202_000 }) as any,
     );
 
     await request(app)

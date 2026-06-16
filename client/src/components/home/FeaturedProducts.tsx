@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'motion/react';
+import { BadgeCheck } from 'lucide-react';
 import { fetchFeaturedProducts } from '../../services/products';
 import { ProductCard, ProductCardSkeleton } from '../product/ProductCard';
 import { ArrowRightIcon } from '../common/HandIcon';
+import { SectionHeader } from './SectionHeader';
 
 const stagger = {
   hidden: {},
@@ -24,32 +26,20 @@ export function FeaturedProducts() {
   return (
     <section className="bg-bg py-20 sm:py-24">
       <div className="container">
-        {/* Header */}
-        <div className="mb-12 flex items-end justify-between gap-6">
-          <div>
-            <div className="eyebrow">
-              <span className="eyebrow-dot" />
-              <span>Featured</span>
-            </div>
-            <motion.h2
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="display-lg mt-4 max-w-2xl text-cream"
-            >
+        {/* Header — curated / editorial (plum) */}
+        <SectionHeader
+          icon={BadgeCheck}
+          eyebrow="Featured"
+          bangla="নির্বাচিত"
+          accent="plum"
+          viewAllHref="/products?isFeatured=true"
+          title={
+            <>
               Picked, photographed,<br className="hidden sm:block" />
-              <em className="text-saffron">and waiting.</em>
-            </motion.h2>
-          </div>
-          <Link
-            to="/products?isFeatured=true"
-            className="group hidden items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm text-cream transition-colors hover:border-saffron hover:text-saffron md:inline-flex"
-          >
-            <span>View all</span>
-            <ArrowRightIcon size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-          </Link>
-        </div>
+              <em className="text-plum">and waiting.</em>
+            </>
+          }
+        />
 
         {/* Grid */}
         {isLoading ? (

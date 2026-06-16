@@ -244,16 +244,22 @@ export default function ProductsPage() {
   const hasActiveFilters = !!categoryId || !!minPrice || !!maxPrice || inStock || !!search;
 
   // ── Contextual page heading — reflects what the shopper clicked ──
+  // "Curated" collections are server-ranked lists (e.g. Best Sellers); the
+  // filter sidebar + sort don't apply to them, so we hide those controls.
+  const isCurated = collection === 'best-sellers';
   const rawSort = searchParams.get('sortBy');
   const activeCategory = categories.find((c) => c.id === categoryId);
   const pageTitle =
-    collection === 'fresh-plus' ? 'Ayra Fresh+'
+    collection === 'best-sellers' ? 'Best Sellers'
+      : collection === 'fresh-plus' ? 'Ayra Fresh+'
       : search         ? `Results for “${search}”`
       : activeCategory ? activeCategory.name
       : rawSort === 'newest' ? 'New Arrivals'
       : 'All Products';
   const pageSubtitle =
-    collection === 'fresh-plus'
+    collection === 'best-sellers'
+      ? 'Our top-selling products, ranked by what shoppers buy most.'
+      : collection === 'fresh-plus'
       ? 'Farm-fresh produce, dairy, fish, meat & bakery — the Ayra Fresh+ line.'
       : rawSort === 'newest' && !categoryId && !search
       ? 'The latest additions to our shelves.'
@@ -271,19 +277,21 @@ export default function ProductsPage() {
       {/* Top bar — mobile filter trigger + result count + sort */}
       <div className="mb-5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          {/* Mobile filter button */}
-          <button
-            onClick={() => setMobileFilterOpen(true)}
-            className="flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-saffron md:hidden"
-          >
-            <SlidersHorizontal className="h-4 w-4" strokeWidth={1.8} />
-            Filters
-            {hasActiveFilters && (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-saffron text-[9px] font-extrabold text-bg">
-                !
-              </span>
-            )}
-          </button>
+          {/* Mobile filter button — hidden for curated (ranked) collections */}
+          {!isCurated && (
+            <button
+              onClick={() => setMobileFilterOpen(true)}
+              className="flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-cream/80 transition hover:border-saffron/40 hover:text-saffron md:hidden"
+            >
+              <SlidersHorizontal className="h-4 w-4" strokeWidth={1.8} />
+              Filters
+              {hasActiveFilters && (
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-saffron text-[9px] font-extrabold text-bg">
+                  !
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Result count */}
           <p className="text-sm text-cream/55">
@@ -297,28 +305,32 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        {/* Sort dropdown */}
-        <select
-          value={sortBy}
-          onChange={(e) => updateParams({ sortBy: e.target.value })}
-          className="rounded-full border border-line bg-surface px-4 py-2 text-sm text-cream/80 focus:border-saffron focus:outline-none focus:ring-2 focus:ring-saffron/25"
-        >
-          {SORT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-        </select>
+        {/* Sort dropdown — hidden for curated (ranked) collections */}
+        {!isCurated && (
+          <select
+            value={sortBy}
+            onChange={(e) => updateParams({ sortBy: e.target.value })}
+            className="rounded-full border border-line bg-surface px-4 py-2 text-sm text-cream/80 focus:border-saffron focus:outline-none focus:ring-2 focus:ring-saffron/25"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="flex gap-6">
-        {/* Filter sidebar */}
-        <FilterSidebar
-          filters={filters}
-          onChange={handleFilterChange}
-          onClear={clearFilters}
-          categories={categories}
-          mobileOpen={mobileFilterOpen}
-          onMobileClose={() => setMobileFilterOpen(false)}
-        />
+        {/* Filter sidebar — hidden for curated (ranked) collections */}
+        {!isCurated && (
+          <FilterSidebar
+            filters={filters}
+            onChange={handleFilterChange}
+            onClear={clearFilters}
+            categories={categories}
+            mobileOpen={mobileFilterOpen}
+            onMobileClose={() => setMobileFilterOpen(false)}
+          />
+        )}
 
         {/* Product grid */}
         <div className="relative min-w-0 flex-1">
