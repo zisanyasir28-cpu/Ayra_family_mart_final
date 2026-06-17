@@ -1,5 +1,5 @@
-// Sentry must be imported first so it can patch error handlers before anything throws.
-import { Sentry } from '@/lib/sentry';
+// Theme listener boots immediately. Sentry is lazily initialised below
+// (initSentry) so its SDK stays out of the first-load bundle when no DSN is set.
 import './store/themeStore'; // boots theme matchMedia listener
 
 import React, { useEffect } from 'react';
@@ -11,6 +11,8 @@ import { Toaster } from 'react-hot-toast';
 
 import { queryClient } from '@/lib/queryClient';
 import { AuthProvider } from '@/components/providers/AuthProvider';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { initSentry } from '@/lib/sentry';
 import App from './App';
 import '@/styles/globals.css';
 
@@ -59,9 +61,12 @@ function ErrorFallback({ error }: { error: unknown }) {
 const rootEl = document.getElementById('root');
 if (!rootEl) throw new Error('Root element #root not found');
 
+// Lazily load + init Sentry (no-op unless VITE_SENTRY_DSN is set).
+void initSentry();
+
 ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
-    <Sentry.ErrorBoundary fallback={({ error }) => <ErrorFallback error={error} />}>
+    <ErrorBoundary fallback={(error) => <ErrorFallback error={error} />}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <AuthProvider>
@@ -81,6 +86,6 @@ ReactDOM.createRoot(rootEl).render(
         </BrowserRouter>
         {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
-    </Sentry.ErrorBoundary>
+    </ErrorBoundary>
   </React.StrictMode>,
 );

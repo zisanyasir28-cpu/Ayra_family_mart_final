@@ -104,6 +104,26 @@ export default defineConfig(() => {
   build: {
     target: 'es2022',
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        // Split only the EAGER vendor libs (already in the first-load entry) into
+        // their own long-cached chunks. This shrinks the entry and lets the
+        // browser keep React et al. cached across deploys.
+        //
+        // Do NOT manual-chunk libraries used only by lazy routes (recharts,
+        // react-hook-form, date-fns): Vite modulepreloads named manual chunks,
+        // so forcing a lazy-only lib into one would pull it into the first-load.
+        // Left alone, those stay inside their route chunks and load on demand.
+        manualChunks(id: string) {
+          if (!id.includes('node_modules')) return undefined;
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return 'react-vendor';
+          if (id.includes('@tanstack')) return 'tanstack';
+          if (/[\\/]node_modules[\\/]motion[\\/]/.test(id) || id.includes('framer-motion')) return 'motion';
+          if (id.includes('lucide-react')) return 'icons';
+          return undefined;
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',
