@@ -54,7 +54,7 @@ export const createProductSchema = z.object({
   unit: z.string().min(1).max(50).default('piece'),
   weight: z.coerce.number().positive().optional(),
   categoryId: z.string().uuid(),
-  brandId: z.string().uuid().optional(),
+  brandId: z.string().min(1).max(64).optional(), // brand IDs are opaque keys, not strictly UUIDs
   tags: coerceTags.default([]),
   imageUrls: coerceUrlArray.optional(), // admin "add by URL" — uploaded to Cloudinary server-side
   isFeatured: coerceBool.default(false),
@@ -68,7 +68,7 @@ export const productQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
   limit: z.coerce.number().int().positive().max(100).default(12),
   categoryId: z.string().uuid().optional(),
-  brandId: z.string().uuid().optional(),
+  brandId: z.string().min(1).max(64).optional(), // brand IDs are opaque keys, not strictly UUIDs
   search: z.string().max(255).optional(),
   minPrice: z.coerce.number().min(0).optional(), // BDT taka
   maxPrice: z.coerce.number().min(0).optional(), // BDT taka

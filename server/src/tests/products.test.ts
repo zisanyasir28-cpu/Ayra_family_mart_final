@@ -191,6 +191,15 @@ describe('GET /api/v1/products', () => {
     );
   });
 
+  it('accepts a non-uuid brandId (brand IDs are opaque keys, not strict UUIDs)', async () => {
+    const brandKey = 'b1d4a9c0-1234-4abc-8def-himalaya00001';
+    const res = await request(app).get(`/api/v1/products?brandId=${brandKey}`);
+    expect(res.status).toBe(200);
+    expect(prisma.product.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ brandId: brandKey }) }),
+    );
+  });
+
   it('attaches effectivePriceInPaisa with active campaign (20% off ৳150 = 12000)', async () => {
     vi.mocked(prisma.product.findMany).mockResolvedValue([
       mockProductWithCampaign,
