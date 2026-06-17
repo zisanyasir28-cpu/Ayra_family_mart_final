@@ -9,6 +9,7 @@ import { fetchBrands } from '../../services/brands';
 import { ProductCard, ProductCardSkeleton } from '../../components/product/ProductCard';
 import { FilterSidebar, type FilterState } from '../../components/products/FilterSidebar';
 import { AyraSpinner } from '../../components/ui/AyraLoader';
+import { FloatingPager } from '../../components/ui/FloatingPager';
 import { cn } from '../../lib/utils';
 
 // ─── Sort options ─────────────────────────────────────────────────────────────
@@ -217,6 +218,14 @@ export default function ProductsPage() {
     });
   }, [setSearchParams]);
 
+  const goToPage = useCallback((p: number) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('page', String(p));
+      return next;
+    });
+  }, [setSearchParams]);
+
   // Scroll to top of product section whenever the page number changes
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -406,18 +415,15 @@ export default function ProductsPage() {
                 page={page}
                 totalPages={totalPages}
                 disabled={isFetching}
-                onChange={(p) =>
-                  setSearchParams((prev) => {
-                    const next = new URLSearchParams(prev);
-                    next.set('page', String(p));
-                    return next;
-                  })
-                }
+                onChange={goToPage}
               />
             </div>
           )}
         </div>
       </div>
+
+      {/* Mobile-only floating prev/next page controls (glassy edge buttons) */}
+      <FloatingPager page={page} totalPages={totalPages} onChange={goToPage} disabled={isFetching} />
     </div>
   );
 }

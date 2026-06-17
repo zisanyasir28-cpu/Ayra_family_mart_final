@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { cn, formatPaisa } from '@/lib/utils';
 import { AyraSpinner } from '@/components/ui/AyraLoader';
+import { FloatingPager } from '@/components/ui/FloatingPager';
 import { useAuthStore } from '@/store/authStore';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useMyOrders } from '@/hooks/useMyOrders';
@@ -223,6 +224,13 @@ function OrdersSection() {
               </button>
             </div>
           )}
+
+          <FloatingPager
+            page={page}
+            totalPages={pagination?.totalPages ?? 1}
+            onChange={setPage}
+            disabled={isFetching}
+          />
         </>
       )}
     </div>

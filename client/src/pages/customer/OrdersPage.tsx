@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Package, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { AyraSpinner } from '@/components/ui/AyraLoader';
+import { FloatingPager } from '@/components/ui/FloatingPager';
 import { useMyOrders } from '@/hooks/useMyOrders';
 import { formatPaisa, cn } from '@/lib/utils';
 import { OrderStatus } from '@superstore/shared';
@@ -150,6 +151,13 @@ export default function OrdersPage() {
           </button>
         </div>
       )}
+
+      <FloatingPager
+        page={page}
+        totalPages={pagination?.totalPages ?? 1}
+        onChange={setPage}
+        disabled={isFetching}
+      />
     </div>
   );
 }
