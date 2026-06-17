@@ -11,10 +11,10 @@ interface FloatingPagerProps {
 
 /**
  * Mobile-only floating prev/next page controls — glassy circular buttons pinned
- * to the left & right screen edges so you can page without scrolling down to the
- * numeric pager. Sits at bottom-28 to clear both the product cards' "+" buttons
- * and the bottom tab bar. Hidden on lg+ (desktop has the sidebar + inline pager)
- * and when there's only one page; each side hides itself at the range ends.
+ * to the left & right screen edges, vertically centered, so you can page without
+ * scrolling down to the numeric pager. Hidden on lg+ (desktop has the sidebar +
+ * inline pager) and when there's only one page; each side hides itself at the
+ * range ends.
  */
 export function FloatingPager({ page, totalPages, onChange, disabled = false }: FloatingPagerProps) {
   if (totalPages <= 1) return null;
@@ -23,7 +23,7 @@ export function FloatingPager({ page, totalPages, onChange, disabled = false }: 
   const hasNext = page < totalPages;
 
   const shell =
-    'group fixed bottom-28 z-40 rounded-full bg-gradient-to-br from-saffron/60 via-plum/40 to-saffron/50 p-[1.5px] shadow-[0_8px_24px_-6px_hsl(var(--saffron)/0.55)] transition active:scale-90 disabled:opacity-40 disabled:active:scale-100 lg:hidden';
+    'group fixed top-1/2 -translate-y-1/2 z-40 rounded-full bg-gradient-to-br from-saffron/60 via-plum/40 to-saffron/50 p-[1.5px] shadow-[0_8px_24px_-6px_hsl(var(--saffron)/0.55)] transition active:scale-90 disabled:opacity-40 disabled:active:scale-100 lg:hidden';
   const face =
     'flex h-12 w-12 items-center justify-center rounded-full bg-bg/55 text-cream backdrop-blur-md transition group-hover:bg-bg/35';
 
