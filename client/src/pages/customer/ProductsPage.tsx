@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'motion/react';
 import { SlidersHorizontal, ChevronLeft, ChevronRight, PackageSearch, AlertTriangle } from 'lucide-react';
 import { fetchProducts } from '../../services/products';
@@ -244,31 +244,53 @@ export default function ProductsPage() {
     staleTime: 1000 * 60 * 10,
   });
 
-  const queryKey = ['products', 'list', { page, sortBy, search, categoryId, brandId, minPrice, maxPrice, inStock, isFeatured, onSale, collection }];
+  const queryClient = useQueryClient();
+
+  // Shared param/key builders so the live query and the next-page prefetch
+  // produce identical cache keys (a mismatch would defeat the prefetch).
+  const buildParams = useCallback((p: number) => ({
+    page:       p,
+    limit:      LIMIT,
+    sortBy,
+    search:     search     || undefined,
+    categoryId: categoryId || undefined,
+    brandId:    brandId    || undefined,
+    minPrice:   minPrice   ? Number(minPrice) : undefined,
+    maxPrice:   maxPrice   ? Number(maxPrice) : undefined,
+    inStock:    inStock    || undefined,
+    isFeatured: isFeatured || undefined,
+    onSale:     onSale     || undefined,
+    collection: collection || undefined,
+  }), [sortBy, search, categoryId, brandId, minPrice, maxPrice, inStock, isFeatured, onSale, collection]);
+
+  const keyForPage = useCallback(
+    (p: number) => ['products', 'list', { page: p, sortBy, search, categoryId, brandId, minPrice, maxPrice, inStock, isFeatured, onSale, collection }],
+    [sortBy, search, categoryId, brandId, minPrice, maxPrice, inStock, isFeatured, onSale, collection],
+  );
+
   const { data, isLoading, isFetching, isError, refetch } = useQuery({
-    queryKey,
-    queryFn: () =>
-      fetchProducts({
-        page,
-        limit:      LIMIT,
-        sortBy,
-        search:     search     || undefined,
-        categoryId: categoryId || undefined,
-        brandId:    brandId    || undefined,
-        minPrice:   minPrice   ? Number(minPrice) : undefined,
-        maxPrice:   maxPrice   ? Number(maxPrice) : undefined,
-        inStock:    inStock    || undefined,
-        isFeatured: isFeatured || undefined,
-        onSale:     onSale     || undefined,
-        collection: collection || undefined,
-      }),
+    queryKey: keyForPage(page),
+    queryFn:  () => fetchProducts(buildParams(page)),
     placeholderData: (prev) => prev,
+    staleTime: 1000 * 60 * 2, // revisiting a page within 2 min is instant (no refetch)
   });
 
   const products   = data?.data ?? [];
   const pagination = data?.meta.pagination;
   const totalPages = pagination?.totalPages ?? 1;
   const total      = pagination?.total ?? 0;
+
+  // Prefetch the next page while the shopper browses the current one, so tapping
+  // "Next" renders instantly from cache instead of waiting on a fresh round-trip.
+  useEffect(() => {
+    if (page >= totalPages) return;
+    const next = page + 1;
+    queryClient.prefetchQuery({
+      queryKey:  keyForPage(next),
+      queryFn:   () => fetchProducts(buildParams(next)),
+      staleTime: 1000 * 60 * 2,
+    });
+  }, [page, totalPages, queryClient, keyForPage, buildParams]);
 
   const hasActiveFilters = !!categoryId || !!brandId || !!minPrice || !!maxPrice || inStock || !!search;
 
