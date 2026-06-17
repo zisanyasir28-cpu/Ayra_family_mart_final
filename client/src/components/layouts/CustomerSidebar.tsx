@@ -1,10 +1,11 @@
-﻿import { NavLink } from 'react-router-dom';
+﻿import { Link, useLocation } from 'react-router-dom';
 import {
   Home, Grid2x2, Tag, Star, Sparkles, Award, Leaf,
   Package, Heart, Headphones, ArrowRight, ChevronRight, type LucideIcon,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useThemeStore } from '../../store/themeStore';
+import { isNavActive } from '../../lib/navActive';
 
 // ─── Desktop persistent left sidebar (lg+) ────────────────────────────────────
 //
@@ -45,6 +46,7 @@ const LIGHT_BDR = 'hsl(145 42% 17% / 0.55)';
 
 export function CustomerSidebar() {
   const isLight = useThemeStore(s => s.resolved === 'light');
+  const location = useLocation();
 
   return (
     <aside
@@ -94,13 +96,16 @@ export function CustomerSidebar() {
       </p>
 
       <nav className="relative flex flex-col gap-0.5">
-        {NAV_ITEMS.map(({ icon: Icon, label, to, end, badge, iconClass, grad }) => (
-          <NavLink
-            key={to + label}
-            to={to}
-            end={end}
-            className={({ isActive }) =>
-              cn(
+        {NAV_ITEMS.map(({ icon: Icon, label, to, end, badge, iconClass, grad }) => {
+          // Active state must respect the query string — NavLink's pathname-only
+          // matching lit up every /products?... link at once.
+          const isActive = isNavActive(to, location, end);
+          return (
+            <Link
+              key={to + label}
+              to={to}
+              aria-current={isActive ? 'page' : undefined}
+              className={cn(
                 // Base — overflow-hidden so the watermark SVG is clipped cleanly
                 'group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-sm transition-all',
                 isLight
@@ -112,15 +117,13 @@ export function CustomerSidebar() {
                   : isActive
                     ? 'font-bold text-bg shadow-[0_4px_16px_-4px_hsl(var(--saffron)/0.5)]'
                     : 'text-cream/75 hover:text-saffron',
-              )
-            }
-            // Light mode: text is hardcoded because --cream resolves dark on green bg
-            style={isLight
-              ? ({ isActive }) => ({ color: isActive ? 'hsl(0 0% 96%)' : 'hsl(0 0% 88% / 0.72)' })
-              : undefined
-            }
-          >
-            {({ isActive }) => (
+              )}
+              // Light mode: text is hardcoded because --cream resolves dark on green bg
+              style={isLight
+                ? { color: isActive ? 'hsl(0 0% 96%)' : 'hsl(0 0% 88% / 0.72)' }
+                : undefined
+              }
+            >
               <>
                 {/* ── Gradient background layer (dark mode) — opacity 1 active, 0.18 inactive ── */}
                 {!isLight && (
@@ -210,9 +213,9 @@ export function CustomerSidebar() {
                   </span>
                 )}
               </>
-            )}
-          </NavLink>
-        ))}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* ── Ayra Fresh+ promo card ───────────────────────────────────────── */}
@@ -303,22 +306,22 @@ export function CustomerSidebar() {
 
             {/* CTA — text link (light) vs sage pill (dark) */}
             {isLight ? (
-              <NavLink
+              <Link
                 to="/products?collection=fresh-plus"
                 className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold transition"
                 style={{ color: 'hsl(var(--saffron))' }}
               >
                 Join Now
                 <ArrowRight className="h-3 w-3" />
-              </NavLink>
+              </Link>
             ) : (
-              <NavLink
+              <Link
                 to="/products?collection=fresh-plus"
                 className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-sage px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-bg shadow-[0_4px_14px_-2px_hsl(var(--sage)/0.5)] transition hover:bg-sage/90 hover:shadow-[0_6px_18px_-2px_hsl(var(--sage)/0.7)]"
               >
                 <span className="[text-shadow:0_1px_4px_rgba(0,0,0,0.4)]">Shop Now</span>
                 <ArrowRight className="h-3 w-3" />
-              </NavLink>
+              </Link>
             )}
           </div>
 

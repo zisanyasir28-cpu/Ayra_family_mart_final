@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { isNavActive } from '../../lib/navActive';
 import { motion, AnimatePresence } from 'motion/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -1053,67 +1054,66 @@ function MobileDrawer({ open, onClose, categories }: MobileDrawerProps) {
 // ─── Secondary nav ────────────────────────────────────────────────────────────
 
 function CategoryNav({ categories }: { categories: ApiCategory[] }) {
+  // Active state respects the query string so only ONE chip is highlighted —
+  // NavLink's pathname-only matching lit up every /products?... chip at once.
+  const location = useLocation();
+  const allActive   = isNavActive('/products', location, true);
+  const dealsActive = isNavActive('/products?onSale=true', location);
+
+  const underline = (
+    <motion.span
+      layoutId="cat-underline"
+      className="absolute -bottom-0.5 left-3 right-3 h-[3px] rounded-full bg-saffron shadow-[0_0_8px_hsl(var(--saffron)/0.6)]"
+      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+    />
+  );
+
   return (
     <div className="border-y border-line/50 bg-bg/85 backdrop-blur-xl">
       <div className="container flex items-center gap-1 overflow-x-auto scrollbar-hide py-2">
-        <NavLink
+        <Link
           to="/products"
-          end
-          className={({ isActive }) =>
-            cn(
-              'group relative shrink-0 px-3 py-1 text-sm transition-colors',
-              isActive ? 'text-saffron' : 'text-cream/65 hover:text-saffron',
-            )
-          }
-        >
-          {({ isActive }) => (
-            <>
-              All
-              {isActive && (
-                <motion.span
-                  layoutId="cat-underline"
-                  className="absolute -bottom-0.5 left-3 right-3 h-[3px] rounded-full bg-saffron shadow-[0_0_8px_hsl(var(--saffron)/0.6)]"
-                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                />
-              )}
-            </>
+          aria-current={allActive ? 'page' : undefined}
+          className={cn(
+            'group relative shrink-0 px-3 py-1 text-sm transition-colors',
+            allActive ? 'text-saffron' : 'text-cream/65 hover:text-saffron',
           )}
-        </NavLink>
+        >
+          All
+          {allActive && underline}
+        </Link>
 
-        <NavLink
+        <Link
           to="/products?onSale=true"
-          className="group relative flex shrink-0 items-center gap-1.5 px-3 py-1 text-sm font-semibold text-coral transition hover:text-saffron"
+          aria-current={dealsActive ? 'page' : undefined}
+          className={cn(
+            'group relative flex shrink-0 items-center gap-1.5 px-3 py-1 text-sm font-semibold transition',
+            dealsActive ? 'text-saffron' : 'text-coral hover:text-saffron',
+          )}
         >
           <Zap className="h-3.5 w-3.5" />
           <span>Deals</span>
-        </NavLink>
+          {dealsActive && underline}
+        </Link>
 
-        {categories.slice(0, 12).map((cat) => (
-          <NavLink
-            key={cat.id}
-            to={`/products?categoryId=${cat.id}`}
-            className={({ isActive }) =>
-              cn(
+        {categories.slice(0, 12).map((cat) => {
+          const isActive = isNavActive(`/products?categoryId=${cat.id}`, location);
+          return (
+            <Link
+              key={cat.id}
+              to={`/products?categoryId=${cat.id}`}
+              aria-current={isActive ? 'page' : undefined}
+              className={cn(
                 'group relative flex shrink-0 items-center gap-1.5 px-3 py-1 text-sm transition-colors',
                 isActive ? 'text-saffron' : 'text-cream/65 hover:text-saffron',
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <span className="text-sm leading-none">{getCategoryEmoji(cat.slug)}</span>
-                <span>{cat.name}</span>
-                {isActive && (
-                  <motion.span
-                    layoutId="cat-underline"
-                    className="absolute -bottom-0.5 left-3 right-3 h-[3px] rounded-full bg-saffron shadow-[0_0_8px_hsl(var(--saffron)/0.6)]"
-                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                  />
-                )}
-              </>
-            )}
-          </NavLink>
-        ))}
+              )}
+            >
+              <span className="text-sm leading-none">{getCategoryEmoji(cat.slug)}</span>
+              <span>{cat.name}</span>
+              {isActive && underline}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
