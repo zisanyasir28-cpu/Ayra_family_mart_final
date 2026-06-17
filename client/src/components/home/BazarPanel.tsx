@@ -1,4 +1,4 @@
-import { CategoryStrip }   from './CategoryStrip';
+import { ShopByBrands }   from './ShopByBrands';
 import { FeatureBanners }  from './FeatureBanners';
 
 // ─── BazarPanel ───────────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ export function BazarPanel() {
 
             {/* Content */}
             <div className="relative">
-              <CategoryStrip />
+              <ShopByBrands />
 
               <div className="mt-7 sm:mt-9 lg:mt-10">
                 <FeatureBanners />
